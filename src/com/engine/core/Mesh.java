@@ -1,7 +1,6 @@
 package com.engine.core;
 
-import org.lwjgl.opengl.GL15;
-import com.engine.Shaders;
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -16,21 +15,16 @@ public class Mesh
 
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
-		this( vertices, indices, false );
+		addVertices( vertices, indices );
 	}
 
-	public Mesh( Vertex3f[] vertices, int[] indices, boolean calcNormals )
+	public Mesh( ArrayList<Vertex3f> verticles, int[] indices )
 	{
-		addVertices( vertices, indices, calcNormals );
+		addVertices( verticles, indices );
 	}
 
-	private void addVertices( Vertex3f[] vertices, int[] indices, boolean calcNormals )
+	private void addVertices( ArrayList<Vertex3f> vertices, int[] indices )
 	{
-		if ( calcNormals )
-		{
-			calcNormals( vertices, indices );
-		}
-
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
@@ -40,11 +34,15 @@ public class Mesh
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
 	}
 
-	public void render(Shaders shaders)
+	private void addVertices( Vertex3f[] vertices, int[] indices )
 	{
-		shaders.bind();
-		glUniform2f( shaders.getOffsetUniform(), 0.5f, 0.5f );
-		draw();
+		resource = new MeshResource( indices.length );
+
+		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
 	}
 
 	public void draw()
@@ -66,25 +64,26 @@ public class Mesh
 		glDisableVertexAttribArray( 2 );
 	}
 
-	private void calcNormals( Vertex3f[] vertices, int[] indices )
-	{
-		for ( int i = 0; i < indices.length; i += 3 )
-		{
-			int i0 = indices[i];
-			int i1 = indices[i + 1];
-			int i2 = indices[i + 2];
 
-			Vector3f v1 = vertices[i1].sub( vertices[i0] );
-			Vector3f v2 = vertices[i2].sub( vertices[i0] );
-
-			Vector3f normal = v1.cross( v2 ).normalized();
-
-			vertices[i0].setNormal( vertices[i0].getNormal().add( normal ) );
-			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
-			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
-		}
-
-		for ( int i = 0; i < vertices.length; i++ )
-			vertices[i].setNormal( vertices[i].getNormal().normalized() );
-	}
+//	private void calcNormals( Vertex3f[] vertices, int[] indices )
+//	{
+//		for ( int i = 0; i < indices.length; i += 3 )
+//		{
+//			int i0 = indices[i];
+//			int i1 = indices[i + 1];
+//			int i2 = indices[i + 2];
+//
+//			Vector3f v1 = vertices[i1].sub( vertices[i0] );
+//			Vector3f v2 = vertices[i2].sub( vertices[i0] );
+//
+//			Vector3f normal = v1.cross( v2 ).normalized();
+//
+//			vertices[i0].setNormal( vertices[i0].getNormal().add( normal ) );
+//			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
+//			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
+//		}
+//
+//		for ( int i = 0; i < vertices.length; i++ )
+//			vertices[i].setNormal( vertices[i].getNormal().normalized() );
+//	}
 }

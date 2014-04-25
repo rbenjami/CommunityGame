@@ -1,6 +1,6 @@
-package com.engine;
+package com.engine.core;
 
-import org.lwjgl.BufferUtils;
+import com.engine.Window;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,11 +17,16 @@ public class Shaders
 {
 	private ArrayList<Integer> shaderList;
 	private int programShader = 0;
-	private int offsetUniform;
+	private int    modelToCameraMatrixUnif;
+	private int    cameraToClipMatrixUnif;
+	private int    baseColorUnif;
+	private Camera cam;
 
 	public Shaders()
 	{
 		shaderList = new ArrayList<>();
+		addShader( GL_FRAGMENT_SHADER, Shaders.loadShader( "ColorMultUniform.frag" ) );
+		addShader( GL_VERTEX_SHADER, Shaders.loadShader( "PosColorLocalTransform.vert" ) );
 	}
 
 	public void createProgram() throws Exception
@@ -34,50 +39,30 @@ public class Shaders
 		{
 			glDeleteShader( shader );
 		}
-		offsetUniform = glGetUniformLocation(programShader, "offset");
-
-		int perspectiveMatrixUnif = glGetUniformLocation(programShader, "perspectiveMatrix");
-
-		float frustumScale = 1.0f; float zNear = 0.5f; float zFar = 3.0f;
-
-		float theMatrix[] = new float[16];
-		theMatrix[0] 	= frustumScale;
-		theMatrix[5] 	= frustumScale;
-		theMatrix[10] 	= (zFar + zNear) / (zNear - zFar);
-		theMatrix[14] 	= (2 * zFar * zNear) / (zNear - zFar);
-		theMatrix[11] 	= -1.0f;
-
-		FloatBuffer theMatrixBuffer = BufferUtils.createFloatBuffer( theMatrix.length );
-		theMatrixBuffer.put(theMatrix);
-		theMatrixBuffer.flip();
-
-		glUseProgram(programShader);
-		glUniformMatrix4(perspectiveMatrixUnif, false, theMatrixBuffer);
-		glUseProgram(0);
+		loadUniform();
 	}
 
-	public int getOffsetUniform()
+	public void loadUniform()
 	{
-		return this.offsetUniform;
-	}
+		modelToCameraMatrixUnif = glGetUniformLocation( programShader, "modelToCameraMatrix" );
+		cameraToClipMatrixUnif = glGetUniformLocation( programShader, "cameraToClipMatrix" );
+		baseColorUnif = glGetUniformLocation( programShader, "baseColor" );
 
-	public int getProgram()
-	{
-		return this.programShader;
+		FloatBuffer cameraToClipMatrix = new Matrix4f().initPerspective( (float) Math.toRadians( 70.0f ), (float) Window.getWidth() / (float) Window.getHeight(), 0.5f, 10 ).toFloatBuffer();
+
+		glUseProgram( programShader );
+		glUniformMatrix4( cameraToClipMatrixUnif, false, cameraToClipMatrix );
+		glUseProgram( 0 );
 	}
 
 	public void bind()
 	{
-		try
-		{
-			if ( programShader == 0 )
-				createProgram();
-			glUseProgram( programShader );
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
-		}
+		glUseProgram( programShader );
+	}
+
+	public void unbind()
+	{
+		glUseProgram( 0 );
 	}
 
 	public void addShader( int shaderType, String shaderFile )
@@ -151,5 +136,43 @@ public class Shaders
 		}
 
 		return shaderSource.toString();
+	}
+
+
+	/**
+	 * GETTER
+	 */
+	public int getModelToCameraMatrixUnif()
+	{
+		return modelToCameraMatrixUnif;
+	}
+
+	public int getCameraToClipMatrixUnif()
+	{
+		return cameraToClipMatrixUnif;
+	}
+
+	public int getBaseColorUnif()
+	{
+		return baseColorUnif;
+	}
+
+	public int getProgram()
+	{
+		return this.programShader;
+	}
+
+	public Camera getCamera()
+	{
+		return cam;
+	}
+
+
+	/**
+	 * SETTER
+	 */
+	public void setCamera( Camera cam )
+	{
+		this.cam = cam;
 	}
 }

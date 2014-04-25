@@ -36,6 +36,15 @@ public class Vector3f
 	/**
 	 * METHODES
 	 */
+	public Vector3f rotate( Quaternion rotation )
+	{
+		Quaternion conjugate = rotation.conjugate();
+
+		Quaternion w = rotation.mul( this ).mul( conjugate );
+
+		return new Vector3f( w.getX(), w.getY(), w.getZ() );
+	}
+
 	public float lenght()
 	{
 		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
@@ -114,9 +123,11 @@ public class Vector3f
 	/**
 	 * SETTER
 	 */
-	public void setZ( float z )
+
+
+	public void setX( float x )
 	{
-		this.z = z;
+		this.x = x;
 	}
 
 	public void setY( float y )
@@ -124,40 +135,40 @@ public class Vector3f
 		this.y = y;
 	}
 
-	public void setX( float x )
+	public void setZ( float z )
 	{
-		this.x = x;
+		this.z = z;
 	}
 
-	public void set( Vector3f v )
-	{
-		this.x = v.getX();
-		this.y = v.getY();
-		this.z = v.getZ();
-	}
-
-	public void set( float x, float y, float z )
+	public Vector3f set( float x, float y, float z )
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		return this;
+	}
+
+	public Vector3f set( Vector3f r )
+	{
+		set( r.getX(), r.getY(), r.getZ() );
+		return this;
 	}
 
 
 	/**
 	 * GETTER
 	 */
-	public float getZ()
-	{
-		return ( z );
-	}
-
 	public float getX()
 	{
 		return ( x );
 	}
 
 	public float getY()
+	{
+		return ( y );
+	}
+
+	public float getZ()
 	{
 		return ( z );
 	}

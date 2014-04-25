@@ -1,17 +1,17 @@
 package com.engine.core;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Created on 10/04/14.
  */
 public class Vertex3f
 {
-	private float x;
-	private float y;
-	private float z;
+	private float    x;
+	private float    y;
+	private float    z;
 	private Vector3f normal;
-	private Color color;
+	private Color    color;
 	public static final int SIZE = 6;
 
 	/**
@@ -47,9 +47,16 @@ public class Vertex3f
 	public Vector3f sub( Vertex3f vertice )
 	{
 		float _x = x - vertice.getX();
-		float _y = x - vertice.getY();
-		float _z = x - vertice.getZ();
+		float _y = y - vertice.getY();
+		float _z = z - vertice.getZ();
 		return new Vector3f( _x, _y, _z );
+	}
+
+	public void transform( Vector3f vec )
+	{
+		this.x += vec.getX();
+		this.y += vec.getY();
+		this.z += vec.getZ();
 	}
 
 

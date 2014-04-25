@@ -16,7 +16,7 @@ public class Color3f
 		this.blue = blue;
 	}
 
-	public Color3f(int red, int green, int blue)
+	public Color3f( int red, int green, int blue )
 	{
 		if ( red <= 1 && green <= 1 && blue <= 1 )
 		{

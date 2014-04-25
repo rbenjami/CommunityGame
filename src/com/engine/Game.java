@@ -1,9 +1,8 @@
 package com.engine;
 
-import org.lwjgl.LWJGLException;
+import com.engine.core.Input;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 import static org.lwjgl.opengl.GL11.glViewport;
 
@@ -25,20 +24,9 @@ public class Game
 	 */
 	public Game()
 	{
-		try
-		{
-			instance = this;
-			Display.setDisplayMode( new DisplayMode( 850, 550 ) );
-			Display.create();
-			Display.setVSyncEnabled( true );
-			Display.setResizable( true );
-			gameLoop();
-		}
-		catch ( LWJGLException e )
-		{
-			e.printStackTrace();
-			System.exit( -1 );
-		}
+		instance = this;
+		Window.create( 850, 550 );
+		gameLoop();
 	}
 
 	// The gameloop. Runs at 60 fps
@@ -50,7 +38,7 @@ public class Game
 
 		init();
 
-		while ( !Display.isCloseRequested() )
+		while ( !Window.isCloseRequested() )
 		{
 			elapsedTime = (long) ( ( System.nanoTime() - startTime ) / 1000000.0 );
 			thisFrame = getCurrentTime();
@@ -66,12 +54,14 @@ public class Game
 			}
 
 			Display.sync( 60 );
+//			System.out.println( "FPS: " + ( thisFrame - lastFrame ) );
 
+			Input.update();
 			Display.update();
 
 			if ( Display.wasResized() )
 			{
-				reshape( Display.getWidth(), Display.getHeight() );
+				reshape( Window.getWidth(), Window.getHeight() );
 			}
 			lastFrame = thisFrame;
 		}
@@ -81,12 +71,6 @@ public class Game
 
 	protected void reshape( int width, int height )
 	{
-//		perspectiveMatrix[0] = fFrustumScale / (w / (float)h);
-//		perspectiveMatrix[5] = fFrustumScale;
-//
-//		glUseProgram(theProgram);
-//		glUniformMatrix4fv(perspectiveMatrixUnif, 1, GL_FALSE, perspectiveMatrix);
-//		glUseProgram(0);
 		glViewport( 0, 0, width, height );
 	}
 
@@ -110,7 +94,7 @@ public class Game
 	{
 		instance.dispose();
 		instance = null;
-		Display.destroy();
+		Window.dispose();
 		System.exit( 0 );
 	}
 

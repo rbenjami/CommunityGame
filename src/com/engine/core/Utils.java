@@ -2,7 +2,10 @@ package com.engine.core;
 
 import org.lwjgl.BufferUtils;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 /**
  * Created on 13/04/14.
@@ -31,6 +34,20 @@ public class Utils
 		buffer.flip();
 
 		return buffer;
+	}
+
+	public static FloatBuffer createFlippedBuffer( ArrayList<Vertex3f> vertices )
+	{
+		FloatBuffer verticlesBuffer = BufferUtils.createFloatBuffer( vertices.size() * 6 );
+		for ( Vertex3f vert : vertices )
+		{
+			verticlesBuffer.put( vert.toFloat() );
+			verticlesBuffer.put( (float) vert.getColor().getRed() / 256 );
+			verticlesBuffer.put( (float) vert.getColor().getGreen() / 256 );
+			verticlesBuffer.put( (float) vert.getColor().getBlue() / 256 );
+		}
+		verticlesBuffer.flip();
+		return verticlesBuffer;
 	}
 
 	public static FloatBuffer createFlippedBuffer( Vertex3f[] vertices )
