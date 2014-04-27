@@ -1,5 +1,7 @@
 package com.engine.core;
 
+import com.engine.core.dimensions_helpers.Vertex3f;
+
 /**
  * Created on 10/04/14.
  */

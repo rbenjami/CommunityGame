@@ -1,6 +1,6 @@
-package com.engine;
+package com.engine.core;
 
-import com.engine.core.Vector2f;
+import com.engine.core.dimensions_helpers.Vector2f;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +12,9 @@ import org.lwjgl.opengl.DisplayMode;
  */
 public class Window
 {
-	public static void create( int width, int height )
+	public static void create( int width, int height, String title )
 	{
+		Display.setTitle( title );
 		try
 		{
 			Display.setDisplayMode( new DisplayMode( width, height ) );

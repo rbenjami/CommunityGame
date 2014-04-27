@@ -1,4 +1,9 @@
-package com.engine.core;
+package com.engine.core.components;
+
+import com.engine.core.RenderEngine;
+import com.engine.core.Shaders;
+import com.engine.core.dimensions_helpers.Vector3f;
+import com.engine.core.dimensions_helpers.Vertex3f;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -6,23 +11,14 @@ import java.util.ArrayList;
 /**
  * Created on 16/04/14.
  */
-public class Cube extends GameObject
+public class Cube extends GameComponent
 {
 	private ArrayList<Vertex3f> verticles;
 	private int[]               indices;
 	private Mesh                mesh;
 
-	public Cube( Vector3f pos, Color color )
+	public Cube( Color color )
 	{
-		this( pos, new Quaternion( 0, 0, 0, 1 ), new Vector3f( 1, 1, 1 ), color );
-	}
-
-	public Cube( Vector3f pos, Quaternion rot, Vector3f scale, Color color )
-	{
-		this.getTransform().setPos( pos );
-		this.getTransform().setRot( rot );
-		this.getTransform().setScale( scale );
-
 		Vertex3f rbf = new Vertex3f( -1, -1, 1, color );
 		Vertex3f rtf = new Vertex3f( -1, 1, 1, color );
 		Vertex3f ltf = new Vertex3f( 1, 1, 1, color );
@@ -44,37 +40,32 @@ public class Cube extends GameObject
 
 		indices = new int[]
 				{
-						0, 1, 2,
-						2, 1, 3,
-						3, 4, 2,
-						2, 4, 5,
-						5, 6, 2,
-						2, 6, 0,
-						0, 6, 1,
-						1, 6, 7,
-						7, 3, 1,
-						7, 4, 3,
-						4, 7, 6,
-						4, 6, 5
+						0, 2, 1,
+						2, 3, 1,
+						3, 2, 4,
+						2, 5, 4,
+						5, 2, 6,
+						2, 0, 6,
+						0, 1, 6,
+						1, 7, 6,
+						7, 1, 3,
+						7, 3, 4,
+						4, 6, 7,
+						4, 5, 6
 				};
 
 		mesh = new Mesh( verticles, indices );
 	}
 
 	@Override
-	public void update()
+	public void render( Shaders shader, RenderEngine renderEngine )
 	{
-
-	}
-
-	@Override
-	protected void draw()
-	{
+		shader.bind();
+		shader.updateUniforms( getTransform(), renderEngine );
 		mesh.draw();
 	}
 
-	public void rotate( Vector3f axis, float angle )
+	public void update( float delta )
 	{
-		getTransform().rotate( axis, (float) Math.toRadians( angle ) );
 	}
 }

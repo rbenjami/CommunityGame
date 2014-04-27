@@ -1,5 +1,7 @@
 package com.engine.core;
 
+import com.engine.core.dimensions_helpers.Matrix4f;
+import com.engine.core.dimensions_helpers.Vertex3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;

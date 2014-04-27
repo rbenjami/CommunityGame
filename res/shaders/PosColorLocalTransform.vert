@@ -5,12 +5,10 @@ layout(location = 1) in vec4 color;
 
 smooth out vec4 theColor;
 
-uniform mat4 cameraToClipMatrix;
-uniform mat4 modelToCameraMatrix;
+uniform mat4 T_MVP;
 
 void main()
 {
-	vec4 cameraPos = modelToCameraMatrix * position;
-	gl_Position = cameraToClipMatrix * cameraPos;
+	gl_Position = T_MVP * position;
 	theColor = color;
 }

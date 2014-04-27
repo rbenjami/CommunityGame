@@ -1,4 +1,4 @@
-package com.engine.core;
+package com.engine.core.dimensions_helpers;
 
 /**
  * Created on 10/04/14.

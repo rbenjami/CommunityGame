@@ -1,56 +1,114 @@
 package com.engine.core;
 
-import java.util.ArrayList;
+import com.engine.CoreEngine;
+import com.engine.core.components.GameComponent;
 
-import static org.lwjgl.opengl.GL20.glUniform4f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4;
+import java.util.ArrayList;
 
 /**
  * Created on 24/04/14.
  */
 public class GameObject
 {
-	private Transform             transform;
-	private ArrayList<GameObject> gameObjectsList;
+	private ArrayList<GameObject>    children;
+	private ArrayList<GameComponent> components;
+	private Transform                transform;
+	private CoreEngine               engine;
 
 	public GameObject()
 	{
+		children = new ArrayList<GameObject>();
+		components = new ArrayList<GameComponent>();
 		transform = new Transform();
+		engine = null;
 	}
 
-	public void render( Shaders shaders )
+	public void addChild( GameObject child )
 	{
-		shaders.bind();
-
-		Matrix4f worldMatrix = transform.getTransformation();
-		Matrix4f MVPMatrix = shaders.getCamera().getViewProjection().mul( worldMatrix );
-
-		glUniform4f( shaders.getBaseColorUnif(), 1.0f, 1.0f, 1.0f, 1.0f );
-		glUniformMatrix4( shaders.getModelToCameraMatrixUnif(), true, MVPMatrix.toFloatBuffer() );
-		draw();
-		shaders.unbind();
+		children.add( child );
+		child.setEngine( engine );
+		child.getTransform().setParent( transform );
 	}
 
-	protected void update()
+	public GameObject addComponent( GameComponent component )
 	{
+		components.add( component );
+		component.setParent( this );
 
+		return this;
 	}
 
-	protected void draw()
+	public void inputAll( float delta )
 	{
+		input( delta );
 
+		for ( GameObject child : children )
+			child.inputAll( delta );
 	}
 
-	/**
-	 * GETTER
-	 */
+	public void updateAll( float delta )
+	{
+		update( delta );
+
+		for ( GameObject child : children )
+			child.updateAll( delta );
+	}
+
+	public void renderAll( Shaders shaders, RenderEngine renderEngine )
+	{
+		render( shaders, renderEngine );
+
+		for ( GameObject child : children )
+			child.renderAll( shaders, renderEngine );
+	}
+
+	public void input( float delta )
+	{
+		transform.update();
+
+		for ( GameComponent component : components )
+			component.input( delta );
+	}
+
+	public void update( float delta )
+	{
+		for ( GameComponent component : components )
+			component.update( delta );
+	}
+
+	public void render( Shaders shaders, RenderEngine renderEngine )
+	{
+		for ( GameComponent component : components )
+			component.render( shaders, renderEngine );
+	}
+
+	public ArrayList<GameObject> getAllAttached()
+	{
+		ArrayList<GameObject> result = new ArrayList<GameObject>();
+
+		for ( GameObject child : children )
+			result.addAll( child.getAllAttached() );
+
+		result.add( this );
+		return result;
+	}
+
 	public Transform getTransform()
 	{
 		return transform;
 	}
 
+	public void setEngine( CoreEngine engine )
+	{
+		if ( this.engine != engine )
+		{
+			this.engine = engine;
 
-	/**
-	 * SETTER
-	 */
+			for ( GameComponent component : components )
+				component.addToEngine( engine );
+
+			for ( GameObject child : children )
+				child.setEngine( engine );
+		}
+	}
 }

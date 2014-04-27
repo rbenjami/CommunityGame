@@ -1,4 +1,4 @@
-package com.engine.core;
+package com.engine.core.dimensions_helpers;
 
 public class Vector2f
 {

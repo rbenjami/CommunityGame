@@ -1,5 +1,6 @@
 package com.engine.core;
 
+import com.engine.core.dimensions_helpers.Vector2f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 

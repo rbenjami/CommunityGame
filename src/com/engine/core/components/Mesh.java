@@ -1,4 +1,8 @@
-package com.engine.core;
+package com.engine.core.components;
+
+import com.engine.core.*;
+import com.engine.core.dimensions_helpers.Vertex3f;
+import org.lwjgl.opengl.GL15;
 
 import java.util.ArrayList;
 
@@ -9,7 +13,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Created on 13/04/14.
  */
-public class Mesh
+public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 
@@ -28,7 +32,7 @@ public class Mesh
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+		GL15.glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
@@ -43,6 +47,14 @@ public class Mesh
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
+	}
+
+	@Override
+	public void render( Shaders shader, RenderEngine renderEngine )
+	{
+		shader.bind();
+		shader.updateUniforms( getTransform(), renderEngine );
+		draw();
 	}
 
 	public void draw()
