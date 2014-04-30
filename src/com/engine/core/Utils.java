@@ -1,13 +1,12 @@
 package com.engine.core;
 
-import com.engine.core.dimensions_helpers.Matrix4f;
-import com.engine.core.dimensions_helpers.Vertex3f;
+import com.engine.core.helpers.dimensions.Matrix4f;
+import com.engine.core.helpers.dimensions.Vertex3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 
 /**
  * Created on 13/04/14.
@@ -38,30 +37,23 @@ public class Utils
 		return buffer;
 	}
 
-	public static FloatBuffer createFlippedBuffer( ArrayList<Vertex3f> vertices )
-	{
-		FloatBuffer verticlesBuffer = BufferUtils.createFloatBuffer( vertices.size() * 6 );
-		for ( Vertex3f vert : vertices )
-		{
-			verticlesBuffer.put( vert.toFloat() );
-			verticlesBuffer.put( (float) vert.getColor().getRed() / 256 );
-			verticlesBuffer.put( (float) vert.getColor().getGreen() / 256 );
-			verticlesBuffer.put( (float) vert.getColor().getBlue() / 256 );
-		}
-		verticlesBuffer.flip();
-		return verticlesBuffer;
-	}
 
-	public static FloatBuffer createFlippedBuffer( Vertex3f[] vertices )
+	public static FloatBuffer createFlippedBuffer( Vertex3f[] verticles )
 	{
-		FloatBuffer verticlesBuffer = BufferUtils.createFloatBuffer( vertices.length * 6 );
-		for ( int i = 0; i < vertices.length; i++ )
+		FloatBuffer verticlesBuffer = BufferUtils.createFloatBuffer( verticles.length * Vertex3f.SIZE );
+		for ( int i = 0; i < verticles.length; i++ )
 		{
-			verticlesBuffer.put( vertices[i].toFloat() );
-			verticlesBuffer.put( (float) vertices[i].getColor().getRed() / 256 );
-			verticlesBuffer.put( (float) vertices[i].getColor().getGreen() / 256 );
-			verticlesBuffer.put( (float) vertices[i].getColor().getBlue() / 256 );
+			verticlesBuffer.put( verticles[i].getX() );
+			verticlesBuffer.put( verticles[i].getY() );
+			verticlesBuffer.put( verticles[i].getZ() );
+			verticlesBuffer.put( (float) verticles[i].getColor().getRed() / 256 );
+			verticlesBuffer.put( (float) verticles[i].getColor().getGreen() / 256 );
+			verticlesBuffer.put( (float) verticles[i].getColor().getBlue() / 256 );
+			verticlesBuffer.put( verticles[i].getNormal().getX() );
+			verticlesBuffer.put( verticles[i].getNormal().getY() );
+			verticlesBuffer.put( verticles[i].getNormal().getZ() );
 		}
+
 		verticlesBuffer.flip();
 		return verticlesBuffer;
 	}

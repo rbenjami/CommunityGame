@@ -1,8 +1,8 @@
 package com.engine.core;
 
-import com.engine.core.dimensions_helpers.Matrix4f;
-import com.engine.core.dimensions_helpers.Quaternion;
-import com.engine.core.dimensions_helpers.Vector3f;
+import com.engine.core.helpers.dimensions.Matrix4f;
+import com.engine.core.helpers.dimensions.Quaternion;
+import com.engine.core.helpers.dimensions.Vector3f;
 
 /**
  * Created on 24/04/14.

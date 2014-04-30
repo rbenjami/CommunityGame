@@ -1,20 +1,33 @@
 package com.engine.core;
 
+import com.engine.core.components.BaseLight;
 import com.engine.core.components.Camera;
+import com.engine.core.helpers.dimensions.Vector3f;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
-public class RenderEngine
+public class RenderEngine extends MappedValues
 {
-	Shaders ambientShaders;
-	Camera  camera;
+	private ArrayList<BaseLight> lights;
+	private BaseLight            activeLight;
+
+	private Shader ambientShader;
+	private Camera camera;
 
 	/**
 	 * Initialize the resources
 	 */
 	public RenderEngine()
 	{
+		lights = new ArrayList<BaseLight>();
+
+		addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 0.1f ) );
+
+		ambientShader = new Shader( "ambient" );
+
 		glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
 		glFrontFace( GL_CW );
@@ -25,8 +38,6 @@ public class RenderEngine
 		glEnable( GL_DEPTH_CLAMP );
 
 		glEnable( GL_TEXTURE_2D );
-
-		ambientShaders = new Shaders( "ambient" );
 	}
 
 	/**
@@ -45,34 +56,23 @@ public class RenderEngine
 	{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		object.renderAll( ambientShaders, this );
+		object.renderAll( ambientShader, this );
 
-//		glEnable( GL_BLEND );
-//		glBlendFunc( GL_ONE, GL_ONE );
-//		glDepthMask( false );
-//		glDepthFunc( GL_EQUAL );
-//
-////		for ( BaseLight light : lights )
-////		{
-////			activeLight = light;
-////			object.renderAll( light.getShader(), this );
-////		}
-//
-//		glDepthFunc( GL_LESS );
-//		glDepthMask( true );
-//		glDisable( GL_BLEND );
+		glEnable( GL_BLEND );
+		glBlendFunc( GL_ONE, GL_ONE );
+		glDepthMask( false );
+		glDepthFunc( GL_EQUAL );
+
+		for ( BaseLight light : lights )
+		{
+			activeLight = light;
+			object.renderAll( light.getShader(), this );
+		}
+
+		glDepthFunc( GL_LESS );
+		glDepthMask( true );
+		glDisable( GL_BLEND );
 	}
-
-//	@Override
-//	protected void reshape( int width, int height )
-//	{
-//		FloatBuffer theMatrixBuffer = new Matrix4f().initPerspective( (float) Math.toRadians( 70.0f ), (float) width / (float) height, 0.5f, 10 ).toFloatBuffer();
-//
-//		glUseProgram( shaders.getProgram() );
-//		glUniformMatrix4( shaders.getCameraToClipMatrixUnif(), false, theMatrixBuffer );
-//		glUseProgram( 0 );
-//		glViewport( 0, 0, width, height );
-//	}
 
 	/**
 	 * Dispose the resources
@@ -82,9 +82,27 @@ public class RenderEngine
 
 	}
 
-	public void setCamera( Camera camera )
+	public void addCamera( Camera camera )
 	{
 		this.camera = camera;
+	}
+
+	public void addLight( BaseLight light )
+	{
+		lights.add( light );
+	}
+
+	public void updateUniformStruct( Transform transform, Shader shader, String uniformName, String uniformType )
+	{
+		throw new IllegalArgumentException( uniformType + " is not a supported type in RenderingEngine" );
+	}
+
+	/**
+	 * GETTER
+	 */
+	public BaseLight getActiveLight()
+	{
+		return activeLight;
 	}
 
 	public Camera getCamera()
@@ -92,7 +110,11 @@ public class RenderEngine
 		return camera;
 	}
 
-	public void addCamera( Camera camera )
+
+	/**
+	 * SETTER
+	 */
+	public void setCamera( Camera camera )
 	{
 		this.camera = camera;
 	}

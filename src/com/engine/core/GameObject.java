@@ -54,12 +54,12 @@ public class GameObject
 			child.updateAll( delta );
 	}
 
-	public void renderAll( Shaders shaders, RenderEngine renderEngine )
+	public void renderAll( Shader shader, RenderEngine renderEngine )
 	{
-		render( shaders, renderEngine );
+		render( shader, renderEngine );
 
 		for ( GameObject child : children )
-			child.renderAll( shaders, renderEngine );
+			child.renderAll( shader, renderEngine );
 	}
 
 	public void input( float delta )
@@ -76,10 +76,10 @@ public class GameObject
 			component.update( delta );
 	}
 
-	public void render( Shaders shaders, RenderEngine renderEngine )
+	public void render( Shader shader, RenderEngine renderEngine )
 	{
 		for ( GameComponent component : components )
-			component.render( shaders, renderEngine );
+			component.render( shader, renderEngine );
 	}
 
 	public ArrayList<GameObject> getAllAttached()

@@ -1,7 +1,7 @@
 package com.engine.core.components;
 
 import com.engine.core.Input;
-import com.engine.core.dimensions_helpers.Vector3f;
+import com.engine.core.helpers.dimensions.Vector3f;
 
 public class FreeMove extends GameComponent
 {

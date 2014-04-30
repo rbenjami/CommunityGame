@@ -1,11 +1,11 @@
 package com.game;
 
-import com.engine.core.*;
-import com.engine.core.components.Camera;
-import com.engine.core.components.Cube;
-import com.engine.core.components.FreeLook;
-import com.engine.core.components.FreeMove;
-import com.engine.core.dimensions_helpers.Vector3f;
+import com.engine.core.Attenuation;
+import com.engine.core.Game;
+import com.engine.core.GameObject;
+import com.engine.core.components.*;
+import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.dimensions.Vertex3f;
 
 import java.awt.*;
 
@@ -17,22 +17,21 @@ public class CommunityGame extends Game
 	public void init()
 	{
 		Cube cube = new Cube( new Color( 123, 180, 44 ) );
-		Cube cube2 = new Cube( new Color( 150, 107, 73 ) );
-		Cube plan = new Cube( new Color( 95, 101, 179 ) );
 
-		GameObject planeObject = new GameObject();
-		planeObject.addComponent( plan );
-		planeObject.getTransform().getPos().set( 0, 0, 5 );
-		planeObject.getTransform().setScale( new Vector3f( 10, 0, 10 ) );
-		addObject( planeObject );
+//		GameObject c = new GameObject().addComponent( cube );
+//		c.getTransform().getPos().set( 0, 5, 0 );
 
-		GameObject c = new GameObject().addComponent( cube );
-		c.getTransform().getPos().set( 0, 5, 0 );
-		GameObject c2 = new GameObject().addComponent( cube2 );
-		c2.getTransform().getPos().set( 5, 0, 0 );
+		PointLight pointLight2 = new PointLight( new Color( 255, 201, 62 ), 0.03f, new Attenuation( 10, 0, 0 ) );
+		GameObject light2 = new GameObject().addComponent( pointLight2 );
+		light2.getTransform().getPos().set( 0, 5, 5 );
 
-		addObject( c );
-		addObject( c2 );
+		Test test = new Test( new Vector3f( 0, 0, 0 ) );
+//		Test test2 = new Test( new Vector3f( 16, 0, 0 ) );
+
+		addObject( test );
+//		addObject( test2 );
+//		addObject( c );
+		addObject( light2 );
 
 		addObject( new GameObject().addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 0.01f ) ).addComponent( new Camera() ) );
 	}

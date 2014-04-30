@@ -2,8 +2,8 @@ package com.engine.core.components;
 
 import com.engine.CoreEngine;
 import com.engine.core.Window;
-import com.engine.core.dimensions_helpers.Matrix4f;
-import com.engine.core.dimensions_helpers.Vector3f;
+import com.engine.core.helpers.dimensions.Matrix4f;
+import com.engine.core.helpers.dimensions.Vector3f;
 
 
 /**
@@ -24,7 +24,7 @@ public class Camera extends GameComponent
 		Vector3f cameraPos = getTransform().getTransformedPos().mul( -1 );
 		Matrix4f cameraTranslation = new Matrix4f().initTranslation( cameraPos.getX(), cameraPos.getY(), cameraPos.getZ() );
 
-		System.out.println( getTransform().getPos() );
+//		System.out.println( getTransform().getPos() );
 		return projection.mul( cameraRotation.mul( cameraTranslation ) );
 	}
 

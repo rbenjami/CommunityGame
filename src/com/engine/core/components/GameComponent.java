@@ -3,7 +3,7 @@ package com.engine.core.components;
 import com.engine.CoreEngine;
 import com.engine.core.GameObject;
 import com.engine.core.RenderEngine;
-import com.engine.core.Shaders;
+import com.engine.core.Shader;
 import com.engine.core.Transform;
 
 /**
@@ -17,7 +17,7 @@ public abstract class GameComponent
 
 	public void update( float delta ) {}
 
-	public void render( Shaders shader, RenderEngine renderingEngine ) {}
+	public void render( Shader shader, RenderEngine renderingEngine ) {}
 
 	public void setParent( GameObject parent )
 	{

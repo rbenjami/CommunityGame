@@ -1,4 +1,4 @@
-package com.engine.core.dimensions_helpers;
+package com.engine.core.helpers.dimensions;
 
 import org.lwjgl.BufferUtils;
 

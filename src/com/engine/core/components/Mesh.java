@@ -1,45 +1,36 @@
 package com.engine.core.components;
 
-import com.engine.core.*;
-import com.engine.core.dimensions_helpers.Vertex3f;
-import org.lwjgl.opengl.GL15;
-
-import java.util.ArrayList;
+import com.engine.core.RenderEngine;
+import com.engine.core.Shader;
+import com.engine.core.Utils;
+import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.dimensions.Vertex3f;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
-/**
- * Created on 13/04/14.
- */
 public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
-		addVertices( vertices, indices );
+		this( vertices, indices, false );
 	}
 
-	public Mesh( ArrayList<Vertex3f> verticles, int[] indices )
+	public Mesh( Vertex3f[] vertices, int[] indices, boolean calcNormals )
 	{
-		addVertices( verticles, indices );
+		addVertices( vertices, indices, calcNormals );
 	}
 
-	private void addVertices( ArrayList<Vertex3f> vertices, int[] indices )
+	private void addVertices( Vertex3f[] vertices, int[] indices, boolean calcNormals )
 	{
-		resource = new MeshResource( indices.length );
+		if ( calcNormals )
+		{
+			calcNormals( vertices, indices );
+		}
 
-		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		GL15.glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
-
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
-	}
-
-	private void addVertices( Vertex3f[] vertices, int[] indices )
-	{
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
@@ -50,7 +41,7 @@ public class Mesh extends GameComponent
 	}
 
 	@Override
-	public void render( Shaders shader, RenderEngine renderEngine )
+	public void render( Shader shader, RenderEngine renderEngine )
 	{
 		shader.bind();
 		shader.updateUniforms( getTransform(), renderEngine );
@@ -76,26 +67,25 @@ public class Mesh extends GameComponent
 		glDisableVertexAttribArray( 2 );
 	}
 
+	private void calcNormals( Vertex3f[] vertices, int[] indices )
+	{
+		for ( int i = 0; i < indices.length; i += 3 )
+		{
+			int i0 = indices[i];
+			int i1 = indices[i + 1];
+			int i2 = indices[i + 2];
 
-//	private void calcNormals( Vertex3f[] vertices, int[] indices )
-//	{
-//		for ( int i = 0; i < indices.length; i += 3 )
-//		{
-//			int i0 = indices[i];
-//			int i1 = indices[i + 1];
-//			int i2 = indices[i + 2];
-//
-//			Vector3f v1 = vertices[i1].sub( vertices[i0] );
-//			Vector3f v2 = vertices[i2].sub( vertices[i0] );
-//
-//			Vector3f normal = v1.cross( v2 ).normalized();
-//
-//			vertices[i0].setNormal( vertices[i0].getNormal().add( normal ) );
-//			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
-//			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
-//		}
-//
-//		for ( int i = 0; i < vertices.length; i++ )
-//			vertices[i].setNormal( vertices[i].getNormal().normalized() );
-//	}
+			Vector3f v1 = vertices[i1].sub( vertices[i0] );
+			Vector3f v2 = vertices[i2].sub( vertices[i0] );
+
+			Vector3f normal = v1.cross( v2 ).normalized();
+
+			vertices[i0].setNormal( vertices[i0].getNormal().add( normal ) );
+			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
+			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
+		}
+
+		for ( int i = 0; i < vertices.length; i++ )
+			vertices[i].setNormal( vertices[i].getNormal().normalized() );
+	}
 }
