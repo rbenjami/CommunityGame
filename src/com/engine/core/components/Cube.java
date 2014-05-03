@@ -43,7 +43,7 @@ public class Cube extends GameComponent
 						4, 6, 5
 				};
 
-		mesh = new Mesh( verticles, indices, true );
+		mesh = new Mesh( verticles, indices );
 	}
 
 	@Override

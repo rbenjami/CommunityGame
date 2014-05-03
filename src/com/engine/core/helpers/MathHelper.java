@@ -5,13 +5,13 @@ package com.engine.core.helpers;
  */
 public class MathHelper
 {
-	public static int rand(int lower, int higher)
+	public static int rand( int lower, int higher )
 	{
-		return (int)(Math.random() * (higher - lower)) + lower;
+		return (int) ( Math.random() * ( ( higher + 1 ) - lower ) ) + lower;
 	}
 
-	public static float rand(float lower, float higher)
+	public static float rand( float lower, float higher )
 	{
-		return (float)(Math.random() * (higher - lower)) + lower;
+		return (float) ( Math.random() * ( higher - lower ) ) + lower;
 	}
 }

@@ -4,7 +4,6 @@ import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.core.helpers.dimensions.Vertex3f;
 import org.lwjgl.BufferUtils;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -23,11 +22,6 @@ public class Utils
 		return BufferUtils.createIntBuffer( size );
 	}
 
-	public static ByteBuffer createByteBuffer( int size )
-	{
-		return BufferUtils.createByteBuffer( size );
-	}
-
 	public static IntBuffer createFlippedBuffer( int... values )
 	{
 		IntBuffer buffer = createIntBuffer( values.length );
@@ -37,25 +31,26 @@ public class Utils
 		return buffer;
 	}
 
-
-	public static FloatBuffer createFlippedBuffer( Vertex3f[] verticles )
+	public static FloatBuffer createFlippedBuffer( Vertex3f[] vertices )
 	{
-		FloatBuffer verticlesBuffer = BufferUtils.createFloatBuffer( verticles.length * Vertex3f.SIZE );
-		for ( int i = 0; i < verticles.length; i++ )
+		FloatBuffer buffer = createFloatBuffer( vertices.length * Vertex3f.SIZE );
+
+		for ( int i = 0; i < vertices.length; i++ )
 		{
-			verticlesBuffer.put( verticles[i].getX() );
-			verticlesBuffer.put( verticles[i].getY() );
-			verticlesBuffer.put( verticles[i].getZ() );
-			verticlesBuffer.put( (float) verticles[i].getColor().getRed() / 256 );
-			verticlesBuffer.put( (float) verticles[i].getColor().getGreen() / 256 );
-			verticlesBuffer.put( (float) verticles[i].getColor().getBlue() / 256 );
-			verticlesBuffer.put( verticles[i].getNormal().getX() );
-			verticlesBuffer.put( verticles[i].getNormal().getY() );
-			verticlesBuffer.put( verticles[i].getNormal().getZ() );
+			buffer.put( vertices[i].getX() );
+			buffer.put( vertices[i].getY() );
+			buffer.put( vertices[i].getZ() );
+			buffer.put( vertices[i].getColor().getRed() );
+			buffer.put( vertices[i].getColor().getGreen() );
+			buffer.put( vertices[i].getColor().getBlue() );
+			buffer.put( vertices[i].getNormal().getX() );
+			buffer.put( vertices[i].getNormal().getY() );
+			buffer.put( vertices[i].getNormal().getZ() );
 		}
 
-		verticlesBuffer.flip();
-		return verticlesBuffer;
+		buffer.flip();
+
+		return buffer;
 	}
 
 	public static FloatBuffer createFlippedBuffer( Matrix4f value )
@@ -69,15 +64,5 @@ public class Utils
 		buffer.flip();
 
 		return buffer;
-	}
-
-	public static int[] toIntArray( Integer[] data )
-	{
-		int[] result = new int[data.length];
-
-		for ( int i = 0; i < data.length; i++ )
-			result[i] = data[i].intValue();
-
-		return result;
 	}
 }

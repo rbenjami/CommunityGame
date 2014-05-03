@@ -4,7 +4,7 @@ import com.engine.core.Game;
 import com.engine.core.Input;
 import com.engine.core.RenderEngine;
 import com.engine.core.Window;
-import org.lwjgl.Sys;
+import com.engine.core.helpers.TimeHelper;
 import org.lwjgl.opengl.Display;
 
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -35,7 +35,7 @@ public class CoreEngine
 
 	public void createWindow( String title )
 	{
-		Window.create( width, height, title );
+		Window.createWindow( width, height, title );
 		this.renderEngine = new RenderEngine();
 	}
 
@@ -55,6 +55,11 @@ public class CoreEngine
 		isRunning = false;
 	}
 
+	protected void reshape( int width, int height )
+	{
+		glViewport( 0, 0, width, height );
+	}
+
 	private void run()
 	{
 		isRunning = true;
@@ -64,7 +69,7 @@ public class CoreEngine
 
 		game.init();
 
-		double lastTime = getCurrentTime();
+		double lastTime = TimeHelper.getTime();
 		double unprocessedTime = 0;
 
 		while ( isRunning )
@@ -75,7 +80,7 @@ public class CoreEngine
 			}
 			boolean render = false;
 
-			double startTime = getCurrentTime();
+			double startTime = TimeHelper.getTime();
 			double passedTime = startTime - lastTime;
 			lastTime = startTime;
 
@@ -98,6 +103,7 @@ public class CoreEngine
 
 				if ( frameCounter >= 1.0 )
 				{
+					System.out.println( frames );
 					frames = 0;
 					frameCounter = 0;
 				}
@@ -105,11 +111,7 @@ public class CoreEngine
 			if ( render )
 			{
 				game.render( renderEngine );
-				Display.update();
-				if ( Display.wasResized() )
-				{
-					reshape( Window.getWidth(), Window.getHeight() );
-				}
+				Window.render();
 				frames++;
 			}
 			else
@@ -125,72 +127,12 @@ public class CoreEngine
 			}
 		}
 
-		end();
+		cleanUp();
 	}
 
-	public void addRenderEngine( RenderEngine renderEngine )
-	{
-		this.renderEngine = renderEngine;
-	}
-
-
-	protected void reshape( int width, int height )
-	{
-		glViewport( 0, 0, width, height );
-	}
-
-	/**
-	 * @return Current time in milliseconds.
-	 */
-	public static long getCurrentTime()
-	{
-		return Sys.getTime() * 1000 / Sys.getTimerResolution();
-	}
-
-	/**
-	 * Properly terminate the game.
-	 */
-	public static void end()
+	private void cleanUp()
 	{
 		Window.dispose();
-		System.exit( 0 );
-	}
-
-	/**
-	 * Load any resources here.
-	 */
-	public void init()
-	{
-	}
-
-	/**
-	 * Update the logic of the game.
-	 *
-	 * @param elapsedTime Time elapsed since last frame.
-	 */
-	public void update( long elapsedTime )
-	{
-	}
-
-	/**
-	 * Render to screen.
-	 */
-	public void render()
-	{
-	}
-
-	/**
-	 * Display is resized
-	 */
-	public void resized()
-	{
-	}
-
-	/**
-	 * Dispose created resources.
-	 */
-	public void dispose()
-	{
 	}
 
 	public RenderEngine getRenderEngine()

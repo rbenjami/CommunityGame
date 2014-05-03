@@ -1,7 +1,9 @@
 package com.engine.core;
 
 import com.engine.core.components.BaseLight;
+import com.engine.core.components.DirectionalLight;
 import com.engine.core.components.PointLight;
+import com.engine.core.components.SpotLight;
 import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.core.helpers.dimensions.Vector3f;
 
@@ -78,18 +80,27 @@ public class Shader
 			else if ( uniformName.startsWith( "R_" ) )
 			{
 				String unprefixedUniformName = uniformName.substring( 2 );
-				if ( uniformType.equals( "vec3" ) )
-					setUniform( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
-				else if ( uniformType.equals( "float" ) )
-					setUniformf( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
-//				else if ( uniformType.equals( "DirectionalLight" ) )
-//					setUniformDirectionalLight( uniformName, (DirectionalLight) renderingEngine.getActiveLight() );
-				else if ( uniformType.equals( "PointLight" ) )
-					setUniformPointLight( uniformName, (PointLight) renderingEngine.getActiveLight() );
-//				else if ( uniformType.equals( "SpotLight" ) )
-//					setUniformSpotLight( uniformName, (SpotLight) renderingEngine.getActiveLight() );
-				else
-					renderingEngine.updateUniformStruct( transform, this, uniformName, uniformType );
+				switch ( uniformType )
+				{
+					case "vec3":
+						setUniform( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+						break;
+					case "float":
+						setUniformf( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
+						break;
+					case "DirectionalLight":
+						setUniformDirectionalLight( uniformName, (DirectionalLight) renderingEngine.getActiveLight() );
+						break;
+					case "PointLight":
+						setUniformPointLight( uniformName, (PointLight) renderingEngine.getActiveLight() );
+						break;
+					case "SpotLight":
+						setUniformSpotLight( uniformName, (SpotLight) renderingEngine.getActiveLight() );
+						break;
+					default:
+						renderingEngine.updateUniformStruct( transform, this, uniformName, uniformType );
+						break;
+				}
 			}
 			else if ( uniformName.startsWith( "C_" ) )
 			{
@@ -388,11 +399,11 @@ public class Shader
 		setUniformf( uniformName + ".intensity", baseLight.getIntensity() );
 	}
 
-//	public void setUniformDirectionalLight( String uniformName, DirectionalLight directionalLight )
-//	{
-//		setUniformBaseLight( uniformName + ".base", directionalLight );
-//		setUniform( uniformName + ".direction", directionalLight.getDirection() );
-//	}
+	public void setUniformDirectionalLight( String uniformName, DirectionalLight directionalLight )
+	{
+		setUniformBaseLight( uniformName + ".base", directionalLight );
+		setUniform( uniformName + ".direction", directionalLight.getDirection() );
+	}
 
 	public void setUniformPointLight( String uniformName, PointLight pointLight )
 	{
@@ -404,10 +415,10 @@ public class Shader
 		setUniformf( uniformName + ".range", pointLight.getRange() );
 	}
 
-//	public void setUniformSpotLight( String uniformName, SpotLight spotLight )
-//	{
-//		setUniformPointLight( uniformName + ".pointLight", spotLight );
-//		setUniform( uniformName + ".direction", spotLight.getDirection() );
-//		setUniformf( uniformName + ".cutoff", spotLight.getCutoff() );
-//	}
+	public void setUniformSpotLight( String uniformName, SpotLight spotLight )
+	{
+		setUniformPointLight( uniformName + ".pointLight", spotLight );
+		setUniform( uniformName + ".direction", spotLight.getDirection() );
+		setUniformf( uniformName + ".cutoff", spotLight.getCutoff() );
+	}
 }

@@ -1,10 +1,8 @@
-#version 330
-
-smooth in vec4 theColor;
+#version 120
 
 uniform vec3 R_ambient;
 
 void main()
 {
-	gl_FragColor = vec4(R_ambient, 1) * theColor;
+	gl_FragColor = vec4(R_ambient, 1);
 }

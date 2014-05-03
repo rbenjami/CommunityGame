@@ -6,6 +6,8 @@ import com.engine.core.Utils;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.dimensions.Vertex3f;
 
+import java.util.HashMap;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -14,38 +16,23 @@ public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 
+
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
-		this( vertices, indices, false );
+		addVertices( vertices, indices );
 	}
 
-	public Mesh( Vertex3f[] vertices, int[] indices, boolean calcNormals )
+	private void addVertices( Vertex3f[] verticles, int[] indices )
 	{
-		addVertices( vertices, indices, calcNormals );
-	}
-
-	private void addVertices( Vertex3f[] vertices, int[] indices, boolean calcNormals )
-	{
-		if ( calcNormals )
-		{
-			calcNormals( vertices, indices );
-		}
+		calcNormals( verticles, indices );
 
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( verticles ), GL_STATIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
-	}
-
-	@Override
-	public void render( Shader shader, RenderEngine renderEngine )
-	{
-		shader.bind();
-		shader.updateUniforms( getTransform(), renderEngine );
-		draw();
 	}
 
 	public void draw()
@@ -87,5 +74,13 @@ public class Mesh extends GameComponent
 
 		for ( int i = 0; i < vertices.length; i++ )
 			vertices[i].setNormal( vertices[i].getNormal().normalized() );
+	}
+
+	@Override
+	public void render( Shader shader, RenderEngine renderingEngine )
+	{
+		shader.bind();
+		shader.updateUniforms( getTransform(), renderingEngine );
+		draw();
 	}
 }

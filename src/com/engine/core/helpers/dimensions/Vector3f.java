@@ -19,21 +19,15 @@ public class Vector3f
 		this.z = z;
 	}
 
-	public Vector3f( Vertex3f origin, Vertex3f destination )
-	{
-		this.x = destination.getX() - origin.getX();
-		this.y = destination.getY() - origin.getY();
-		this.z = destination.getZ() - origin.getZ();
-	}
+    public Vector3f( Vertex3f origin, Vertex3f destination )
+    {
+        this.x = destination.getX() - origin.getX();
+        this.y = destination.getY() - origin.getY();
+        this.z = destination.getZ() - origin.getZ();
+    }
 
-	public Vector3f( Vertex3f destination )
-	{
-		this.x = destination.getX();
-		this.y = destination.getY();
-		this.z = destination.getZ();
-	}
 
-	/**
+    /**
 	 * METHODES
 	 */
 	public Vector3f rotate( Quaternion rotation )
@@ -48,14 +42,6 @@ public class Vector3f
 	public float lenght()
 	{
 		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
-	}
-
-	public boolean equals( Vector3f v )
-	{
-		if ( x == v.x && y == v.y && z == v.z )
-			return ( true );
-		else
-			return ( false );
 	}
 
 	public Vector3f normalized()
@@ -123,8 +109,6 @@ public class Vector3f
 	/**
 	 * SETTER
 	 */
-
-
 	public void setX( float x )
 	{
 		this.x = x;
@@ -172,6 +156,11 @@ public class Vector3f
 	{
 		return ( z );
 	}
+
+    public boolean equals( Vector3f r )
+    {
+        return x == r.getX() && y == r.getY() && z == r.getZ();
+    }
 
 	public String toString()
 	{

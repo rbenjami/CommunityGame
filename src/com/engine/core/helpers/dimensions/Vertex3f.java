@@ -7,26 +7,30 @@ import java.awt.*;
  */
 public class Vertex3f
 {
-	private float    x;
-	private float    y;
-	private float    z;
-	private Vector3f normal;
-	private Color    color;
 	public static final int SIZE = 9;
 
+	private float    x;
+    private float    y;
+    private float    z;
+	private Color    color;
+	private Vector3f normal;
+
+    /**
+     * CONSTRUCTOR
+     */
 	public Vertex3f( Vector3f pos )
 	{
-		this( pos, new Color( 255, 255, 255 ) );
+		this( pos, new Color( 0, 0, 0 ) );
 	}
+
+    public Vertex3f( float x, float y, float z )
+    {
+        this( new Vector3f( x, y, z ), new Color( 0, 0, 0 ) );
+    }
 
 	public Vertex3f( Vector3f pos, Color color )
 	{
 		this( pos, color, new Vector3f( 0, 0, 0 ) );
-	}
-
-	public Vertex3f( float x, float y, float z )
-	{
-		this(new Vector3f( x, y, z ), new Color( 255, 255, 255 ), new Vector3f( 0, 0, 0 ) );
 	}
 
 	public Vertex3f( float x, float y, float z, Color color )
@@ -36,121 +40,96 @@ public class Vertex3f
 
 	public Vertex3f( Vector3f pos, Color color, Vector3f normal )
 	{
-		this.x = pos.getX();
-		this.y = pos.getY();
-		this.z = pos.getZ();
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
 		this.color = color;
 		this.normal = normal;
 	}
-//	/**
-//	 * CONSTRUCTOR
-//	 *
-//	 * @param x
-//	 * @param y
-//	 * @param z
-//	 * @param color
-//	 */
-//	public Vertex3f( float x, float y, float z, Color color )
-//	{
-//		this.x = x;
-//		this.y = y;
-//		this.z = z;
-//		this.color = color;
-//	}
-//
-//	public Vertex3f( float x, float y, float z )
-//	{
-//		this.x = x;
-//		this.y = y;
-//		this.z = z;
-//		this.color = new Color( 255, 255, 255 );
-//	}
 
-	public float[] toFloat()
-	{
-		float array[] = { this.x, this.y, this.z };
-		return array;
-	}
+    /**
+     * METHODES
+     */
+    public Vector3f sub( Vertex3f v )
+    {
+        return ( new Vector3f( this.x - v.getX(), this.y - v.getY(), this.z - v.getZ() ) );
+    }
 
-	public Vector3f sub( Vertex3f vertice )
-	{
-		float _x = x - vertice.getX();
-		float _y = y - vertice.getY();
-		float _z = z - vertice.getZ();
-		return new Vector3f( _x, _y, _z );
-	}
+    /**
+     * GETTER
+     */
+    public float getX()
+    {
+        return x;
+    }
 
-	public Vertex3f transform( Vector3f vec )
-	{
-		this.x += vec.getX();
-		this.y += vec.getY();
-		this.z += vec.getZ();
-		return this;
-	}
+    public float getY()
+    {
+        return y;
+    }
 
-
-	/**
-	 * SETTER
-	 */
-	public void set( Vertex3f r )
-	{
-		this.x = r.getX();
-		this.y = r.getY();
-		this.z = r.getZ();
-	}
-
-	public void setZ( float z )
-	{
-		this.z = z;
-	}
-
-	public void setY( float y )
-	{
-		this.y = y;
-	}
-
-	public void setX( float x )
-	{
-		this.x = x;
-	}
-
-	public void setColor( Color color )
-	{
-		this.color = color;
-	}
-
-	public void setNormal( Vector3f normal )
-	{
-		this.normal = normal;
-	}
-
-	/**
-	 * GETTER
-	 */
-	public float getX()
-	{
-		return ( x );
-	}
-
-	public float getY()
-	{
-		return ( y );
-	}
-
-	public float getZ()
-	{
-		return ( z );
-	}
+    public float getZ()
+    {
+        return z;
+    }
 
 	public Color getColor()
 	{
-		return ( color );
+		return color;
 	}
 
 	public Vector3f getNormal()
 	{
 		return normal;
 	}
+
+
+    /**
+     * SETTER
+     */
+    public void setX(float x)
+    {
+        this.x = x;
+    }
+
+    public void setY(float y)
+    {
+        this.y = y;
+    }
+
+    public void setZ(float z)
+    {
+        this.z = z;
+    }
+
+    public void setColor( Color color )
+    {
+        this.color = color;
+    }
+
+    public void setNormal( Vector3f normal )
+    {
+        this.normal = normal;
+    }
+
+    public void setPos( Vector3f pos )
+    {
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
+    }
+
+    public void setPos( float x, float y, float z )
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public boolean equals( Vector3f r )
+    {
+        return x == r.getX() && y == r.getY() && z == r.getZ();
+    }
 
 	public String toString()
 	{

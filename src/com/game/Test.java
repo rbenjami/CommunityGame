@@ -18,26 +18,28 @@ public class Test extends GameObject
 		getTransform().getPos().set( pos );
 		Color color = new Color( 123, 180, 44 );
 		int indices[] =
-		{
-			0, 1, 2,
-			2, 1, 3
-		};
+				{
+						0, 1, 2,
+						2, 1, 3
+				};
 		Vertex3f[] verticles = new Vertex3f[4];
 
-		float[][] map = new float[17][17];
-		for ( int i = 0; i < 17;i++)
-			for (int j = 0;j < 17;j++)
-				map[i][j] = MathHelper.rand( 0.0f, 1.5f );
+        int fileds = 16; /** paire ! **/
 
-		for ( int i = 0; i < 16;i++)
+		float[][] map = new float[fileds + 1][fileds + 1];
+		for ( int i = 0; i < fileds + 1; i++ )
+			for ( int j = 0; j < fileds + 1; j++ )
+				map[i][j] = MathHelper.rand( 0.0f, 4.0f );
+
+		for ( int i = 0; i < fileds; i++ )
 		{
-			for (int j = 0;j < 16;j++)
+			for ( int j = 0; j < fileds; j++ )
 			{
-				verticles[0] = new Vertex3f( -0.5f + i - 8, map[i][j], -0.5f + j - 8, color );
-				verticles[1] = new Vertex3f( -0.5f + i - 8, map[i][j + 1], +0.5f + j - 8, color );
-				verticles[2] = new Vertex3f( +0.5f + i - 8, map[i + 1][j], -0.5f + j - 8, color );
-				verticles[3] = new Vertex3f( +0.5f + i - 8, map[i + 1][j + 1], +0.5f + j - 8, color );
-				addComponent( new Mesh( verticles, indices, true ) );
+				verticles[0] = new Vertex3f( -0.5f + i - fileds / 2, map[i][j], -0.5f + j - fileds / 2, color );
+				verticles[1] = new Vertex3f( -0.5f + i - fileds / 2, map[i][j + 1], +0.5f + j - fileds / 2, color );
+				verticles[2] = new Vertex3f( +0.5f + i - fileds / 2, map[i + 1][j], -0.5f + j - fileds / 2, color );
+				verticles[3] = new Vertex3f( +0.5f + i - fileds / 2, map[i + 1][j + 1], +0.5f + j - fileds / 2, color );
+				addComponent( new Mesh( verticles, indices ) );
 			}
 		}
 	}

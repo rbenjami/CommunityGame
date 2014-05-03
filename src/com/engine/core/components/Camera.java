@@ -1,7 +1,6 @@
 package com.engine.core.components;
 
 import com.engine.CoreEngine;
-import com.engine.core.Window;
 import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.core.helpers.dimensions.Vector3f;
 
@@ -13,9 +12,9 @@ public class Camera extends GameComponent
 {
 	private Matrix4f projection;
 
-	public Camera()
+	public Camera( float fov, float aspect, float zNear, float zFar )
 	{
-		this.projection = new Matrix4f().initPerspective( (float) Math.toRadians( 70.0f ), (float) Window.getWidth() / (float) Window.getHeight(), 0.5f, 1000 );
+		this.projection = new Matrix4f().initPerspective( fov, aspect, zNear, zFar );
 	}
 
 	public Matrix4f getViewProjection()
@@ -24,7 +23,6 @@ public class Camera extends GameComponent
 		Vector3f cameraPos = getTransform().getTransformedPos().mul( -1 );
 		Matrix4f cameraTranslation = new Matrix4f().initTranslation( cameraPos.getX(), cameraPos.getY(), cameraPos.getZ() );
 
-//		System.out.println( getTransform().getPos() );
 		return projection.mul( cameraRotation.mul( cameraTranslation ) );
 	}
 
