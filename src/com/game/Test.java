@@ -16,21 +16,21 @@ public class Test extends GameObject
 	public Test( Vector3f pos )
 	{
 		getTransform().getPos().set( pos );
-		Color color = new Color( 123, 180, 44 );
+		Color color = new Color( 255, 255, 255 );
 		int indices[] =
 				{
 						0, 1, 2,
 						2, 1, 3
 				};
-		Vertex3f[] verticles = new Vertex3f[4];
 
-        int fileds = 16; /** paire ! **/
+		int fileds = 16; /** paire ! **/
 
 		float[][] map = new float[fileds + 1][fileds + 1];
 		for ( int i = 0; i < fileds + 1; i++ )
 			for ( int j = 0; j < fileds + 1; j++ )
-				map[i][j] = MathHelper.rand( 0.0f, 4.0f );
+				map[i][j] = MathHelper.rand( 0.0f, 0.8f );
 
+		Vertex3f[] verticles = new Vertex3f[4];
 		for ( int i = 0; i < fileds; i++ )
 		{
 			for ( int j = 0; j < fileds; j++ )

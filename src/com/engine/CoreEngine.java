@@ -2,9 +2,9 @@ package com.engine;
 
 import com.engine.core.Game;
 import com.engine.core.Input;
-import com.engine.core.RenderEngine;
-import com.engine.core.Window;
 import com.engine.core.helpers.TimeHelper;
+import com.engine.render.RenderEngine;
+import com.engine.render.Window;
 import org.lwjgl.opengl.Display;
 
 import static org.lwjgl.opengl.GL11.glViewport;

@@ -10,9 +10,9 @@ public class Quaternion
 	private float z;
 	private float w;
 
-    /**
-     * CONSTRUCTOR
-     */
+	/**
+	 * CONSTRUCTOR
+	 */
 	public Quaternion( float x, float y, float z, float w )
 	{
 		this.x = x;
@@ -182,9 +182,9 @@ public class Quaternion
 		w /= length;
 	}
 
-    /**
-     * GETTER
-     */
+	/**
+	 * GETTER
+	 */
 	public Vector3f getForward()
 	{
 		return new Vector3f( 0, 0, 1 ).rotate( this );
@@ -230,24 +230,24 @@ public class Quaternion
 		return z;
 	}
 
-    public float getW()
-    {
-        return w;
-    }
+	public float getW()
+	{
+		return w;
+	}
 
 
-    /**
-     * SETTER
-     */
-    public void setX( float x )
-    {
-        this.x = x;
-    }
+	/**
+	 * SETTER
+	 */
+	public void setX( float x )
+	{
+		this.x = x;
+	}
 
-    public void setY( float y )
-    {
-        this.y = y;
-    }
+	public void setY( float y )
+	{
+		this.y = y;
+	}
 
 	public void setZ( float z )
 	{
@@ -259,20 +259,20 @@ public class Quaternion
 		this.w = w;
 	}
 
-    public Quaternion set( float x, float y, float z, float w )
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-        return this;
-    }
+	public Quaternion set( float x, float y, float z, float w )
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+		return this;
+	}
 
-    public Quaternion set( Quaternion r )
-    {
-        set( r.getX(), r.getY(), r.getZ(), r.getW() );
-        return this;
-    }
+	public Quaternion set( Quaternion r )
+	{
+		set( r.getX(), r.getY(), r.getZ(), r.getW() );
+		return this;
+	}
 
 	public boolean equals( Quaternion r )
 	{

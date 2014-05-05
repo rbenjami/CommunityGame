@@ -1,12 +1,10 @@
 package com.engine.core.components;
 
-import com.engine.core.RenderEngine;
-import com.engine.core.Shader;
 import com.engine.core.Utils;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.dimensions.Vertex3f;
-
-import java.util.HashMap;
+import com.engine.render.RenderEngine;
+import com.engine.render.Shader;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -16,20 +14,19 @@ public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 
-
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
 		addVertices( vertices, indices );
 	}
 
-	private void addVertices( Vertex3f[] verticles, int[] indices )
+	private void addVertices( Vertex3f[] vertices, int[] indices )
 	{
-		calcNormals( verticles, indices );
+		calcNormals( vertices, indices );
 
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( verticles ), GL_STATIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );

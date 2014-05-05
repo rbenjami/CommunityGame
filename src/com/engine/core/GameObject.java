@@ -2,6 +2,9 @@ package com.engine.core;
 
 import com.engine.CoreEngine;
 import com.engine.core.components.GameComponent;
+import com.engine.core.helpers.dimensions.Transform;
+import com.engine.render.RenderEngine;
+import com.engine.render.Shader;
 
 import java.util.ArrayList;
 

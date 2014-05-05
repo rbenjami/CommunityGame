@@ -1,10 +1,13 @@
-package com.engine.core;
+package com.engine.render;
 
+import com.engine.core.Material;
+import com.engine.core.Utils;
 import com.engine.core.components.BaseLight;
 import com.engine.core.components.DirectionalLight;
 import com.engine.core.components.PointLight;
 import com.engine.core.components.SpotLight;
 import com.engine.core.helpers.dimensions.Matrix4f;
+import com.engine.core.helpers.dimensions.Transform;
 import com.engine.core.helpers.dimensions.Vector3f;
 
 import java.awt.*;
@@ -21,12 +24,9 @@ public class Shader
 	private static HashMap<String, ShaderResource> loadedShaders = new HashMap<String, ShaderResource>();
 
 	private ShaderResource resource;
-	private String         fileName;
 
 	public Shader( String fileName )
 	{
-		this.fileName = fileName;
-
 		ShaderResource oldResource = loadedShaders.get( fileName );
 
 		if ( oldResource != null )
@@ -58,10 +58,18 @@ public class Shader
 		glUseProgram( resource.getProgram() );
 	}
 
-	public void updateUniforms( Transform transform, RenderEngine renderingEngine )
+	public void updateUniforms( Transform transform, RenderEngine renderEngine )
+	{
+		Material material = new Material();
+		material.addFloat( "specularIntensity", 1 );
+		material.addFloat( "specularPower", 4 );
+		updateUniforms( transform, material, renderEngine );
+	}
+
+	public void updateUniforms( Transform transform, Material material, RenderEngine renderEngine )
 	{
 		Matrix4f worldMatrix = transform.getTransformation();
-		Matrix4f MVPMatrix = renderingEngine.getCamera().getViewProjection().mul( worldMatrix );
+		Matrix4f MVPMatrix = renderEngine.getCamera().getViewProjection().mul( worldMatrix );
 
 		for ( int i = 0; i < resource.getUniformNames().size(); i++ )
 		{
@@ -83,38 +91,38 @@ public class Shader
 				switch ( uniformType )
 				{
 					case "vec3":
-						setUniform( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+						setUniform( uniformName, renderEngine.getVector3f( unprefixedUniformName ) );
 						break;
 					case "float":
-						setUniformf( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
+						setUniformf( uniformName, renderEngine.getFloat( unprefixedUniformName ) );
 						break;
 					case "DirectionalLight":
-						setUniformDirectionalLight( uniformName, (DirectionalLight) renderingEngine.getActiveLight() );
+						setUniformDirectionalLight( uniformName, (DirectionalLight) renderEngine.getActiveLight() );
 						break;
 					case "PointLight":
-						setUniformPointLight( uniformName, (PointLight) renderingEngine.getActiveLight() );
+						setUniformPointLight( uniformName, (PointLight) renderEngine.getActiveLight() );
 						break;
 					case "SpotLight":
-						setUniformSpotLight( uniformName, (SpotLight) renderingEngine.getActiveLight() );
+						setUniformSpotLight( uniformName, (SpotLight) renderEngine.getActiveLight() );
 						break;
 					default:
-						renderingEngine.updateUniformStruct( transform, this, uniformName, uniformType );
+						renderEngine.updateUniformStruct( transform, this, uniformName, uniformType );
 						break;
 				}
 			}
 			else if ( uniformName.startsWith( "C_" ) )
 			{
 				if ( uniformName.equals( "C_eyePos" ) )
-					setUniform( uniformName, renderingEngine.getCamera().getTransform().getTransformedPos() );
+					setUniform( uniformName, renderEngine.getCamera().getTransform().getTransformedPos() );
 				else
 					throw new IllegalArgumentException( uniformName + " is not a valid component of Camera" );
 			}
 			else
 			{
 				if ( uniformType.equals( "vec3" ) )
-					setUniform( uniformName, new Vector3f( 0, 0, 0 ) );
+					setUniform( uniformName, material.getVector3f( uniformName ) );
 				else if ( uniformType.equals( "float" ) )
-					setUniformf( uniformName, 0 );
+					setUniformf( uniformName, material.getFloat( uniformName ) );
 				else
 					throw new IllegalArgumentException( uniformType + " is not a supported type in Material" );
 			}
@@ -390,7 +398,7 @@ public class Shader
 
 	private void setUniform( String uniformName, Color color )
 	{
-		glUniform3f( resource.getUniforms().get( uniformName ), color.getRed(), color.getGreen(), color.getBlue() );
+		glUniform3f( resource.getUniforms().get( uniformName ), (float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255 );
 	}
 
 	public void setUniformBaseLight( String uniformName, BaseLight baseLight )

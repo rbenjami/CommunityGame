@@ -40,9 +40,9 @@ public class Utils
 			buffer.put( vertices[i].getX() );
 			buffer.put( vertices[i].getY() );
 			buffer.put( vertices[i].getZ() );
-			buffer.put( vertices[i].getColor().getRed() );
-			buffer.put( vertices[i].getColor().getGreen() );
-			buffer.put( vertices[i].getColor().getBlue() );
+			buffer.put( (float) vertices[i].getColor().getRed() / 255 );
+			buffer.put( (float) vertices[i].getColor().getGreen() / 255 );
+			buffer.put( (float) vertices[i].getColor().getBlue() / 255 );
 			buffer.put( vertices[i].getNormal().getX() );
 			buffer.put( vertices[i].getNormal().getY() );
 			buffer.put( vertices[i].getNormal().getZ() );
@@ -64,5 +64,15 @@ public class Utils
 		buffer.flip();
 
 		return buffer;
+	}
+
+	public static int[] toIntArray( Integer[] data )
+	{
+		int[] result = new int[data.length];
+
+		for ( int i = 0; i < data.length; i++ )
+			result[i] = data[i].intValue();
+
+		return result;
 	}
 }

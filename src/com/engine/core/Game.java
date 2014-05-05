@@ -1,6 +1,7 @@
 package com.engine.core;
 
 import com.engine.CoreEngine;
+import com.engine.render.RenderEngine;
 
 /**
  * Created on 27/04/14.

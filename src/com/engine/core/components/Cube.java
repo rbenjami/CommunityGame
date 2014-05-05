@@ -1,8 +1,8 @@
 package com.engine.core.components;
 
-import com.engine.core.RenderEngine;
-import com.engine.core.Shader;
 import com.engine.core.helpers.dimensions.Vertex3f;
+import com.engine.render.RenderEngine;
+import com.engine.render.Shader;
 
 import java.awt.*;
 

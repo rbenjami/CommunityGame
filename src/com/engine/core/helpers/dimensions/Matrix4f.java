@@ -12,9 +12,9 @@ public class Matrix4f
 	public static final int SIZE = 16;
 	private float[][] m;
 
-    /**
-     * CONSTRUCTOR
-     */
+	/**
+	 * CONSTRUCTOR
+	 */
 	public Matrix4f()
 	{
 		m = new float[4][4];

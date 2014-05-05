@@ -19,15 +19,15 @@ public class Vector3f
 		this.z = z;
 	}
 
-    public Vector3f( Vertex3f origin, Vertex3f destination )
-    {
-        this.x = destination.getX() - origin.getX();
-        this.y = destination.getY() - origin.getY();
-        this.z = destination.getZ() - origin.getZ();
-    }
+	public Vector3f( Vertex3f origin, Vertex3f destination )
+	{
+		this.x = destination.getX() - origin.getX();
+		this.y = destination.getY() - origin.getY();
+		this.z = destination.getZ() - origin.getZ();
+	}
 
 
-    /**
+	/**
 	 * METHODES
 	 */
 	public Vector3f rotate( Quaternion rotation )
@@ -157,10 +157,10 @@ public class Vector3f
 		return ( z );
 	}
 
-    public boolean equals( Vector3f r )
-    {
-        return x == r.getX() && y == r.getY() && z == r.getZ();
-    }
+	public boolean equals( Vector3f r )
+	{
+		return x == r.getX() && y == r.getY() && z == r.getZ();
+	}
 
 	public String toString()
 	{

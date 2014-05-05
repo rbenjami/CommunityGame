@@ -1,4 +1,4 @@
-package com.engine.core;
+package com.engine.render;
 
 import com.engine.core.helpers.dimensions.Vector2f;
 import org.lwjgl.LWJGLException;

@@ -1,9 +1,9 @@
 package com.engine.core.components;
 
 import com.engine.core.Input;
-import com.engine.core.Window;
 import com.engine.core.helpers.dimensions.Vector2f;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.render.Window;
 
 public class FreeLook extends GameComponent
 {

@@ -2,9 +2,9 @@ package com.engine.core.components;
 
 import com.engine.CoreEngine;
 import com.engine.core.GameObject;
-import com.engine.core.RenderEngine;
-import com.engine.core.Shader;
-import com.engine.core.Transform;
+import com.engine.core.helpers.dimensions.Transform;
+import com.engine.render.RenderEngine;
+import com.engine.render.Shader;
 
 /**
  * Created on 27/04/14.

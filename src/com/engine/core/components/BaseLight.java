@@ -1,7 +1,7 @@
 package com.engine.core.components;
 
 import com.engine.CoreEngine;
-import com.engine.core.Shader;
+import com.engine.render.Shader;
 
 import java.awt.*;
 

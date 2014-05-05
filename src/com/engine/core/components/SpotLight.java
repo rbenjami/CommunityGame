@@ -1,8 +1,8 @@
 package com.engine.core.components;
 
 import com.engine.core.Attenuation;
-import com.engine.core.Shader;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.render.Shader;
 
 import java.awt.*;
 

@@ -5,18 +5,18 @@ public class Vector2f
 	private float x;
 	private float y;
 
-    /**
-     * CONSTRUCTOR
-     */
+	/**
+	 * CONSTRUCTOR
+	 */
 	public Vector2f( float x, float y )
 	{
 		this.x = x;
 		this.y = y;
 	}
 
-    /**
-     * METHODES
-     */
+	/**
+	 * METHODES
+	 */
 	public float length()
 	{
 		return (float) Math.sqrt( x * x + y * y );
@@ -104,23 +104,23 @@ public class Vector2f
 	}
 
 
-    /**
-     * GETTER
-     */
-    public float getX()
-    {
-        return x;
-    }
+	/**
+	 * GETTER
+	 */
+	public float getX()
+	{
+		return x;
+	}
 
-    public float getY()
-    {
-        return y;
-    }
+	public float getY()
+	{
+		return y;
+	}
 
 
-    /**
-     * SETTER
-     */
+	/**
+	 * SETTER
+	 */
 	public Vector2f set( float x, float y )
 	{
 		this.x = x;
@@ -145,13 +145,13 @@ public class Vector2f
 		this.y = y;
 	}
 
-    public boolean equals( Vector2f r )
-    {
-        return x == r.getX() && y == r.getY();
-    }
+	public boolean equals( Vector2f r )
+	{
+		return x == r.getX() && y == r.getY();
+	}
 
-    public String toString()
-    {
-        return "(" + x + " " + y + ")";
-    }
+	public String toString()
+	{
+		return "(" + x + " " + y + ")";
+	}
 }
