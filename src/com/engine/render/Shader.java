@@ -113,10 +113,23 @@ public class Shader
 			}
 			else
 			{
-				if ( uniformType.equals( "vec3" ) )
+				/*if ( uniformType.equals( "vec3" ) )
 					setUniform( uniformName, material.getVector3f( uniformName ) );
-				else if ( uniformType.equals( "float" ) )
-					setUniformf( uniformName, material.getFloat( uniformName ) );
+				else */
+				if ( uniformType.equals( "float" ) )
+				{
+					switch ( uniformName )
+					{
+						case "specularIntensity":
+							setUniformf( uniformName, material.getSpecularIntensity() );
+							break;
+						case "specularPower":
+							setUniformf( uniformName, material.getSpecularPower() );
+							break;
+						default:
+							throw new IllegalArgumentException( uniformName + " is not a supported type in Material" );
+					}
+				}
 				else
 					throw new IllegalArgumentException( uniformType + " is not a supported type in Material" );
 			}

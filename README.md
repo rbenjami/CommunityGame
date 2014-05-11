@@ -4,6 +4,7 @@
 
 ####### Stage
 Engine development: Render, Physic
+* Test: Procedural generation of planet, Perlin noise, Quadtree, LOD
 
 ####### Description
 Coming soon.
@@ -12,7 +13,7 @@ Coming soon.
 | Ressources |
 --------------
 
-* OpenGL (1.2 at this time)
+* OpenGL (1.3 at this time)
 * Java 1.7
 
 -----------

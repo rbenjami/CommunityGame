@@ -3,24 +3,38 @@ package com.engine.core;
 /**
  * Created on 05/05/2014.
  */
-public class Material extends MappedValues
+public class Material
 {
-	private boolean isTransparent = false;
+	private float specularIntensity;
+	private float specularPower;
+	private float transparency;
 
-	public Material()
+	public Material( float specularIntensity, float specularPower , float transparency )
 	{
-		super();
-		addFloat( "specularIntensity", 0.8f );
-		addFloat( "specularPower", 1 );
+		this.specularIntensity = specularIntensity;
+		this.specularPower = specularPower;
+		this.transparency = transparency;
 	}
 
-	public void setTransparent( boolean isTransparent )
+	public static final Material WATER = new Material( 1, 6, 0.5f);
+	public static final Material ROCk = new Material( 1, 4, 1f);
+
+
+	/**
+	 * GETTER
+	 */
+	public boolean isTransparency()
 	{
-		this.isTransparent = isTransparent;
+		return this.transparency < 1;
 	}
 
-	public boolean isTransparent()
+	public float getSpecularIntensity()
 	{
-		return isTransparent;
+		return specularIntensity;
+	}
+
+	public float getSpecularPower()
+	{
+		return specularPower;
 	}
 }

@@ -10,17 +10,18 @@ import com.engine.render.Shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class Mesh extends GameComponent
 {
 	private MeshResource resource;
-	private Material material;
-	private Vertex3f[] vertices;
-	private int[] indices;
+	private Material     material;
+	private Vertex3f[]   vertices;
+	private int[]        indices;
 
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
-		this.material = new Material();
+		this.material = Material.ROCk;
 		addVertices( vertices, indices );
 	}
 
@@ -67,7 +68,8 @@ public class Mesh extends GameComponent
 
 		glDisableVertexAttribArray( 0 );
 		glDisableVertexAttribArray( 1 );
-		glDisableVertexAttribArray( 2 );}
+		glDisableVertexAttribArray( 2 );
+	}
 
 	private void calcNormals( Vertex3f[] vertices, int[] indices )
 	{
@@ -77,8 +79,8 @@ public class Mesh extends GameComponent
 			int i1 = indices[i + 1];
 			int i2 = indices[i + 2];
 
-			Vector3f v1 = vertices[i1].sub( vertices[i0] );
-			Vector3f v2 = vertices[i2].sub( vertices[i0] );
+			Vector3f v1 = new Vector3f( vertices[i0], vertices[i1] );
+			Vector3f v2 = new Vector3f( vertices[i0], vertices[i2] );
 
 			Vector3f normal = v1.cross( v2 ).normalized();
 
@@ -94,23 +96,20 @@ public class Mesh extends GameComponent
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
 	{
-		if ( material.isTransparent() )
+		if ( material.isTransparency() )
 		{
-//			glDisable(GL_DEPTH_TEST);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glDepthMask(false);
+//			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+//			glDepthMask( false );
+//			glDepthFunc( GL_LESS );
 		}
 		shader.bind();
 		shader.updateUniforms( getTransform(), material, renderingEngine );
 		draw();
-		if ( material.isTransparent() )
+		if ( material.isTransparency() )
 		{
-//			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_BLEND);
-			glDepthMask( true );
+//			glBlendFunc( GL_ONE, GL_ONE );
+//			glDepthFunc( GL_EQUAL );
+//			glDepthMask( true );
 		}
 	}
 

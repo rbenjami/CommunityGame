@@ -1,6 +1,8 @@
 package com.game;
 
-import com.engine.core.*;
+import com.engine.core.Attenuation;
+import com.engine.core.Game;
+import com.engine.core.GameObject;
 import com.engine.core.components.*;
 import com.engine.core.helpers.NoiseHelper;
 import com.engine.core.helpers.dimensions.Quaternion;
@@ -14,51 +16,29 @@ import java.awt.*;
  */
 public class CommunityGame extends Game
 {
-	Tessellator tessellator3 = new Tessellator( 128, 0.02f, new Color( 85, 105, 255 ) );
-
 	public void init()
 	{
-		NoiseHelper.setSeed( 0 );
+		NoiseHelper.setSeed( 42 );
 
-//		SpotLight spotLight = new SpotLight( new Color( 255, 255, 255 ), 1.2f, new Attenuation( 0, 0, 0.1f ), 0.7f );
-//		GameObject spotLightObject = new GameObject();
-//		spotLightObject.addComponent( spotLight );
-//		spotLightObject.getTransform().translate( -6, 0, 6 );
-//		spotLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float)Math.toRadians( 90 ) );
+		World world = new World( this );
+
+		PointLight pointLight = new PointLight( new Color( 255, 205, 73 ), 0.2f, new Attenuation( 0, 0, 0.1f ) );
+		GameObject pointLightObject = new GameObject();
+		pointLightObject.addComponent( pointLight );
+		pointLightObject.getTransform().translate( 10, 13, 10 );
+		pointLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 255, 255 ), 0.4f );
+		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 241, 150 ), 0.6f );
 		directionalLightObject.addComponent( directionalLight );
 		directionalLightObject.getTransform().getPos().set( 0, 2, 0 );
 		directionalLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
-		Tessellator tessellator = new Tessellator( 128, 10f, new Color( 132, 255, 69 ) );
-		tessellator.calculateTesselator();
-		GameObject dirt = new GameObject();
-		dirt.addComponent( tessellator.getMesh() );
-		dirt.getTransform().translate( 0, 3, 0 );
-		dirt.getTransform().getScale().set( 100, 100, 100 );
-
-
-		Tessellator tessellator2 = new Tessellator( 128, 20f, new Color( 93, 92, 82 ) );
-		tessellator2.calculateTesselator();
-		GameObject rock = new GameObject();
-		rock.addComponent( tessellator2.getMesh() );
-		rock.getTransform().getScale().set( 100, 100, 100 );
-
-		tessellator3.calculateTesselator();
-		GameObject wather = new GameObject();
-		tessellator3.getMesh().getMaterial().setTransparent( true );
-		wather.addComponent( tessellator3.getMesh() );
-		wather.getTransform().translate( 0, 8, 0 );
-		wather.getTransform().getScale().set( 100, 100, 100 );
-
-		addObject( dirt );
-		addObject( rock );
-		addObject( wather );
-//		addObject( pointLightObject );
+//		addObject( dirt );
+//		addObject( rock );
+//		addObject( water );
 		addObject( directionalLightObject );
-//		addObject( spotLightObject );
+		addObject( pointLightObject );
 
 		GameObject cam = new GameObject();
 		cam.addComponent( new Camera( (float) Math.toRadians( 70.0f ), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f ) );

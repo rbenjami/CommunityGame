@@ -19,6 +19,13 @@ public class Vector3f
 		this.z = z;
 	}
 
+	public Vector3f( Vertex3f direction )
+	{
+		this.x = direction.getX();
+		this.y = direction.getY();
+		this.z = direction.getZ();
+	}
+
 	public Vector3f( Vertex3f origin, Vertex3f destination )
 	{
 		this.x = destination.getX() - origin.getX();
