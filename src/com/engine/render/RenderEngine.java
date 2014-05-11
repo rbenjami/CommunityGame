@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 public class RenderEngine extends MappedValues
 {
 	private ArrayList<BaseLight> lights;
-	private BaseLight            activeLight;
+	private BaseLight activeLight;
 
 	private Shader ambientShader;
 	private Camera camera;
@@ -25,6 +25,7 @@ public class RenderEngine extends MappedValues
 	 */
 	public RenderEngine()
 	{
+		super();
 		lights = new ArrayList<BaseLight>();
 
 		addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 0.1f ) );
@@ -63,7 +64,6 @@ public class RenderEngine extends MappedValues
 
 		glEnable( GL_BLEND );
 		glBlendFunc( GL_ONE, GL_ONE );
-		glDepthMask( false );
 		glDepthFunc( GL_EQUAL );
 
 		for ( BaseLight light : lights )
@@ -73,7 +73,6 @@ public class RenderEngine extends MappedValues
 		}
 
 		glDepthFunc( GL_LESS );
-		glDepthMask( true );
 		glDisable( GL_BLEND );
 	}
 

@@ -42,7 +42,7 @@ vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal, vec3 worldPos)
     
     vec4 diffuseColor = vec4(0,0,0,0);
     vec4 specularColor = vec4(0,0,0,0);
-    
+
     if(diffuseFactor > 0)
     {
         diffuseColor = vec4(base.color, 1.0) * base.intensity * diffuseFactor;
@@ -60,7 +60,6 @@ vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal, vec3 worldPos)
             specularColor = vec4(base.color, 1.0) * specularIntensity * specularFactor;
         }
     }
-    
     return diffuseColor + specularColor;
 }
 
@@ -90,7 +89,7 @@ vec4 CalcSpotLight(SpotLight spotLight, vec3 normal, vec3 worldPos)
     float spotFactor = dot(lightDirection, spotLight.direction);
     
     vec4 color = vec4(0,0,0,0);
-    
+
     if(spotFactor > spotLight.cutoff)
     {
         color = CalcPointLight(spotLight.pointLight, normal, worldPos) *

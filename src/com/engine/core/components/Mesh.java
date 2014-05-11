@@ -1,5 +1,6 @@
 package com.engine.core.components;
 
+import com.engine.core.Material;
 import com.engine.core.Utils;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.dimensions.Vertex3f;
@@ -13,9 +14,13 @@ import static org.lwjgl.opengl.GL20.*;
 public class Mesh extends GameComponent
 {
 	private MeshResource resource;
+	private Material material;
+	private Vertex3f[] vertices;
+	private int[] indices;
 
 	public Mesh( Vertex3f[] vertices, int[] indices )
 	{
+		this.material = new Material();
 		addVertices( vertices, indices );
 	}
 
@@ -23,8 +28,22 @@ public class Mesh extends GameComponent
 	{
 		calcNormals( vertices, indices );
 
+		this.vertices = vertices;
+		this.indices = indices;
 		resource = new MeshResource( indices.length );
 
+		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
+	}
+
+	public void setVertices( Vertex3f[] vertices )
+	{
+		calcNormals( vertices, indices );
+
+		this.vertices = vertices;
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
 		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
 
@@ -40,7 +59,7 @@ public class Mesh extends GameComponent
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
 		glVertexAttribPointer( 0, 3, GL_FLOAT, false, Vertex3f.SIZE * 4, 0 );
-		glVertexAttribPointer( 1, 3, GL_FLOAT, false, Vertex3f.SIZE * 4, 12 );
+		glVertexAttribPointer( 1, 3, GL_FLOAT, true, Vertex3f.SIZE * 4, 12 );
 		glVertexAttribPointer( 2, 3, GL_FLOAT, false, Vertex3f.SIZE * 4, 24 );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
@@ -48,8 +67,7 @@ public class Mesh extends GameComponent
 
 		glDisableVertexAttribArray( 0 );
 		glDisableVertexAttribArray( 1 );
-		glDisableVertexAttribArray( 2 );
-	}
+		glDisableVertexAttribArray( 2 );}
 
 	private void calcNormals( Vertex3f[] vertices, int[] indices )
 	{
@@ -69,15 +87,45 @@ public class Mesh extends GameComponent
 			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
 		}
 
-		for ( int i = 0; i < vertices.length; i++ )
-			vertices[i].setNormal( vertices[i].getNormal().normalized() );
+		for ( Vertex3f vertex : vertices )
+			vertex.setNormal( vertex.getNormal().normalized() );
 	}
 
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
 	{
+		if ( material.isTransparent() )
+		{
+//			glDisable(GL_DEPTH_TEST);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glDepthMask(false);
+		}
 		shader.bind();
-		shader.updateUniforms( getTransform(), renderingEngine );
+		shader.updateUniforms( getTransform(), material, renderingEngine );
 		draw();
+		if ( material.isTransparent() )
+		{
+//			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
+			glDepthMask( true );
+		}
+	}
+
+	public void setMaterial( Material material )
+	{
+		this.material = material;
+	}
+
+	public Material getMaterial()
+	{
+		return material;
+	}
+
+	public Vertex3f[] getVertices()
+	{
+		return vertices;
 	}
 }

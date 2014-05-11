@@ -1,12 +1,12 @@
-#version 120
+#version 130
 
-attribute vec3 position;
-attribute vec3 color;
-attribute vec3 normal;
+in vec3 position;
+in vec4 color;
+in vec3 normal;
 
-varying vec3 color0;
-varying vec3 normal0;
-varying vec3 worldPos0;
+out vec4 color0;
+out vec3 normal0;
+out vec3 worldPos0;
 
 uniform mat4 T_model;
 uniform mat4 T_MVP;

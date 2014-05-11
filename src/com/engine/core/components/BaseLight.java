@@ -1,6 +1,7 @@
 package com.engine.core.components;
 
 import com.engine.CoreEngine;
+import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.render.Shader;
 
 import java.awt.*;
@@ -31,6 +32,24 @@ public class BaseLight extends GameComponent
 		this.shader = shader;
 	}
 
+	public void setColor( Color color )
+	{
+		this.color = color;
+	}
+
+	public void setIntensity( float intensity )
+	{
+		this.intensity = intensity;
+	}
+
+	public Matrix4f getDepthMVP()
+	{
+		Matrix4f depthProjectionMatrix = new Matrix4f().initOrthographic( -10, 10, -10, 10, -10, 20 );
+		Matrix4f worldMatrix = getTransform().getTransformation();
+
+		return depthProjectionMatrix.mul( worldMatrix );
+	}
+
 	public Shader getShader()
 	{
 		return shader;
@@ -41,18 +60,8 @@ public class BaseLight extends GameComponent
 		return color;
 	}
 
-	public void setColor( Color color )
-	{
-		this.color = color;
-	}
-
 	public float getIntensity()
 	{
 		return intensity;
-	}
-
-	public void setIntensity( float intensity )
-	{
-		this.intensity = intensity;
 	}
 }

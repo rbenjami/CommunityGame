@@ -1,4 +1,8 @@
-package com.engine.core.helpers.dimensions;
+package com.engine.core;
+
+import com.engine.core.helpers.dimensions.Matrix4f;
+import com.engine.core.helpers.dimensions.Quaternion;
+import com.engine.core.helpers.dimensions.Vector3f;
 
 /**
  * Created on 24/04/14.
@@ -50,6 +54,21 @@ public class Transform
 		}
 	}
 
+	public void rotate( Vector3f axis, float angle )
+	{
+		rot = new Quaternion( axis, angle ).mul( rot ).normalized();
+	}
+
+	public void lookAt( Vector3f point, Vector3f up )
+	{
+		rot = getLookAtRotation( point, up );
+	}
+
+	public Quaternion getLookAtRotation( Vector3f point, Vector3f up )
+	{
+		return new Quaternion( new Matrix4f().initRotation( point.sub( pos ).normalized(), up ) );
+	}
+
 	public boolean hasChanged()
 	{
 		if ( parent != null && parent.hasChanged() )
@@ -65,26 +84,6 @@ public class Transform
 			return true;
 
 		return false;
-	}
-
-	public void translate( float x, float y, float z )
-	{
-		pos = pos.add( new Vector3f( x, y, z ) );
-	}
-
-	public void translate( Vector3f vec )
-	{
-		pos = pos.add( vec );
-	}
-
-	public void rotate( Vector3f axis, float angle )
-	{
-		rot = new Quaternion( axis, angle ).mul( rot ).normalized();
-	}
-
-	public void lookAt( Vector3f point, Vector3f up )
-	{
-		rot = getLookAtRotation( point, up );
 	}
 
 	public Matrix4f getTransformation()
@@ -104,6 +103,11 @@ public class Transform
 		return parentMatrix;
 	}
 
+	public void setParent( Transform parent )
+	{
+		this.parent = parent;
+	}
+
 	public Vector3f getTransformedPos()
 	{
 		return getParentMatrix().transform( pos );
@@ -119,29 +123,9 @@ public class Transform
 		return parentRotation.mul( rot );
 	}
 
-	public Quaternion getLookAtRotation( Vector3f point, Vector3f up )
-	{
-		return new Quaternion( new Matrix4f().initRotation( point.sub( pos ).normalized(), up ) );
-	}
-
 	public Vector3f getPos()
 	{
 		return pos;
-	}
-
-	public Quaternion getRot()
-	{
-		return rot;
-	}
-
-	public Vector3f getScale()
-	{
-		return scale;
-	}
-
-	public void setParent( Transform parent )
-	{
-		this.parent = parent;
 	}
 
 	public void setPos( Vector3f pos )
@@ -149,9 +133,19 @@ public class Transform
 		this.pos = pos;
 	}
 
+	public Quaternion getRot()
+	{
+		return rot;
+	}
+
 	public void setRot( Quaternion rotation )
 	{
 		this.rot = rotation;
+	}
+
+	public Vector3f getScale()
+	{
+		return scale;
 	}
 
 	public void setScale( Vector3f scale )

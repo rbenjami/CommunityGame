@@ -18,9 +18,15 @@ public abstract class MappedValues
 		floatHashMap = new HashMap<String, Float>();
 	}
 
-	public void addVector3f( String name, Vector3f vector3f ) { vector3fHashMap.put( name, vector3f ); }
+	public void addVector3f( String name, Vector3f vector3f )
+	{
+		vector3fHashMap.put( name, vector3f );
+	}
 
-	public void addFloat( String name, float floatValue ) { floatHashMap.put( name, floatValue ); }
+	public void addFloat( String name, float floatValue )
+	{
+		floatHashMap.put( name, floatValue );
+	}
 
 	public Vector3f getVector3f( String name )
 	{

@@ -1,12 +1,6 @@
 package com.game;
 
 import com.engine.core.GameObject;
-import com.engine.core.Tessellator;
-import com.engine.core.helpers.MathHelper;
-import com.engine.core.helpers.dimensions.Vertex3f;
-
-import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created on 05/05/14.

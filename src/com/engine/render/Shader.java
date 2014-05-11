@@ -58,14 +58,6 @@ public class Shader
 		glUseProgram( resource.getProgram() );
 	}
 
-	public void updateUniforms( Transform transform, RenderEngine renderEngine )
-	{
-		Material material = new Material();
-		material.addFloat( "specularIntensity", 1 );
-		material.addFloat( "specularPower", 4 );
-		updateUniforms( transform, material, renderEngine );
-	}
-
 	public void updateUniforms( Transform transform, Material material, RenderEngine renderEngine )
 	{
 		Matrix4f worldMatrix = transform.getTransformation();
@@ -82,6 +74,8 @@ public class Shader
 					setUniform( uniformName, MVPMatrix );
 				else if ( uniformName.equals( "T_model" ) )
 					setUniform( uniformName, worldMatrix );
+				else if ( uniformName.equals( "T_depthMVP" ) )
+					setUniform( uniformName, renderEngine.getActiveLight().getDepthMVP() );
 				else
 					throw new IllegalArgumentException( uniformName + " is not a valid component of Transform" );
 			}
@@ -274,7 +268,7 @@ public class Shader
 
 		if ( uniformLocation == 0xFFFFFFFF )
 		{
-			System.err.println( "Error: Could not find uniform: " + uniformName );
+			System.err.println( "Error: Could not find uniform: " + uniformName + ": not influenced the result" );
 			new Exception().printStackTrace();
 			System.exit( 1 );
 		}
