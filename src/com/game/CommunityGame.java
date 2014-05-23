@@ -48,7 +48,7 @@ public class CommunityGame extends Game
 		pointLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 243, 149 ), 0.6f );
+		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 243, 149 ), 0.3f );
 		directionalLightObject.addComponent( directionalLight );
 
 		/**
@@ -58,15 +58,15 @@ public class CommunityGame extends Game
 		planet.addComponent( new GeoSphere( 5, 5 ).getMesh() );
 		planet.getTransform().translate( 0, 10, 0 );
 
-//		Tessellator tessellator = new Tessellator( 128, 10f, new Color( 255, 237, 117 ), 40 );
-//		tessellator.calculateTesselator();
-//		tessellator.getMesh().setMaterial( Material.ROCK );
-//		GameObject dirt = new GameObject();
-//		dirt.addComponent( tessellator.getMesh() );
-//		dirt.getTransform().translate( 0, -3, 0 );
-//		dirt.getTransform().getScale().set( 100, 100, 100 );
+		Tessellator tessellator = new Tessellator( 128, 10f, new Color( 255, 237, 117 ), 40 );
+		tessellator.calculateTesselator();
+		tessellator.getMesh().setMaterial( Material.ROCK );
+		GameObject dirt = new GameObject();
+		dirt.addComponent( tessellator.getMesh() );
+		dirt.getTransform().translate( 0, -3, 0 );
+		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-//		addObject( dirt );
+		addObject( dirt );
 		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );

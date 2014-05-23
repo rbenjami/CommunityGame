@@ -2,6 +2,7 @@ package com.engine.core.components;
 
 import com.engine.core.Material;
 import com.engine.core.Utils;
+import com.engine.core.helpers.TimeHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
@@ -82,9 +83,8 @@ public class Mesh extends GameComponent
 			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
 			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
 		}
-
-		for ( Vector3f vertex : vertices )
-			vertex.setNormal( vertex.getNormal().normalized() );
+//		for ( Vector3f vertex : vertices )
+//			vertex.setNormal( vertex.getNormal().normalized() );
 	}
 
 	@Override

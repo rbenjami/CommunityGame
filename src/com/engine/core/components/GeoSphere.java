@@ -1,5 +1,7 @@
 package com.engine.core.components;
 
+import com.engine.core.helpers.MathHelper;
+import com.engine.core.helpers.TimeHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
 
 /**
@@ -76,7 +78,6 @@ public class GeoSphere
 		data.put( new Vector3f( a, y, 0 ) );
 		data.put( new Vector3f( c, -y, e ) );
 
-
 		data.put( new Vector3f( -b, -y, -d ) );
 		data.put( new Vector3f( c, -y, -e ) );
 		data.put( new Vector3f( 0, -this.radius, 0 ) );
@@ -92,49 +93,44 @@ public class GeoSphere
 		data.put( new Vector3f( c, -y, -e ) );
 		data.put( new Vector3f( c, -y, e ) );
 		data.put( new Vector3f( 0, -this.radius, 0 ) );
-
-		for ( int i = 0; i < data.getVertices().length / 3; i++ )
-		{
-			data.put( 3 * i );
-			data.put( 3 * i + 1 );
-			data.put( 3 * i + 2 );
-		}
 
 		/* Subdivide each starting triangle (maxlevels - 1) times */
 		for ( int level = 1; level < maxLevels; level++ )
 		{
 			MeshData newdata = new MeshData();
+			Vector3f[] vertices = data.getVertices();
 
-			for ( int i = 0; i < data.getVertices().length / 3; i++ )
+			for ( int i = 0; i < vertices.length / 3; i++ )
 			{
-				Vector3f pt0 = data.getVertices()[i * 3];
-				Vector3f pt1 = data.getVertices()[i * 3 + 1];
-				Vector3f pt2 = data.getVertices()[i * 3 + 2];
-				Vector3f va = createMidpoint( pt0, pt2 ).normalized().mul( this.radius );
-				Vector3f vb = createMidpoint( pt0, pt1 ).normalized().mul( this.radius );
-				Vector3f vc = createMidpoint( pt1, pt2 ).normalized().mul( this.radius );
-				newdata.put( pt0 );
-				newdata.put( vb );
-				newdata.put( va );
-				newdata.put( vb );
-				newdata.put( pt1 );
-				newdata.put( vc );
-				newdata.put( va );
-				newdata.put( vb );
-				newdata.put( vc );
-				newdata.put( va );
-				newdata.put( vc );
-				newdata.put( pt2 );
+				Vector3f pt0 = vertices[i * 3];
+				Vector3f pt1 = vertices[i * 3 + 1];
+				Vector3f pt2 = vertices[i * 3 + 2];
+				Vector3f va = createMidpoint( pt0, pt2 ).mul( this.radius );
+				Vector3f vb = createMidpoint( pt0, pt1 ).mul( this.radius );
+				Vector3f vc = createMidpoint( pt1, pt2 ).mul( this.radius );
+				newdata.put( new Vector3f( pt0 ) );
+				newdata.put( new Vector3f( vb ) );
+				newdata.put( new Vector3f( va ) );
+				newdata.put( new Vector3f( vb ) );
+				newdata.put( new Vector3f( pt1 ) );
+				newdata.put( new Vector3f( vc ) );
+				newdata.put( new Vector3f( va ) );
+				newdata.put( new Vector3f( vb ) );
+				newdata.put( new Vector3f( vc ) );
+				newdata.put( new Vector3f( va ) );
+				newdata.put( new Vector3f( vc ) );
+				newdata.put( new Vector3f( pt2 ) );
 			}
 			data = newdata;
 		}
-		for ( int j = 0; j < data.getVertices().length; j++ )
-			data.put( j );
+		int len = data.getVertices().length;
+		for ( int i = 0; i < len; i++ )
+			data.put( i );
 	}
 
 	protected Vector3f createMidpoint( Vector3f a, Vector3f b )
 	{
-		return new Vector3f( ( a.getX() + b.getX() ) * 0.5f, ( a.getY() + b.getY() ) * 0.5f, ( a.getZ() + b.getZ() ) * 0.5f );
+		return new Vector3f( a.add( b ).div( 2 ) ).normalized();
 	}
 
 	/**
