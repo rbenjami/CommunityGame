@@ -12,16 +12,16 @@ public class Test2 extends GameObject
 
 //		Color color = new Color( 255, 255, 255 );
 //
-//		ArrayList<Vertex3f> vertices = new ArrayList<Vertex3f>();
+//		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
 //		ArrayList<Integer> indices = new ArrayList<Integer>();
 //		int x = 0, y = 0, z = 0;
-//		vertices.add( new Vertex3f( x, y, z, color ) );
-//		vertices.add( new Vertex3f( x, y, z + 1, color ) );
+//		vertices.add( new Vector3f( x, y, z, color ) );
+//		vertices.add( new Vector3f( x, y, z + 1, color ) );
 //		for ( int i = 0; i < 20; i++ )
 //		{
 //			x++;
-//			vertices.add( new Vertex3f( x, MathHelper.rand( 0.0f, 0.9F ), z, color ) );
-//			vertices.add( new Vertex3f( x, MathHelper.rand( 0.0f, 0.9F ), z + 1, color ) );
+//			vertices.add( new Vector3f( x, MathHelper.rand( 0.0f, 0.9F ), z, color ) );
+//			vertices.add( new Vector3f( x, MathHelper.rand( 0.0f, 0.9F ), z + 1, color ) );
 //		}
 //
 //		Tessellator tessellator = new Tessellator();

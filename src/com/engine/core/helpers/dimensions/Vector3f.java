@@ -1,5 +1,7 @@
 package com.engine.core.helpers.dimensions;
 
+import java.awt.*;
+
 /**
  * Created on 10/04/14.
  */
@@ -8,31 +10,34 @@ public class Vector3f
 	private float x;
 	private float y;
 	private float z;
+	private Color color;
+	private Vector3f normal;
 
 	/**
 	 * CONSTRUCTOR
 	 */
 	public Vector3f( float x, float y, float z )
 	{
+		this( x, y, z, new Color( 255, 255, 255 ) );
+	}
+
+	public Vector3f( Vector3f direction )
+	{
+		this( direction.getX(), direction.getY(), direction.getZ(), new Color( 255, 255, 255 ) );
+	}
+
+	public Vector3f( Vector3f ori, Vector3f dest )
+	{
+		this( dest.getX() - ori.getX(), dest.getY() - ori.getY(), dest.getZ() - ori.getZ(), new Color( 255, 255, 255 ) );
+	}
+
+	public Vector3f( float x, float y, float z, Color color )
+	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.color = color;
 	}
-
-	public Vector3f( Vertex3f direction )
-	{
-		this.x = direction.getX();
-		this.y = direction.getY();
-		this.z = direction.getZ();
-	}
-
-	public Vector3f( Vertex3f origin, Vertex3f destination )
-	{
-		this.x = destination.getX() - origin.getX();
-		this.y = destination.getY() - origin.getY();
-		this.z = destination.getZ() - origin.getZ();
-	}
-
 
 	/**
 	 * METHODES
@@ -131,6 +136,16 @@ public class Vector3f
 		this.z = z;
 	}
 
+	public void setColor( Color color )
+	{
+		this.color = color;
+	}
+
+	public void setNormal( Vector3f normal )
+	{
+		this.normal = normal;
+	}
+
 	public Vector3f set( float x, float y, float z )
 	{
 		this.x = x;
@@ -162,6 +177,18 @@ public class Vector3f
 	public float getZ()
 	{
 		return ( z );
+	}
+
+	public Color getColor()
+	{
+		return color;
+	}
+
+	public Vector3f getNormal()
+	{
+		if ( normal == null )
+			this.normal = new Vector3f( 0, 0, 0 );
+		return normal;
 	}
 
 	public boolean equals( Vector3f r )

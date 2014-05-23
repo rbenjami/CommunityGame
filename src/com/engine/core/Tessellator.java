@@ -3,8 +3,7 @@ package com.engine.core;
 import com.engine.core.components.Mesh;
 import com.engine.core.helpers.MathHelper;
 import com.engine.core.helpers.NoiseHelper;
-import com.engine.core.helpers.dimensions.Vector2f;
-import com.engine.core.helpers.dimensions.Vertex3f;
+import com.engine.core.helpers.dimensions.Vector3f;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,19 +19,19 @@ public class Tessellator
 	private Color     color;
 	private Mesh      mesh;
 
-	public Tessellator( int fraction, float smooth, Color color )
+	public Tessellator( int fraction, float smooth, Color color, long seed )
 	{
 		this.fraction = fraction;
 		if ( fraction % 2 != 0 )
 			this.fraction--;
 		this.color = color;
 		this.smooth = smooth;
-		this.noise = NoiseHelper.generatePerlinNoise( NoiseHelper.generateWhiteNoise( fraction + 1, fraction + 1 ), 6 );
+		this.noise = NoiseHelper.generatePerlinNoise( NoiseHelper.generateWhiteNoise( fraction + 1, fraction + 1, seed ), 6 );
 	}
 
 	public void calculateTesselator()
 	{
-		ArrayList<Vertex3f> vertices = new ArrayList<Vertex3f>();
+		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 
 		int z = -fraction / 2;
@@ -45,7 +44,7 @@ public class Tessellator
 				float rand1 = MathHelper.rand( -0.3f, 0.3f );
 				float rand2 = MathHelper.rand( -0.3f, 0.3f );
 				for ( int i = 0; i < 6; i++ )
-					vertices.add( new Vertex3f( ( x + rand1 ) / fraction, noise[x + fraction / 2][z + fraction / 2] / ( fraction / smooth ), ( z + rand2 ) / fraction, this.color ) );
+					vertices.add( new Vector3f( ( x + rand1 ) / fraction, noise[x + fraction / 2][z + fraction / 2] / ( fraction / smooth ), ( z + rand2 ) / fraction, this.color ) );
 				x++;
 			}
 			z++;
@@ -75,7 +74,7 @@ public class Tessellator
 			}
 			z++;
 		}
-		Vertex3f[] vertexData = new Vertex3f[vertices.size()];
+		Vector3f[] vertexData = new Vector3f[vertices.size()];
 		vertices.toArray( vertexData );
 
 		Integer[] indexData = new Integer[indices.size()];

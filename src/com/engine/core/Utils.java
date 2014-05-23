@@ -1,7 +1,7 @@
 package com.engine.core;
 
 import com.engine.core.helpers.dimensions.Matrix4f;
-import com.engine.core.helpers.dimensions.Vertex3f;
+import com.engine.core.helpers.dimensions.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -31,21 +31,21 @@ public class Utils
 		return buffer;
 	}
 
-	public static FloatBuffer createFlippedBuffer( Vertex3f[] vertices )
+	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices )
 	{
-		FloatBuffer buffer = createFloatBuffer( vertices.length * Vertex3f.SIZE );
+		FloatBuffer buffer = createFloatBuffer( vertices.length * 9 );
 
-		for ( int i = 0; i < vertices.length; i++ )
+		for ( Vector3f vertex : vertices )
 		{
-			buffer.put( vertices[i].getX() );
-			buffer.put( vertices[i].getY() );
-			buffer.put( vertices[i].getZ() );
-			buffer.put( (float) vertices[i].getColor().getRed() / 255 );
-			buffer.put( (float) vertices[i].getColor().getGreen() / 255 );
-			buffer.put( (float) vertices[i].getColor().getBlue() / 255 );
-			buffer.put( vertices[i].getNormal().getX() );
-			buffer.put( vertices[i].getNormal().getY() );
-			buffer.put( vertices[i].getNormal().getZ() );
+			buffer.put( vertex.getX() );
+			buffer.put( vertex.getY() );
+			buffer.put( vertex.getZ() );
+			buffer.put( (float) vertex.getColor().getRed() / 255 );
+			buffer.put( (float) vertex.getColor().getGreen() / 255 );
+			buffer.put( (float) vertex.getColor().getBlue() / 255 );
+			buffer.put( vertex.getNormal().getX() );
+			buffer.put( vertex.getNormal().getY() );
+			buffer.put( vertex.getNormal().getZ() );
 		}
 
 		buffer.flip();

@@ -7,14 +7,7 @@ import java.util.Random;
  */
 public class NoiseHelper
 {
-	private static int seed = 0;
-
-	public static void setSeed( int seed )
-	{
-		NoiseHelper.seed = seed;
-	}
-
-	public static float[][] generateWhiteNoise( int width, int height )
+	public static float[][] generateWhiteNoise( int width, int height, long seed )
 	{
 		Random random = new Random( seed );
 		float[][] noise = new float[width][height];

@@ -23,7 +23,7 @@ public class Camera extends GameComponent
 		Vector3f cameraPos = getTransform().getTransformedPos().mul( -1 );
 		Matrix4f cameraTranslation = new Matrix4f().initTranslation( cameraPos.getX(), cameraPos.getY(), cameraPos.getZ() );
 
-		System.out.println( getPos() );
+//		System.out.println( getPos() );
 
 		return projection.mul( cameraRotation.mul( cameraTranslation ) );
 	}

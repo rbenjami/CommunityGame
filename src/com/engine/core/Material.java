@@ -9,15 +9,15 @@ public class Material
 	private float specularPower;
 	private float transparency;
 
-	public Material( float specularIntensity, float specularPower , float transparency )
+	public Material( float specularIntensity, float specularPower, float transparency )
 	{
 		this.specularIntensity = specularIntensity;
 		this.specularPower = specularPower;
 		this.transparency = transparency;
 	}
 
-	public static final Material WATER = new Material( 1, 6, 0.5f);
-	public static final Material ROCk = new Material( 1, 4, 1f);
+	public static final Material WATER = new Material( 1, 6, 0.5f );
+	public static final Material ROCK  = new Material( 1, 4, 1f );
 
 
 	/**
