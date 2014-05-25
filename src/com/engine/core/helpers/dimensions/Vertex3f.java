@@ -104,7 +104,6 @@ public class Vertex3f
 	}
 
 
-
 	/**
 	 * GETTER
 	 */

@@ -7,10 +7,10 @@ import java.awt.*;
  */
 public class Vector3f
 {
-	private float x;
-	private float y;
-	private float z;
-	private Color color;
+	private float    x;
+	private float    y;
+	private float    z;
+	private Color    color;
 	private Vector3f normal;
 
 	/**
@@ -37,6 +37,7 @@ public class Vector3f
 		this.y = y;
 		this.z = z;
 		this.color = color;
+		this.normal = null;
 	}
 
 	/**

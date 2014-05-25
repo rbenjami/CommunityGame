@@ -11,9 +11,17 @@ import com.engine.core.helpers.dimensions.Vector3f;
 public class Camera extends GameComponent
 {
 	private Matrix4f projection;
+	private float    fov;
+	private float    aspect;
+	private float    zNear;
+	private float    zFar;
 
 	public Camera( float fov, float aspect, float zNear, float zFar )
 	{
+		this.fov = fov;
+		this.aspect = aspect;
+		this.zNear = zNear;
+		this.zFar = zFar;
 		this.projection = new Matrix4f().initPerspective( fov, aspect, zNear, zFar );
 	}
 
@@ -49,5 +57,10 @@ public class Camera extends GameComponent
 	public void setPos( Vector3f pos )
 	{
 		getTransform().setPos( pos );
+	}
+
+	public void resizeProjection( float width, float height )
+	{
+		this.projection = new Matrix4f().initPerspective( fov, width / height, zNear, zFar );
 	}
 }

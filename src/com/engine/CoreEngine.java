@@ -7,7 +7,7 @@ import com.engine.render.RenderEngine;
 import com.engine.render.Window;
 import org.lwjgl.opengl.Display;
 
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * The basic framework for use with my LWJGL tutorials.
@@ -58,6 +58,17 @@ public class CoreEngine
 	protected void reshape( int width, int height )
 	{
 		glViewport( 0, 0, width, height );
+		renderEngine.getCamera().resizeProjection( width, height );
+	}
+
+	private void debug()
+	{
+		if ( Input.getKey( Input.KEY_F5 ) )
+			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+		else if ( Input.getKey( Input.KEY_F6 ) )
+			glPolygonMode( GL_FRONT_AND_BACK, GL_POINT );
+		else
+			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	}
 
 	private void run()
@@ -98,6 +109,7 @@ public class CoreEngine
 
 				game.input( (float) frameTime );
 				Input.update();
+				debug();
 
 				game.update( (float) frameTime );
 

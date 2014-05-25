@@ -54,11 +54,12 @@ public class CommunityGame extends Game
 		/**
 		 * Object
 		 */
+
 		GameObject planet = new GameObject();
-		planet.addComponent( new GeoSphere( 5, 5 ).getMesh() );
+		planet.addComponent( new GeoSphere( 5, 2 ) );
 		planet.getTransform().translate( 0, 10, 0 );
 
-		Tessellator tessellator = new Tessellator( 128, 10f, new Color( 255, 237, 117 ), 40 );
+		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
 		tessellator.calculateTesselator();
 		tessellator.getMesh().setMaterial( Material.ROCK );
 		GameObject dirt = new GameObject();
@@ -70,6 +71,7 @@ public class CommunityGame extends Game
 		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );
+
 
 		GameObject cam = new GameObject();
 		cam.addComponent( new Camera( (float) Math.toRadians( 70.0f ), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f ) );

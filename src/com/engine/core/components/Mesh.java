@@ -2,12 +2,9 @@ package com.engine.core.components;
 
 import com.engine.core.Material;
 import com.engine.core.Utils;
-import com.engine.core.helpers.TimeHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
-
-import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -90,21 +87,9 @@ public class Mesh extends GameComponent
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
 	{
-		if ( material.isTransparency() )
-		{
-			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-			glDepthMask( false );
-			glDepthFunc( GL_LESS );
-		}
 		shader.bind();
 		shader.updateUniforms( getTransform(), material, renderingEngine );
 		draw();
-		if ( material.isTransparency() )
-		{
-			glBlendFunc( GL_ONE, GL_ONE );
-			glDepthFunc( GL_EQUAL );
-			glDepthMask( true );
-		}
 	}
 
 	public void setMaterial( Material material )
