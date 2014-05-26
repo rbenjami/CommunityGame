@@ -7,6 +7,7 @@ import java.awt.*;
  */
 public class Vector3f
 {
+	public static final Vector3f NULL = new Vector3f( 0, 0, 0 );
 	private float    x;
 	private float    y;
 	private float    z;
@@ -23,7 +24,7 @@ public class Vector3f
 
 	public Vector3f( Vector3f direction )
 	{
-		this( direction.getX(), direction.getY(), direction.getZ(), new Color( 255, 255, 255 ) );
+		this( direction.getX(), direction.getY(), direction.getZ(), direction.getColor() );
 	}
 
 	public Vector3f( Vector3f ori, Vector3f dest )
@@ -52,16 +53,16 @@ public class Vector3f
 		return new Vector3f( w.getX(), w.getY(), w.getZ() );
 	}
 
-	public float lenght()
+	public float length()
 	{
 		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
 	}
 
 	public Vector3f normalized()
 	{
-		float lenght = this.lenght();
+		float length = this.length();
 
-		return ( new Vector3f( x / lenght, y / lenght, z / lenght ) );
+		return ( new Vector3f( x / length, y / length, z / length ) );
 	}
 
 	public float dot( Vector3f v )

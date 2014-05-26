@@ -56,18 +56,18 @@ public class CommunityGame extends Game
 		 */
 
 		GameObject planet = new GameObject();
-		planet.addComponent( new GeoSphere( 5, 2 ) );
-		planet.getTransform().translate( 0, 10, 0 );
+		planet.addComponent( new GeoSphere( 50, 7 ) );
+		planet.getTransform().translate( -50, 10, 0 );
 
-		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
-		tessellator.calculateTesselator();
-		tessellator.getMesh().setMaterial( Material.ROCK );
-		GameObject dirt = new GameObject();
-		dirt.addComponent( tessellator.getMesh() );
-		dirt.getTransform().translate( 0, -3, 0 );
-		dirt.getTransform().getScale().set( 100, 100, 100 );
+//		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
+//		tessellator.calculateTesselator();
+//		tessellator.getMesh().setMaterial( Material.ROCK );
+//		GameObject dirt = new GameObject();
+//		dirt.addComponent( tessellator.getMesh() );
+//		dirt.getTransform().translate( 0, -3, 0 );
+//		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-		addObject( dirt );
+//		addObject( dirt );
 		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );

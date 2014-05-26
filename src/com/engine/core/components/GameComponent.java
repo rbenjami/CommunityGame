@@ -17,7 +17,7 @@ public abstract class GameComponent
 
 	public void update( float delta ) {}
 
-	public void render( Shader shader, RenderEngine renderingEngine ) {}
+	public void render( Shader shader, RenderEngine renderEngine ) {}
 
 	public void setParent( GameObject parent )
 	{

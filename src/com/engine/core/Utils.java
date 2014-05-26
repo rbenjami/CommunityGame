@@ -37,8 +37,6 @@ public class Utils
 
 		for ( Vector3f vertex : vertices )
 		{
-			if ( vertex == null )
-				break ;
 			buffer.put( vertex.getX() );
 			buffer.put( vertex.getY() );
 			buffer.put( vertex.getZ() );

@@ -1,4 +1,4 @@
-package com.engine.core.helpers.QuadTree;
+package com.engine.core.helpers.quadtree;
 
 import com.engine.core.helpers.dimensions.Vector3f;
 
@@ -11,10 +11,10 @@ public class Node
 	private Vector3f vector2;
 	private Vector3f vector3;
 	private Node     parent;
-	private Node     bot;
-	private Node     mid;
-	private Node     right;
-	private Node     left;
+	private Node     bot = null;
+	private Node     mid = null;
+	private Node     right = null;
+	private Node     left = null;
 
 	public Node( Vector3f vector1, Vector3f vector2, Vector3f vector3, Node parent )
 	{

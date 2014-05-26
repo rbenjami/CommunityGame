@@ -1,4 +1,4 @@
-package com.engine.core.helpers.QuadTree;
+package com.engine.core.helpers.quadtree;
 
 import java.util.ArrayList;
 
