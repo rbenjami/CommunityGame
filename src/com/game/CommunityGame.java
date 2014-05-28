@@ -1,6 +1,8 @@
 package com.game;
 
-import com.engine.core.*;
+import com.engine.core.Attenuation;
+import com.engine.core.Game;
+import com.engine.core.GameObject;
 import com.engine.core.components.*;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.Window;

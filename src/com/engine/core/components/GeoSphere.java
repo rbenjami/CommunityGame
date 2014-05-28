@@ -2,10 +2,11 @@ package com.engine.core.components;
 
 import com.engine.core.Material;
 import com.engine.core.Utils;
-import com.engine.core.helpers.quadtree.Node;
-import com.engine.core.helpers.quadtree.QuadTree;
+import com.engine.core.helpers.IntersectHelper;
 import com.engine.core.helpers.TimeHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.quadtree.Node;
+import com.engine.core.helpers.quadtree.QuadTree;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
 
@@ -13,9 +14,7 @@ import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Created on 21/05/2014.
@@ -37,8 +36,6 @@ public class GeoSphere extends GameComponent
 		this.material = Material.ROCK;
 		createBase();
 	}
-
-	int debug = 0;
 
 	public void createBase()
 	{
@@ -78,17 +75,14 @@ public class GeoSphere extends GameComponent
 
 		//DEBUG
 		double start = TimeHelper.getTime();
-		System.out.println( start );
 
 		if ( maxLevels > 1 )
 		{
 			for ( int i = 0; i < dataTree.size(); i++ )
-			{
 				subdivideNode( rootNodes.get( i ), maxLevels );
-			}
 		}
+
 		//DEBUG
-		System.out.println( "Vertices: " + debug );
 		System.out.println( TimeHelper.getTime() - start );
 	}
 
@@ -104,7 +98,6 @@ public class GeoSphere extends GameComponent
 		node.setBot( new Node( new Vector3f( vb ), pt1, vc, node ) );
 		node.setMid( new Node( new Vector3f( va ), new Vector3f( vb ), new Vector3f( vc ), node ) );
 		node.setRight( new Node( new Vector3f( va ), new Vector3f( vc ), pt2, node ) );
-		debug += 4;
 		if ( --levels > 0 )
 		{
 			subdivideNode( node.getLeft(), levels );
@@ -126,43 +119,19 @@ public class GeoSphere extends GameComponent
 		vertices.add( node.getVector3() );
 	}
 
-//	private void fillValueNode( ArrayList<Vector3f> vertices, Node node, int levels, Vector3f pos, Vector3f ray )
-//	{
-//		if ( node == null )
-//			return ;
-//		if ( levels-- > 0 && intersectTriangle( node, pos, ray ) )
-//		{
-//			fillValueNode( vertices, node.getLeft(), levels, pos, ray );
-//			fillValueNode( vertices, node.getBot(), levels, pos, ray );
-//			fillValueNode( vertices, node.getMid(), levels, pos, ray );
-//			fillValueNode( vertices, node.getRight(), levels, pos, ray );
-//		}
-//		else
-//			addToArray( vertices, node );
-//	}
+	int DEBUG = 0;
 
-	private void fillValueNode( ArrayList<Vector3f> vertices, Node node, int levels, Vector3f pos, Vector3f ray, boolean forced )
+	private void fillValueNode( ArrayList<Vector3f> vertices, Node node, int levels, Vector3f pos, Vector3f ray )
 	{
 		if ( node == null )
-			return ;
-		if ( levels-- > 0)
+			return;
+		if ( levels-- >= 0 && IntersectHelper.rayTriangle( node, pos, ray, -0.01f * levels ) )
 		{
-			if ( forced || intersectTriangle( node.getLeft(), pos, ray ) )
-				fillValueNode( vertices, node.getLeft(), levels, pos, ray, false );
-			else
-				addToArray( vertices, node.getLeft() );
-			if ( forced || intersectTriangle( node.getBot(), pos, ray ) )
-				fillValueNode( vertices, node.getBot(), levels, pos, ray, false );
-			else
-				addToArray( vertices, node.getBot() );
-			if ( forced || intersectTriangle( node.getMid(), pos, ray ) )
-				fillValueNode( vertices, node.getMid(), levels, pos, ray, false );
-			else
-				addToArray( vertices, node.getMid() );
-			if ( forced || intersectTriangle( node.getRight(), pos, ray ) )
-				fillValueNode( vertices, node.getRight(), levels, pos, ray, false );
-			else
-				addToArray( vertices, node.getRight() );
+			DEBUG += 4;
+			fillValueNode( vertices, node.getLeft(), levels, pos, ray );
+			fillValueNode( vertices, node.getBot(), levels, pos, ray );
+			fillValueNode( vertices, node.getMid(), levels, pos, ray );
+			fillValueNode( vertices, node.getRight(), levels, pos, ray );
 		}
 		else
 			addToArray( vertices, node );
@@ -172,10 +141,11 @@ public class GeoSphere extends GameComponent
 	{
 		ArrayList<Vector3f> tmpVertices = new ArrayList<Vector3f>();
 
-//		this.vertices = new Vector3f[20 * (int)Math.pow( 4, levels - 1 ) * 3];
+		DEBUG = 0;
 		for ( int i = 0; i < dataTree.size(); i++ )
-			fillValueNode( tmpVertices, dataTree.getRootNodes().get( i ), levels, pos, ray, false );
+			fillValueNode( tmpVertices, dataTree.getRootNodes().get( i ), levels, pos, ray );
 
+		System.out.println( DEBUG );
 		Vector3f[] vertices = new Vector3f[tmpVertices.size()];
 		tmpVertices.toArray( vertices );
 
@@ -188,10 +158,10 @@ public class GeoSphere extends GameComponent
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_DYNAMIC_DRAW  );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_DYNAMIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_DYNAMIC_DRAW  );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_DYNAMIC_DRAW );
 	}
 
 	public void draw()
@@ -232,82 +202,13 @@ public class GeoSphere extends GameComponent
 		}
 	}
 
-	boolean intersectTriangle(Node node, Vector3f orig, Vector3f ray)
-	{
-		Vector3f v0 = node.getVector1();
-		Vector3f v1 = node.getVector2();
-		Vector3f v2 = node.getVector3();
-
-		// compute plane's normal
-		Vector3f A, B;
-		A = v1.sub( v0 );
-		B = v2.sub( v0 );
-		// no need to normalize
-		Vector3f N = A .cross( B ); // N
-
-		//
-		// Step 1: finding P
-		//
-
-		// check if ray and plane are parallel ?
-		float NdotRayDirection = N.dot( ray );
-//		if (NdotRayDirection == 0)
-//			return false; // they are parallel so they don't intersect !
-		// compute d parameter using equation 2
-		float d = N.dot( v0 );
-		// compute t (equation 3)
-		float t = -(N.dot( orig ) + d) / NdotRayDirection;
-		// check if the triangle is in behind the ray
-		if (t < 0)
-			return false; // the triangle is behind 
-		// compute the intersection point using equation 1
-		Vector3f P = orig.add( ray.mul( t ) );
-
-		//
-		// Step 2: inside-outside test
-		//
-
-		Vector3f C; // Vector3f perpendicular to triangle's plane
-
-		// edge 0
-		Vector3f edge0 = v1.sub( v0 );
-		Vector3f VP0 = P.sub( v0 );
-		C = edge0.cross( VP0 );
-		if (N.dot( C ) < 0)
-			return false; // P is on the right side
-
-		// edge 1
-		Vector3f edge1 = v2.sub( v1 );
-		Vector3f VP1 = P.sub( v1 );
-		C = edge1.cross( VP1 );
-		if (N.dot( C ) < 0)
-			return false; // P is on the right side
-
-		// edge 2
-		Vector3f edge2 = v0.sub( v2 );
-		Vector3f VP2 = P.sub( v2 );
-		C = edge2.cross( VP2 );
-		if (N.dot( C ) < 0)
-			return false; // P is on the right side;
-
-		return true; // this ray hits the triangle
-	}
-
-	boolean  hasChanged = true;
-
 	@Override
 	public void render( Shader shader, RenderEngine renderEngine )
 	{
 		Vector3f playerToPlanet = getTransform().getPos().sub( renderEngine.getCamera().getPos() );
-//		Vector3f planetToPlayer = renderEngine.getCamera().getPos().sub( getTransform().getPos() );
-		System.out.println( playerToPlanet.length() );
 		shader.bind();
 		shader.updateUniforms( getTransform(), material, renderEngine );
-//		if ( hasChanged )
-//		{
-//			hasChanged = false;
-			updateVertices( maxLevels, renderEngine.getCamera().getPos().normalized(), playerToPlanet );
-//		}
+		updateVertices( maxLevels, renderEngine.getCamera().getPos().normalized(), playerToPlanet );
 		draw();
 	}
 
