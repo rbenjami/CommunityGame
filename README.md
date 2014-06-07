@@ -13,7 +13,7 @@ Coming soon.
 | Ressources |
 --------------
 
-* OpenGL (1.3 at this time)
+* OpenGL (1.2 at this time, mac OK)
 * Java 1.7
 
 -----------

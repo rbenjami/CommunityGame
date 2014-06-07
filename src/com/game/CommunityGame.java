@@ -1,8 +1,6 @@
 package com.game;
 
-import com.engine.core.Attenuation;
-import com.engine.core.Game;
-import com.engine.core.GameObject;
+import com.engine.core.*;
 import com.engine.core.components.*;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.Window;
@@ -61,15 +59,15 @@ public class CommunityGame extends Game
 		planet.addComponent( new GeoSphere( 50, 7 ) );
 		planet.getTransform().translate( -50, 10, 0 );
 
-//		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
-//		tessellator.calculateTesselator();
-//		tessellator.getMesh().setMaterial( Material.ROCK );
-//		GameObject dirt = new GameObject();
-//		dirt.addComponent( tessellator.getMesh() );
-//		dirt.getTransform().translate( 0, -3, 0 );
-//		dirt.getTransform().getScale().set( 100, 100, 100 );
+		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
+		tessellator.calculateTesselator();
+		tessellator.getMesh().setMaterial( Material.ROCK );
+		GameObject dirt = new GameObject();
+		dirt.addComponent( tessellator.getMesh() );
+		dirt.getTransform().translate( 0, -3, 0 );
+		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-//		addObject( dirt );
+		addObject( dirt );
 		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );
