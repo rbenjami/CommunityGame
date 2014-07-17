@@ -2,6 +2,9 @@ package com.engine.core;
 
 import com.engine.CoreEngine;
 import com.engine.render.RenderEngine;
+import com.game.entity.Entity;
+
+import java.util.ArrayList;
 
 /**
  * Created on 27/04/14.
@@ -9,12 +12,21 @@ import com.engine.render.RenderEngine;
 public abstract class Game
 {
 	private GameObject root;
+	private ArrayList<Entity> entityList = new ArrayList<Entity>();
 
 	public void init() {}
 
 	public void input( float delta )
 	{
 		getRootObject().inputAll( delta );
+	}
+
+	private GameObject getRootObject()
+	{
+		if ( root == null )
+			root = new GameObject();
+
+		return root;
 	}
 
 	public void update( float delta )
@@ -32,12 +44,10 @@ public abstract class Game
 		getRootObject().addChild( object );
 	}
 
-	private GameObject getRootObject()
+	public void addEntity( Entity entity )
 	{
-		if ( root == null )
-			root = new GameObject();
-
-		return root;
+		root.addComponent( entity.getModel() );
+		entityList.add( entity );
 	}
 
 	public void setEngine( CoreEngine engine )

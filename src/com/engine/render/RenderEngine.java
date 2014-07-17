@@ -53,6 +53,18 @@ public class RenderEngine extends MappedValues
 		getCamera().input( elapsedTime );
 	}
 
+	public Camera getCamera()
+	{
+		return camera;
+	}
+
+	/**
+	 * SETTER
+	 */
+	public void setCamera( Camera camera )
+	{
+		this.camera = camera;
+	}
 
 	/**
 	 * Render to screen
@@ -108,19 +120,5 @@ public class RenderEngine extends MappedValues
 	public BaseLight getActiveLight()
 	{
 		return activeLight;
-	}
-
-	public Camera getCamera()
-	{
-		return camera;
-	}
-
-
-	/**
-	 * SETTER
-	 */
-	public void setCamera( Camera camera )
-	{
-		this.camera = camera;
 	}
 }

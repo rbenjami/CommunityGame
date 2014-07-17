@@ -47,16 +47,6 @@ public class Window
 		return Display.isCloseRequested();
 	}
 
-	public static int getWidth()
-	{
-		return Display.getDisplayMode().getWidth();
-	}
-
-	public static int getHeight()
-	{
-		return Display.getDisplayMode().getHeight();
-	}
-
 	public static String getTitle()
 	{
 		return Display.getTitle();
@@ -65,5 +55,15 @@ public class Window
 	public Vector2f getCenter()
 	{
 		return new Vector2f( getWidth() / 2, getHeight() / 2 );
+	}
+
+	public static int getWidth()
+	{
+		return Display.getDisplayMode().getWidth();
+	}
+
+	public static int getHeight()
+	{
+		return Display.getDisplayMode().getHeight();
 	}
 }

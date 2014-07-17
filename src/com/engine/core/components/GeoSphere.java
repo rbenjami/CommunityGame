@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class GeoSphere extends GameComponent
 {
+	int DEBUG = 0;
 	private float        radius;
 	private int          maxLevels;
 	private QuadTree     dataTree;
@@ -33,7 +34,7 @@ public class GeoSphere extends GameComponent
 	{
 		this.maxLevels = maxLevels;
 		this.radius = radius;
-		this.material = Material.ROCK;
+		this.material = new Material();
 		createBase();
 	}
 
@@ -83,7 +84,7 @@ public class GeoSphere extends GameComponent
 		}
 
 		//DEBUG
-		System.out.println( TimeHelper.getTime() - start );
+//		System.out.println( TimeHelper.getTime() - start );
 	}
 
 	private void subdivideNode( Node node, int levels )
@@ -101,8 +102,8 @@ public class GeoSphere extends GameComponent
 		if ( --levels > 0 )
 		{
 			subdivideNode( node.getLeft(), levels );
-			subdivideNode( node.getBot(), levels );
-			subdivideNode( node.getMid(), levels );
+			subdivideNode( node.getBottom(), levels );
+			subdivideNode( node.getMiddle(), levels );
 			subdivideNode( node.getRight(), levels );
 		}
 	}
@@ -119,8 +120,6 @@ public class GeoSphere extends GameComponent
 		vertices.add( node.getVector3() );
 	}
 
-	int DEBUG = 0;
-
 	private void fillValueNode( ArrayList<Vector3f> vertices, Node node, int levels, Vector3f pos, Vector3f ray )
 	{
 		if ( node == null )
@@ -129,8 +128,8 @@ public class GeoSphere extends GameComponent
 		{
 			DEBUG += 4;
 			fillValueNode( vertices, node.getLeft(), levels, pos, ray );
-			fillValueNode( vertices, node.getBot(), levels, pos, ray );
-			fillValueNode( vertices, node.getMid(), levels, pos, ray );
+			fillValueNode( vertices, node.getBottom(), levels, pos, ray );
+			fillValueNode( vertices, node.getMiddle(), levels, pos, ray );
 			fillValueNode( vertices, node.getRight(), levels, pos, ray );
 		}
 		else
@@ -145,7 +144,7 @@ public class GeoSphere extends GameComponent
 		for ( int i = 0; i < dataTree.size(); i++ )
 			fillValueNode( tmpVertices, dataTree.getRootNodes().get( i ), levels, pos, ray );
 
-		System.out.println( DEBUG );
+//		System.out.println( DEBUG );
 		Vector3f[] vertices = new Vector3f[tmpVertices.size()];
 		tmpVertices.toArray( vertices );
 

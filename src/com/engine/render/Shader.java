@@ -53,6 +53,39 @@ public class Shader
 		}
 	}
 
+	private static String loadShader( String fileName )
+	{
+		StringBuilder shaderSource = new StringBuilder();
+		BufferedReader shaderReader = null;
+		final String INCLUDE_DIRECTIVE = "#include";
+
+		try
+		{
+			shaderReader = new BufferedReader( new FileReader( "./res/shaders/" + fileName ) );
+			String line;
+
+			while ( ( line = shaderReader.readLine() ) != null )
+			{
+				if ( line.startsWith( INCLUDE_DIRECTIVE ) )
+				{
+					shaderSource.append( loadShader( line.substring( INCLUDE_DIRECTIVE.length() + 2, line.length() - 1 ) ) );
+				}
+				else
+					shaderSource.append( line ).append( "\n" );
+			}
+
+			shaderReader.close();
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+			System.exit( 1 );
+		}
+
+
+		return shaderSource.toString();
+	}
+
 	public void bind()
 	{
 		glUseProgram( resource.getProgram() );
@@ -68,6 +101,13 @@ public class Shader
 			String uniformName = resource.getUniformNames().get( i );
 			String uniformType = resource.getUniformTypes().get( i );
 
+			/*if(uniformType.equals("sampler2D"))
+			{
+				int samplerSlot = renderEngine.getSamplerSlot(uniformName);
+				material.getTexture(uniformName).bind(samplerSlot);
+				setUniformi(uniformName, samplerSlot);
+			}
+			else */
 			if ( uniformName.startsWith( "T_" ) )
 			{
 				if ( uniformName.equals( "T_MVP" ) )
@@ -82,27 +122,18 @@ public class Shader
 			else if ( uniformName.startsWith( "R_" ) )
 			{
 				String unprefixedUniformName = uniformName.substring( 2 );
-				switch ( uniformType )
-				{
-					case "vec3":
-						setUniform( uniformName, renderEngine.getVector3f( unprefixedUniformName ) );
-						break;
-					case "float":
-						setUniformf( uniformName, renderEngine.getFloat( unprefixedUniformName ) );
-						break;
-					case "DirectionalLight":
-						setUniformDirectionalLight( uniformName, (DirectionalLight) renderEngine.getActiveLight() );
-						break;
-					case "PointLight":
-						setUniformPointLight( uniformName, (PointLight) renderEngine.getActiveLight() );
-						break;
-					case "SpotLight":
-						setUniformSpotLight( uniformName, (SpotLight) renderEngine.getActiveLight() );
-						break;
-					default:
-						renderEngine.updateUniformStruct( transform, this, uniformName, uniformType );
-						break;
-				}
+				if ( uniformType.equals( "vec3" ) )
+					setUniform( uniformName, renderEngine.getVector3f( unprefixedUniformName ) );
+				else if ( uniformType.equals( "float" ) )
+					setUniformf( uniformName, renderEngine.getFloat( unprefixedUniformName ) );
+				else if ( uniformType.equals( "DirectionalLight" ) )
+					setUniformDirectionalLight( uniformName, (DirectionalLight) renderEngine.getActiveLight() );
+				else if ( uniformType.equals( "PointLight" ) )
+					setUniformPointLight( uniformName, (PointLight) renderEngine.getActiveLight() );
+				else if ( uniformType.equals( "SpotLight" ) )
+					setUniformSpotLight( uniformName, (SpotLight) renderEngine.getActiveLight() );
+				else
+					renderEngine.updateUniformStruct( transform, this, uniformName, uniformType );
 			}
 			else if ( uniformName.startsWith( "C_" ) )
 			{
@@ -113,23 +144,10 @@ public class Shader
 			}
 			else
 			{
-				/*if ( uniformType.equals( "vec3" ) )
+				if ( uniformType.equals( "vec3" ) )
 					setUniform( uniformName, material.getVector3f( uniformName ) );
-				else */
-				if ( uniformType.equals( "float" ) )
-				{
-					switch ( uniformName )
-					{
-						case "specularIntensity":
-							setUniformf( uniformName, material.getSpecularIntensity() );
-							break;
-						case "specularPower":
-							setUniformf( uniformName, material.getSpecularPower() );
-							break;
-						default:
-							throw new IllegalArgumentException( uniformName + " is not a supported type in Material" );
-					}
-				}
+				else if ( uniformType.equals( "float" ) )
+					setUniformf( uniformName, material.getFloat( uniformName ) );
 				else
 					throw new IllegalArgumentException( uniformType + " is not a supported type in Material" );
 			}
@@ -159,12 +177,6 @@ public class Shader
 
 			attributeStartLocation = shaderText.indexOf( ATTRIBUTE_KEYWORD, attributeStartLocation + ATTRIBUTE_KEYWORD.length() );
 		}
-	}
-
-	private class GLSLStruct
-	{
-		public String name;
-		public String type;
 	}
 
 	private HashMap<String, ArrayList<GLSLStruct>> findUniformStructs( String shaderText )
@@ -299,6 +311,28 @@ public class Shader
 		addProgram( text, GL_GEOMETRY_SHADER );
 	}
 
+	private void addProgram( String text, int type )
+	{
+		int shader = glCreateShader( type );
+
+		if ( shader == 0 )
+		{
+			System.err.println( "Shader creation failed: Could not find valid memory location when adding shader" );
+			System.exit( 1 );
+		}
+
+		glShaderSource( shader, text );
+		glCompileShader( shader );
+
+		if ( glGetShaderi( shader, GL_COMPILE_STATUS ) == 0 )
+		{
+			System.err.println( glGetShaderInfoLog( shader, 1024 ) );
+			System.exit( 1 );
+		}
+
+		glAttachShader( resource.getProgram(), shader );
+	}
+
 	private void addFragmentShader( String text )
 	{
 		addProgram( text, GL_FRAGMENT_SHADER );
@@ -326,61 +360,6 @@ public class Shader
 			System.err.println( glGetProgramInfoLog( resource.getProgram(), 1024 ) );
 			System.exit( 1 );
 		}
-	}
-
-	private void addProgram( String text, int type )
-	{
-		int shader = glCreateShader( type );
-
-		if ( shader == 0 )
-		{
-			System.err.println( "Shader creation failed: Could not find valid memory location when adding shader" );
-			System.exit( 1 );
-		}
-
-		glShaderSource( shader, text );
-		glCompileShader( shader );
-
-		if ( glGetShaderi( shader, GL_COMPILE_STATUS ) == 0 )
-		{
-			System.err.println( glGetShaderInfoLog( shader, 1024 ) );
-			System.exit( 1 );
-		}
-
-		glAttachShader( resource.getProgram(), shader );
-	}
-
-	private static String loadShader( String fileName )
-	{
-		StringBuilder shaderSource = new StringBuilder();
-		BufferedReader shaderReader = null;
-		final String INCLUDE_DIRECTIVE = "#include";
-
-		try
-		{
-			shaderReader = new BufferedReader( new FileReader( "./res/shaders/" + fileName ) );
-			String line;
-
-			while ( ( line = shaderReader.readLine() ) != null )
-			{
-				if ( line.startsWith( INCLUDE_DIRECTIVE ) )
-				{
-					shaderSource.append( loadShader( line.substring( INCLUDE_DIRECTIVE.length() + 2, line.length() - 1 ) ) );
-				}
-				else
-					shaderSource.append( line ).append( "\n" );
-			}
-
-			shaderReader.close();
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
-			System.exit( 1 );
-		}
-
-
-		return shaderSource.toString();
 	}
 
 	public void setUniformi( String uniformName, int value )
@@ -435,5 +414,11 @@ public class Shader
 		setUniformPointLight( uniformName + ".pointLight", spotLight );
 		setUniform( uniformName + ".direction", spotLight.getDirection() );
 		setUniformf( uniformName + ".cutoff", spotLight.getCutoff() );
+	}
+
+	private class GLSLStruct
+	{
+		public String name;
+		public String type;
 	}
 }

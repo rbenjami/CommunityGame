@@ -1,6 +1,6 @@
 #version 120
 
-in vec4 color0;
+vec4 color0;
 
 uniform vec3 R_ambient;
 

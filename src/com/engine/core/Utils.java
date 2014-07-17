@@ -6,22 +6,13 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 /**
  * Created on 13/04/14.
  */
 public class Utils
 {
-	public static FloatBuffer createFloatBuffer( int size )
-	{
-		return BufferUtils.createFloatBuffer( size );
-	}
-
-	public static IntBuffer createIntBuffer( int size )
-	{
-		return BufferUtils.createIntBuffer( size );
-	}
-
 	public static IntBuffer createFlippedBuffer( int... values )
 	{
 		IntBuffer buffer = createIntBuffer( values.length );
@@ -29,6 +20,11 @@ public class Utils
 		buffer.flip();
 
 		return buffer;
+	}
+
+	public static IntBuffer createIntBuffer( int size )
+	{
+		return BufferUtils.createIntBuffer( size );
 	}
 
 	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices )
@@ -53,6 +49,11 @@ public class Utils
 		return buffer;
 	}
 
+	public static FloatBuffer createFloatBuffer( int size )
+	{
+		return BufferUtils.createFloatBuffer( size );
+	}
+
 	public static FloatBuffer createFlippedBuffer( Matrix4f value )
 	{
 		FloatBuffer buffer = createFloatBuffer( 4 * 4 );
@@ -66,6 +67,20 @@ public class Utils
 		return buffer;
 	}
 
+	public static String[] removeEmptyStrings( String[] data )
+	{
+		ArrayList<String> result = new ArrayList<String>();
+
+		for ( String aData : data )
+			if ( !aData.equals( "" ) )
+				result.add( aData );
+
+		String[] res = new String[result.size()];
+		result.toArray( res );
+
+		return res;
+	}
+
 	public static int[] toIntArray( Integer[] data )
 	{
 		int[] result = new int[data.length];
@@ -75,4 +90,6 @@ public class Utils
 
 		return result;
 	}
+
+
 }

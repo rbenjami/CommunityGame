@@ -5,4 +5,13 @@ package com.engine.physic;
  */
 public class PhysicEngine
 {
+	public PhysicEngine()
+	{
+
+	}
+
+	public void updateGame()
+	{
+
+	}
 }

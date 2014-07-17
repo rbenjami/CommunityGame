@@ -14,14 +14,6 @@ public class Vector2f
 		this.y = y;
 	}
 
-	/**
-	 * METHODES
-	 */
-	public float length()
-	{
-		return (float) Math.sqrt( x * x + y * y );
-	}
-
 	public float max()
 	{
 		return Math.max( x, y );
@@ -32,11 +24,42 @@ public class Vector2f
 		return x * r.getX() + y * r.getY();
 	}
 
+	public float getY()
+	{
+		return y;
+	}
+
+	/**
+	 * GETTER
+	 */
+	public float getX()
+	{
+		return x;
+	}
+
+	public void setX( float x )
+	{
+		this.x = x;
+	}
+
+	public void setY( float y )
+	{
+		this.y = y;
+	}
+
 	public Vector2f normalized()
 	{
 		float length = length();
 
 		return new Vector2f( x / length, y / length );
+	}
+
+	/**
+	 * METHODES
+	 */
+	public float length()
+	{
+		return (float) Math.sqrt( x * x + y * y );
 	}
 
 	public float cross( Vector2f r )
@@ -49,6 +72,21 @@ public class Vector2f
 		return dest.sub( this ).mul( lerpFactor ).add( this );
 	}
 
+	public Vector2f add( Vector2f r )
+	{
+		return new Vector2f( x + r.getX(), y + r.getY() );
+	}
+
+	public Vector2f mul( float r )
+	{
+		return new Vector2f( x * r, y * r );
+	}
+
+	public Vector2f sub( Vector2f r )
+	{
+		return new Vector2f( x - r.getX(), y - r.getY() );
+	}
+
 	public Vector2f rotate( float angle )
 	{
 		double rad = Math.toRadians( angle );
@@ -58,19 +96,9 @@ public class Vector2f
 		return new Vector2f( (float) ( x * cos - y * sin ), (float) ( x * sin + y * cos ) );
 	}
 
-	public Vector2f add( Vector2f r )
-	{
-		return new Vector2f( x + r.getX(), y + r.getY() );
-	}
-
 	public Vector2f add( float r )
 	{
 		return new Vector2f( x + r, y + r );
-	}
-
-	public Vector2f sub( Vector2f r )
-	{
-		return new Vector2f( x - r.getX(), y - r.getY() );
 	}
 
 	public Vector2f sub( float r )
@@ -81,11 +109,6 @@ public class Vector2f
 	public Vector2f mul( Vector2f r )
 	{
 		return new Vector2f( x * r.getX(), y * r.getY() );
-	}
-
-	public Vector2f mul( float r )
-	{
-		return new Vector2f( x * r, y * r );
 	}
 
 	public Vector2f div( Vector2f r )
@@ -103,20 +126,11 @@ public class Vector2f
 		return new Vector2f( Math.abs( x ), Math.abs( y ) );
 	}
 
-
-	/**
-	 * GETTER
-	 */
-	public float getX()
+	public Vector2f set( Vector2f r )
 	{
-		return x;
+		set( r.getX(), r.getY() );
+		return this;
 	}
-
-	public float getY()
-	{
-		return y;
-	}
-
 
 	/**
 	 * SETTER
@@ -126,23 +140,6 @@ public class Vector2f
 		this.x = x;
 		this.y = y;
 		return this;
-	}
-
-	public Vector2f set( Vector2f r )
-	{
-		set( r.getX(), r.getY() );
-		return this;
-	}
-
-	public void setX( float x )
-	{
-		this.x = x;
-	}
-
-
-	public void setY( float y )
-	{
-		this.y = y;
 	}
 
 	public boolean equals( Vector2f r )

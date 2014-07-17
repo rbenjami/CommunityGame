@@ -32,6 +32,54 @@ public class Quaternion
 		this.w = cosHalfAngle;
 	}
 
+	//From Ken Shoemake's "Quaternion Calculus and Fast Animation" article
+	public Quaternion( Matrix4f rot )
+	{
+		float trace = rot.get( 0, 0 ) + rot.get( 1, 1 ) + rot.get( 2, 2 );
+
+		if ( trace > 0 )
+		{
+			float s = 0.5f / (float) Math.sqrt( trace + 1.0f );
+			w = 0.25f / s;
+			x = ( rot.get( 1, 2 ) - rot.get( 2, 1 ) ) * s;
+			y = ( rot.get( 2, 0 ) - rot.get( 0, 2 ) ) * s;
+			z = ( rot.get( 0, 1 ) - rot.get( 1, 0 ) ) * s;
+		}
+		else
+		{
+			if ( rot.get( 0, 0 ) > rot.get( 1, 1 ) && rot.get( 0, 0 ) > rot.get( 2, 2 ) )
+			{
+				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 0, 0 ) - rot.get( 1, 1 ) - rot.get( 2, 2 ) );
+				w = ( rot.get( 1, 2 ) - rot.get( 2, 1 ) ) / s;
+				x = 0.25f * s;
+				y = ( rot.get( 1, 0 ) + rot.get( 0, 1 ) ) / s;
+				z = ( rot.get( 2, 0 ) + rot.get( 0, 2 ) ) / s;
+			}
+			else if ( rot.get( 1, 1 ) > rot.get( 2, 2 ) )
+			{
+				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 1, 1 ) - rot.get( 0, 0 ) - rot.get( 2, 2 ) );
+				w = ( rot.get( 2, 0 ) - rot.get( 0, 2 ) ) / s;
+				x = ( rot.get( 1, 0 ) + rot.get( 0, 1 ) ) / s;
+				y = 0.25f * s;
+				z = ( rot.get( 2, 1 ) + rot.get( 1, 2 ) ) / s;
+			}
+			else
+			{
+				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 2, 2 ) - rot.get( 0, 0 ) - rot.get( 1, 1 ) );
+				w = ( rot.get( 0, 1 ) - rot.get( 1, 0 ) ) / s;
+				x = ( rot.get( 2, 0 ) + rot.get( 0, 2 ) ) / s;
+				y = ( rot.get( 1, 2 ) + rot.get( 2, 1 ) ) / s;
+				z = 0.25f * s;
+			}
+		}
+
+		float length = (float) Math.sqrt( x * x + y * y + z * z + w * w );
+		x /= length;
+		y /= length;
+		z /= length;
+		w /= length;
+	}
+
 	public float length()
 	{
 		return (float) Math.sqrt( x * x + y * y + z * z + w * w );
@@ -62,6 +110,49 @@ public class Quaternion
 		float z_ = z * r.getW() + w * r.getZ() + x * r.getY() - y * r.getX();
 
 		return new Quaternion( x_, y_, z_, w_ );
+	}
+
+	public float getW()
+	{
+		return w;
+	}
+
+	public float getX()
+	{
+		return x;
+	}
+
+	public float getY()
+	{
+		return y;
+	}
+
+	public float getZ()
+	{
+		return z;
+	}
+
+	public void setZ( float z )
+	{
+		this.z = z;
+	}
+
+	public void setY( float y )
+	{
+		this.y = y;
+	}
+
+	/**
+	 * SETTER
+	 */
+	public void setX( float x )
+	{
+		this.x = x;
+	}
+
+	public void setW( float w )
+	{
+		this.w = w;
 	}
 
 	public Quaternion mul( Vector3f r )
@@ -134,54 +225,6 @@ public class Quaternion
 		return this.mul( srcFactor ).add( correctedDest.mul( destFactor ) );
 	}
 
-	//From Ken Shoemake's "Quaternion Calculus and Fast Animation" article
-	public Quaternion( Matrix4f rot )
-	{
-		float trace = rot.get( 0, 0 ) + rot.get( 1, 1 ) + rot.get( 2, 2 );
-
-		if ( trace > 0 )
-		{
-			float s = 0.5f / (float) Math.sqrt( trace + 1.0f );
-			w = 0.25f / s;
-			x = ( rot.get( 1, 2 ) - rot.get( 2, 1 ) ) * s;
-			y = ( rot.get( 2, 0 ) - rot.get( 0, 2 ) ) * s;
-			z = ( rot.get( 0, 1 ) - rot.get( 1, 0 ) ) * s;
-		}
-		else
-		{
-			if ( rot.get( 0, 0 ) > rot.get( 1, 1 ) && rot.get( 0, 0 ) > rot.get( 2, 2 ) )
-			{
-				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 0, 0 ) - rot.get( 1, 1 ) - rot.get( 2, 2 ) );
-				w = ( rot.get( 1, 2 ) - rot.get( 2, 1 ) ) / s;
-				x = 0.25f * s;
-				y = ( rot.get( 1, 0 ) + rot.get( 0, 1 ) ) / s;
-				z = ( rot.get( 2, 0 ) + rot.get( 0, 2 ) ) / s;
-			}
-			else if ( rot.get( 1, 1 ) > rot.get( 2, 2 ) )
-			{
-				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 1, 1 ) - rot.get( 0, 0 ) - rot.get( 2, 2 ) );
-				w = ( rot.get( 2, 0 ) - rot.get( 0, 2 ) ) / s;
-				x = ( rot.get( 1, 0 ) + rot.get( 0, 1 ) ) / s;
-				y = 0.25f * s;
-				z = ( rot.get( 2, 1 ) + rot.get( 1, 2 ) ) / s;
-			}
-			else
-			{
-				float s = 2.0f * (float) Math.sqrt( 1.0f + rot.get( 2, 2 ) - rot.get( 0, 0 ) - rot.get( 1, 1 ) );
-				w = ( rot.get( 0, 1 ) - rot.get( 1, 0 ) ) / s;
-				x = ( rot.get( 2, 0 ) + rot.get( 0, 2 ) ) / s;
-				y = ( rot.get( 1, 2 ) + rot.get( 2, 1 ) ) / s;
-				z = 0.25f * s;
-			}
-		}
-
-		float length = (float) Math.sqrt( x * x + y * y + z * z + w * w );
-		x /= length;
-		y /= length;
-		z /= length;
-		w /= length;
-	}
-
 	/**
 	 * GETTER
 	 */
@@ -215,48 +258,10 @@ public class Quaternion
 		return new Vector3f( -1, 0, 0 ).rotate( this );
 	}
 
-	public float getX()
+	public Quaternion set( Quaternion r )
 	{
-		return x;
-	}
-
-	public float getY()
-	{
-		return y;
-	}
-
-	public float getZ()
-	{
-		return z;
-	}
-
-	public float getW()
-	{
-		return w;
-	}
-
-
-	/**
-	 * SETTER
-	 */
-	public void setX( float x )
-	{
-		this.x = x;
-	}
-
-	public void setY( float y )
-	{
-		this.y = y;
-	}
-
-	public void setZ( float z )
-	{
-		this.z = z;
-	}
-
-	public void setW( float w )
-	{
-		this.w = w;
+		set( r.getX(), r.getY(), r.getZ(), r.getW() );
+		return this;
 	}
 
 	public Quaternion set( float x, float y, float z, float w )
@@ -265,12 +270,6 @@ public class Quaternion
 		this.y = y;
 		this.z = z;
 		this.w = w;
-		return this;
-	}
-
-	public Quaternion set( Quaternion r )
-	{
-		set( r.getX(), r.getY(), r.getZ(), r.getW() );
 		return this;
 	}
 

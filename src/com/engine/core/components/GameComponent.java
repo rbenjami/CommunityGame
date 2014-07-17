@@ -26,7 +26,9 @@ public abstract class GameComponent
 
 	public Transform getTransform()
 	{
-		return parent.getTransform();
+		if ( parent != null )
+			return parent.getTransform();
+		return new Transform();
 	}
 
 	public void addToEngine( CoreEngine engine ) {}

@@ -24,19 +24,9 @@ public class Vertex3f
 		this( pos, new Color( 255, 255, 255 ) );
 	}
 
-	public Vertex3f( float x, float y, float z )
-	{
-		this( new Vertex3f( x, y, z ), new Color( 255, 255, 255 ) );
-	}
-
 	public Vertex3f( Vertex3f pos, Color color )
 	{
 		this( pos, color, new Vertex3f( 0, 0, 0 ) );
-	}
-
-	public Vertex3f( float x, float y, float z, Color color )
-	{
-		this( new Vertex3f( x, y, z ), color, new Vertex3f( 0, 0, 0 ) );
 	}
 
 	public Vertex3f( Vertex3f pos, Color color, Vertex3f normal )
@@ -49,11 +39,49 @@ public class Vertex3f
 	}
 
 	/**
-	 * METHODES
+	 * GETTER
 	 */
-	public float lenght()
+	public float getX()
 	{
-		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
+		return x;
+	}
+
+	public float getY()
+	{
+		return y;
+	}
+
+	public float getZ()
+	{
+		return z;
+	}
+
+	public void setZ( float z )
+	{
+		this.z = z;
+	}
+
+	public void setY( float y )
+	{
+		this.y = y;
+	}
+
+	/**
+	 * SETTER
+	 */
+	public void setX( float x )
+	{
+		this.x = x;
+	}
+
+	public Vertex3f( float x, float y, float z )
+	{
+		this( new Vertex3f( x, y, z ), new Color( 255, 255, 255 ) );
+	}
+
+	public Vertex3f( float x, float y, float z, Color color )
+	{
+		this( new Vertex3f( x, y, z ), color, new Vertex3f( 0, 0, 0 ) );
 	}
 
 	public Vertex3f normalized()
@@ -61,6 +89,14 @@ public class Vertex3f
 		float lenght = this.lenght();
 
 		return ( new Vertex3f( x / lenght, y / lenght, z / lenght ) );
+	}
+
+	/**
+	 * METHODES
+	 */
+	public float lenght()
+	{
+		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
 	}
 
 	public Vertex3f add( Vertex3f v )
@@ -103,57 +139,19 @@ public class Vertex3f
 		return ( new Vertex3f( this.x / v, this.y / v, this.z / v ) );
 	}
 
-
-	/**
-	 * GETTER
-	 */
-	public float getX()
-	{
-		return x;
-	}
-
-	public float getY()
-	{
-		return y;
-	}
-
-	public float getZ()
-	{
-		return z;
-	}
-
 	public Color getColor()
 	{
 		return color;
 	}
 
-	public Vertex3f getNormal()
-	{
-		return normal;
-	}
-
-
-	/**
-	 * SETTER
-	 */
-	public void setX( float x )
-	{
-		this.x = x;
-	}
-
-	public void setY( float y )
-	{
-		this.y = y;
-	}
-
-	public void setZ( float z )
-	{
-		this.z = z;
-	}
-
 	public void setColor( Color color )
 	{
 		this.color = color;
+	}
+
+	public Vertex3f getNormal()
+	{
+		return normal;
 	}
 
 	public void setNormal( Vertex3f normal )

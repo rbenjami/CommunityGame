@@ -87,6 +87,11 @@ public class Transform
 		rot = getLookAtRotation( point, up );
 	}
 
+	public Quaternion getLookAtRotation( Vector3f point, Vector3f up )
+	{
+		return new Quaternion( new Matrix4f().initRotation( point.sub( pos ).normalized(), up ) );
+	}
+
 	public Matrix4f getTransformation()
 	{
 		Matrix4f translationMatrix = new Matrix4f().initTranslation( pos.getX(), pos.getY(), pos.getZ() );
@@ -119,29 +124,9 @@ public class Transform
 		return parentRotation.mul( rot );
 	}
 
-	public Quaternion getLookAtRotation( Vector3f point, Vector3f up )
-	{
-		return new Quaternion( new Matrix4f().initRotation( point.sub( pos ).normalized(), up ) );
-	}
-
 	public Vector3f getPos()
 	{
 		return pos;
-	}
-
-	public Quaternion getRot()
-	{
-		return rot;
-	}
-
-	public Vector3f getScale()
-	{
-		return scale;
-	}
-
-	public void setParent( Transform parent )
-	{
-		this.parent = parent;
 	}
 
 	public void setPos( Vector3f pos )
@@ -149,13 +134,28 @@ public class Transform
 		this.pos = pos;
 	}
 
+	public Quaternion getRot()
+	{
+		return rot;
+	}
+
 	public void setRot( Quaternion rotation )
 	{
 		this.rot = rotation;
 	}
 
+	public Vector3f getScale()
+	{
+		return scale;
+	}
+
 	public void setScale( Vector3f scale )
 	{
 		this.scale = scale;
+	}
+
+	public void setParent( Transform parent )
+	{
+		this.parent = parent;
 	}
 }

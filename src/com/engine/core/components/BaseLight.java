@@ -27,21 +27,6 @@ public class BaseLight extends GameComponent
 		engine.getRenderEngine().addLight( this );
 	}
 
-	public void setShader( Shader shader )
-	{
-		this.shader = shader;
-	}
-
-	public void setColor( Color color )
-	{
-		this.color = color;
-	}
-
-	public void setIntensity( float intensity )
-	{
-		this.intensity = intensity;
-	}
-
 	public Matrix4f getDepthMVP()
 	{
 		Matrix4f depthProjectionMatrix = new Matrix4f().initOrthographic( -10, 10, -10, 10, -10, 20 );
@@ -55,13 +40,28 @@ public class BaseLight extends GameComponent
 		return shader;
 	}
 
+	public void setShader( Shader shader )
+	{
+		this.shader = shader;
+	}
+
 	public Color getColor()
 	{
 		return color;
 	}
 
+	public void setColor( Color color )
+	{
+		this.color = color;
+	}
+
 	public float getIntensity()
 	{
 		return intensity;
+	}
+
+	public void setIntensity( float intensity )
+	{
+		this.intensity = intensity;
 	}
 }

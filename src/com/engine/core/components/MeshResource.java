@@ -12,13 +12,20 @@ public class MeshResource
 	private int ibo;
 	private int size;
 	private int refCount;
+	private boolean isModel = false;
 
 	public MeshResource( int size )
+	{
+		this( size, false );
+	}
+
+	public MeshResource( int size, boolean isModel )
 	{
 		vbo = glGenBuffers();
 		ibo = glGenBuffers();
 		this.size = size;
 		this.refCount = 1;
+		this.isModel = isModel;
 	}
 
 	@Override
@@ -52,5 +59,10 @@ public class MeshResource
 	public int getSize()
 	{
 		return size;
+	}
+
+	public boolean isModel()
+	{
+		return this.isModel;
 	}
 }

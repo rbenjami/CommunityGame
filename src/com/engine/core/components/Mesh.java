@@ -2,9 +2,14 @@ package com.engine.core.components;
 
 import com.engine.core.Material;
 import com.engine.core.Utils;
+import com.engine.core.components.meshLoading.IndexedModel;
+import com.engine.core.components.meshLoading.OBJModel;
+import com.engine.core.helpers.Bounds;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -14,34 +19,120 @@ public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 	private Material     material;
-	private Vector3f[]   vertices;
 	private int[]        indices;
+	private Vector3f[] vertex;
+	private Bounds     boundingBox;
 
-	public Mesh( MeshData data )
+	public Mesh( String fileName )
 	{
-		this.material = Material.ROCK;
-		addVertices( data.getVertices(), data.getIndices() );
+		loadMesh( fileName );
+		this.material = new Material();
 	}
 
-	public Mesh( Vector3f[] vertices, int[] indices )
+	public void loadMesh( String fileName )
 	{
-		this.material = Material.ROCK;
-		addVertices( vertices, indices );
-	}
+		String[] splitArray = fileName.split( "\\." );
+		String ext = splitArray[splitArray.length - 1];
 
-	private void addVertices( Vector3f[] vertices, int[] indices )
-	{
-		calcNormals( vertices, indices );
+		if ( !ext.equals( "obj" ) )
+		{
+			System.err.println( "Error: '" + ext + "' file format not supported for mesh data." );
+			new Exception().printStackTrace();
+			System.exit( 1 );
+		}
 
-		this.vertices = vertices;
+		OBJModel test = new OBJModel( "./res/models/" + fileName );
+		IndexedModel model = test.toIndexedModel();
+		model.calcNormals();
+
+		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
+
+		for ( int i = 0; i < model.getPositions().size(); i++ )
+		{
+			vertices.add( new Vector3f( model.getPositions().get( i ) ) );
+		}
+
+		Vector3f[] vertexData = new Vector3f[vertices.size()];
+		vertices.toArray( vertexData );
+
+		Integer[] indexData = new Integer[model.getIndices().size()];
+		model.getIndices().toArray( indexData );
+		int[] indices = Utils.toIntArray( indexData );
+
 		this.indices = indices;
-		resource = new MeshResource( indices.length );
+		this.vertex = vertexData;
+		addVertices( vertexData, indices, true );
+	}
+
+	private void addVertices( Vector3f[] vertex, int[] indices, boolean isModel )
+	{
+		this.indices = indices;
+		this.vertex = vertex;
+		boundingBox = new Bounds( this );
+		calcNormals( vertex, indices );
+
+		resource = new MeshResource( this.indices.length, isModel );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( this.vertex ), GL_STATIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( this.indices ), GL_STATIC_DRAW );
+	}
+
+	private void calcNormals( Vector3f[] vertex, int[] indices )
+	{
+		ArrayList<Vector3f> newVertex = new ArrayList<Vector3f>();
+		ArrayList<Integer> newIndices = new ArrayList<Integer>();
+
+		for ( int i = 0; i < indices.length; i += 3 )
+		{
+			int i0 = indices[i];
+			int i1 = indices[i + 1];
+			int i2 = indices[i + 2];
+
+			Vector3f v1 = new Vector3f( vertex[i0], vertex[i1] );
+			Vector3f v2 = new Vector3f( vertex[i0], vertex[i2] );
+
+			Vector3f normal = v1.cross( v2 ).normalized();
+
+			vertex[i0].setNormal( vertex[i0].getNormal().add( normal ) );
+			vertex[i1].setNormal( vertex[i1].getNormal().add( normal ) );
+			vertex[i2].setNormal( vertex[i2].getNormal().add( normal ) );
+
+			newVertex.add( new Vector3f( vertex[i0] ) );
+			newVertex.add( new Vector3f( vertex[i1] ) );
+			newVertex.add( new Vector3f( vertex[i2] ) );
+			newIndices.add( i );
+			newIndices.add( i + 1 );
+			newIndices.add( i + 2 );
+		}
+		Vector3f[] vertexData = new Vector3f[newVertex.size()];
+		newVertex.toArray( vertexData );
+		this.vertex = vertexData;
+
+		Integer[] indexData = new Integer[newIndices.size()];
+		newIndices.toArray( indexData );
+		this.indices = Utils.toIntArray( indexData );
+	}
+
+	public Mesh( Vector3f[] vertex, int[] indices )
+	{
+		this( vertex, indices, new Material() );
+	}
+
+	public Mesh( Vector3f[] vertex, int[] indices, Material material )
+	{
+		this.material = material;
+		addVertices( vertex, indices, false );
+	}
+
+	@Override
+	public void render( Shader shader, RenderEngine renderingEngine )
+	{
+		shader.bind();
+		shader.updateUniforms( getTransform(), material, renderingEngine );
+		draw();
 	}
 
 	public void draw()
@@ -63,33 +154,9 @@ public class Mesh extends GameComponent
 		glDisableVertexAttribArray( 2 );
 	}
 
-	private void calcNormals( Vector3f[] vertices, int[] indices )
+	public Material getMaterial()
 	{
-		for ( int i = 0; i < indices.length; i += 3 )
-		{
-			int i0 = indices[i];
-			int i1 = indices[i + 1];
-			int i2 = indices[i + 2];
-
-			Vector3f v1 = new Vector3f( vertices[i0], vertices[i1] );
-			Vector3f v2 = new Vector3f( vertices[i0], vertices[i2] );
-
-			Vector3f normal = v1.cross( v2 ).normalized();
-
-			vertices[i0].setNormal( vertices[i0].getNormal().add( normal ) );
-			vertices[i1].setNormal( vertices[i1].getNormal().add( normal ) );
-			vertices[i2].setNormal( vertices[i2].getNormal().add( normal ) );
-		}
-//		for ( Vector3f vertex : vertices )
-//			vertex.setNormal( vertex.getNormal().normalized() );
-	}
-
-	@Override
-	public void render( Shader shader, RenderEngine renderingEngine )
-	{
-		shader.bind();
-		shader.updateUniforms( getTransform(), material, renderingEngine );
-		draw();
+		return material;
 	}
 
 	public void setMaterial( Material material )
@@ -97,13 +164,23 @@ public class Mesh extends GameComponent
 		this.material = material;
 	}
 
-	public Material getMaterial()
+	public Vector3f[] getVertex()
 	{
-		return material;
+		return vertex;
 	}
 
-	public Vector3f[] getVertices()
+	public boolean intersect( Mesh mesh )
 	{
-		return vertices;
+		Bounds bound1 = boundingBox.addPos( getTransform().getPos() );
+		Bounds bound2 = mesh.getBoundingBox().addPos( mesh.getTransform().getPos() );
+
+		if ( !bound1.intersect( bound2 ) )
+			return false;
+		return true;
+	}
+
+	public Bounds getBoundingBox()
+	{
+		return boundingBox;
 	}
 }
