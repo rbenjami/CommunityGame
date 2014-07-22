@@ -12,6 +12,13 @@ public class Player extends Entity
 	public Player( Mesh model )
 	{
 		super( model );
+		setName( "" );
 		this.addComponent( new Camera( (float) Math.toRadians( 70.0f ), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f ) );
+	}
+
+	@Override
+	public void update( float delta )
+	{
+
 	}
 }

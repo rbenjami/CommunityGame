@@ -3,7 +3,7 @@ package com.engine;
 import com.engine.core.Game;
 import com.engine.core.Input;
 import com.engine.core.helpers.TimeHelper;
-import com.engine.physic.PhysicEngine;
+import com.engine.physic.PhysicsEngine;
 import com.engine.render.RenderEngine;
 import com.engine.render.Window;
 import org.lwjgl.opengl.Display;
@@ -17,13 +17,13 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class CoreEngine
 {
-	private boolean      isRunning;
-	private Game         game;
-	private RenderEngine renderEngine;
-	private PhysicEngine physicEngine;
-	private int          width;
-	private int          height;
-	private double       frameTime;
+	private boolean       isRunning;
+	private Game          game;
+	private RenderEngine  renderEngine;
+	private PhysicsEngine physicsEngine;
+	private int           width;
+	private int           height;
+	private double        frameTime;
 
 	public CoreEngine( int width, int height, double framerate, Game game )
 	{
@@ -39,7 +39,7 @@ public class CoreEngine
 	{
 		Window.createWindow( width, height, title );
 		this.renderEngine = new RenderEngine();
-		this.physicEngine = new PhysicEngine();
+		this.physicsEngine = new PhysicsEngine();
 	}
 
 	public void start()
@@ -91,6 +91,8 @@ public class CoreEngine
 				debug();
 
 				game.update( (float) frameTime );
+
+				game.physic( physicsEngine, (float) frameTime );
 
 				if ( frameCounter >= 1.0 )
 				{
@@ -153,5 +155,15 @@ public class CoreEngine
 	public RenderEngine getRenderEngine()
 	{
 		return renderEngine;
+	}
+
+	public PhysicsEngine getPhysicsEngine()
+	{
+		return physicsEngine;
+	}
+
+	public Game getGame()
+	{
+		return game;
 	}
 }

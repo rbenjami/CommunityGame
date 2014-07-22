@@ -8,11 +8,10 @@ import java.awt.*;
 public class Vector3f
 {
 	public static final Vector3f NULL = new Vector3f( 0, 0, 0 );
-	private float    x;
-	private float    y;
-	private float    z;
-	private Color    color;
-	private Vector3f normal;
+	private float x;
+	private float y;
+	private float z;
+	private Color color;
 
 	/**
 	 * CONSTRUCTOR
@@ -28,14 +27,11 @@ public class Vector3f
 		this.y = y;
 		this.z = z;
 		this.color = color;
-		this.normal = null;
 	}
 
 	public Vector3f( Vector3f direction )
 	{
 		this( direction.getX(), direction.getY(), direction.getZ(), direction.getColor() );
-		if ( direction.getNormal() != null )
-			this.normal = direction.normal;
 	}
 
 	/**
@@ -46,32 +42,14 @@ public class Vector3f
 		return ( x );
 	}
 
-	/**
-	 * SETTER
-	 */
-	public void setX( float x )
-	{
-		this.x = x;
-	}
-
 	public float getY()
 	{
 		return ( y );
 	}
 
-	public void setY( float y )
-	{
-		this.y = y;
-	}
-
 	public float getZ()
 	{
 		return ( z );
-	}
-
-	public void setZ( float z )
-	{
-		this.z = z;
 	}
 
 	public Color getColor()
@@ -84,16 +62,22 @@ public class Vector3f
 		this.color = color;
 	}
 
-	public Vector3f getNormal()
+	public void setZ( float z )
 	{
-		if ( normal == null )
-			this.normal = new Vector3f( 0, 0, 0 );
-		return normal;
+		this.z = z;
 	}
 
-	public void setNormal( Vector3f normal )
+	public void setY( float y )
 	{
-		this.normal = normal;
+		this.y = y;
+	}
+
+	/**
+	 * SETTER
+	 */
+	public void setX( float x )
+	{
+		this.x = x;
 	}
 
 	public Vector3f( Vector3f ori, Vector3f dest )
@@ -102,7 +86,7 @@ public class Vector3f
 	}
 
 	/**
-	 * METHODES
+	 * METHODS
 	 */
 	public Vector3f rotate( Quaternion rotation )
 	{

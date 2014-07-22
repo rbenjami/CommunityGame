@@ -4,6 +4,7 @@ import com.engine.core.components.Mesh;
 import com.engine.core.helpers.MathHelper;
 import com.engine.core.helpers.NoiseHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.geometry.Triangle;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,13 +12,12 @@ import java.util.ArrayList;
 /**
  * Created on 10/04/14.
  */
-public class Tessellator
+public class Tessellator extends GameObject
 {
 	private int       fraction;
 	private float[][] noise;
 	private float     smooth;
 	private Color     color;
-	private Mesh      mesh;
 
 	public Tessellator( int fraction, float smooth, Color color, long seed )
 	{
@@ -27,9 +27,13 @@ public class Tessellator
 		this.color = color;
 		this.smooth = smooth;
 		this.noise = NoiseHelper.generatePerlinNoise( NoiseHelper.generateWhiteNoise( fraction + 1, fraction + 1, seed ), 6 );
+		Mesh model = calculateTesselator();
+		setModel( model );
+		addComponent( model );
 	}
 
-	public void calculateTesselator()
+	@Deprecated
+	private Mesh calculateTesselator()
 	{
 		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
 		ArrayList<Integer> indices = new ArrayList<Integer>();
@@ -74,17 +78,10 @@ public class Tessellator
 			}
 			z++;
 		}
-		Vector3f[] vertexData = new Vector3f[vertices.size()];
-		vertices.toArray( vertexData );
-
-		Integer[] indexData = new Integer[indices.size()];
-		indices.toArray( indexData );
-		mesh = new Mesh( vertexData, Utils.toIntArray( indexData ) );
-	}
-
-	public Mesh getMesh()
-	{
-		return mesh;
+		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
+		for ( int i = 0; i < indices.size(); i += 3 )
+			triangles.add( new Triangle( vertices.get( indices.get( i ) ), vertices.get( indices.get( i + 1 ) ), vertices.get( indices.get( i + 2 ) ) ) );
+		return new Mesh( triangles );
 	}
 }
 

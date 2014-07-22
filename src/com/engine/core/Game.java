@@ -1,6 +1,8 @@
 package com.engine.core;
 
 import com.engine.CoreEngine;
+import com.engine.core.components.GameComponent;
+import com.engine.physic.PhysicsEngine;
 import com.engine.render.RenderEngine;
 import com.game.entity.Entity;
 
@@ -12,7 +14,9 @@ import java.util.ArrayList;
 public abstract class Game
 {
 	private GameObject root;
-	private ArrayList<Entity> entityList = new ArrayList<Entity>();
+	private ArrayList<GameObject>    gameObjectsList = new ArrayList<GameObject>();
+	private ArrayList<Entity>        entityList      = new ArrayList<Entity>();
+	private ArrayList<GameComponent> boundingBox     = new ArrayList<GameComponent>();
 
 	public void init() {}
 
@@ -21,7 +25,7 @@ public abstract class Game
 		getRootObject().inputAll( delta );
 	}
 
-	private GameObject getRootObject()
+	public GameObject getRootObject()
 	{
 		if ( root == null )
 			root = new GameObject();
@@ -34,6 +38,11 @@ public abstract class Game
 		getRootObject().updateAll( delta );
 	}
 
+	public void physic( PhysicsEngine physicsEngine, float delta )
+	{
+		physicsEngine.update( getRootObject().getAllAttached(), delta );
+	}
+
 	public void render( RenderEngine renderingEngine )
 	{
 		renderingEngine.render( getRootObject() );
@@ -42,12 +51,18 @@ public abstract class Game
 	public void addObject( GameObject object )
 	{
 		getRootObject().addChild( object );
+		gameObjectsList.add( object );
 	}
 
 	public void addEntity( Entity entity )
 	{
 		root.addComponent( entity.getModel() );
 		entityList.add( entity );
+	}
+
+	public ArrayList<GameObject> getGameObjectsList()
+	{
+		return gameObjectsList;
 	}
 
 	public void setEngine( CoreEngine engine )

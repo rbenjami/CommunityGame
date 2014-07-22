@@ -2,7 +2,10 @@ package com.engine.core;
 
 import com.engine.CoreEngine;
 import com.engine.core.components.GameComponent;
+import com.engine.core.components.Mesh;
+import com.engine.core.helpers.AABB;
 import com.engine.core.helpers.dimensions.Transform;
+import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
 
@@ -15,15 +18,25 @@ public class GameObject
 {
 	private ArrayList<GameObject>    children;
 	private ArrayList<GameComponent> components;
-	private Transform                transform;
 	private CoreEngine               engine;
+	private Mesh      model;
+	private Transform transform;
+	private Material  material;
+	private Vector3f  velocity;
+	private float     rollAngle;
+	private String    name;
 
 	public GameObject()
 	{
 		children = new ArrayList<GameObject>();
 		components = new ArrayList<GameComponent>();
 		transform = new Transform();
+		material = new Material();
+		velocity = new Vector3f( 0, 0, 0 );
+		rollAngle = 0;
 		engine = null;
+		model = null;
+		name = "";
 	}
 
 	public void addChild( GameObject child )
@@ -85,6 +98,9 @@ public class GameObject
 			component.render( shader, renderEngine );
 	}
 
+	/**
+	 * GETTER
+	 */
 	public ArrayList<GameObject> getAllAttached()
 	{
 		ArrayList<GameObject> result = new ArrayList<GameObject>();
@@ -101,6 +117,64 @@ public class GameObject
 		return transform;
 	}
 
+	public Material getMaterial()
+	{
+		return material;
+	}
+
+	public void setMaterial( Material material )
+	{
+		this.material = material;
+	}
+
+	public Vector3f getVelocity()
+	{
+		return velocity;
+	}
+
+	public void setVelocity( Vector3f velocity )
+	{
+		this.velocity = velocity;
+	}
+
+	public float getRollAngle()
+	{
+		return rollAngle;
+	}
+
+	public void setRollAngle( float rollAngle )
+	{
+		this.rollAngle = (float) Math.toRadians( rollAngle );
+	}
+
+	public AABB getAxisAlignedBoundingBox()
+	{
+		return getModel().getAxisAlignedBoundingBox();
+	}
+
+	public Mesh getModel()
+	{
+		return model;
+	}
+
+	public void setModel( Mesh model )
+	{
+		this.model = model;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName( String name )
+	{
+		this.name = name;
+	}
+
+	/**
+	 * SETTER
+	 */
 	public void setEngine( CoreEngine engine )
 	{
 		if ( this.engine != engine )

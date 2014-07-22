@@ -2,6 +2,7 @@ package com.engine.core;
 
 import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.geometry.Triangle;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -13,10 +14,12 @@ import java.util.ArrayList;
  */
 public class Utils
 {
-	public static IntBuffer createFlippedBuffer( int... values )
+	public static IntBuffer createRegularFlippedBuffer( int size )
 	{
-		IntBuffer buffer = createIntBuffer( values.length );
-		buffer.put( values );
+		IntBuffer buffer = createIntBuffer( size );
+
+		for ( int i = 0; i < size; i++ )
+			buffer.put( i );
 		buffer.flip();
 
 		return buffer;
@@ -27,22 +30,21 @@ public class Utils
 		return BufferUtils.createIntBuffer( size );
 	}
 
+	public static IntBuffer createFlippedBuffer( int... values )
+	{
+		IntBuffer buffer = createIntBuffer( values.length );
+		buffer.put( values );
+		buffer.flip();
+
+		return buffer;
+	}
+
 	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices )
 	{
 		FloatBuffer buffer = createFloatBuffer( vertices.length * 9 );
 
 		for ( Vector3f vertex : vertices )
-		{
-			buffer.put( vertex.getX() );
-			buffer.put( vertex.getY() );
-			buffer.put( vertex.getZ() );
-			buffer.put( (float) vertex.getColor().getRed() / 255 );
-			buffer.put( (float) vertex.getColor().getGreen() / 255 );
-			buffer.put( (float) vertex.getColor().getBlue() / 255 );
-			buffer.put( vertex.getNormal().getX() );
-			buffer.put( vertex.getNormal().getY() );
-			buffer.put( vertex.getNormal().getZ() );
-		}
+			vertexToBuffer( buffer, vertex, new Vector3f( 0, 1, 0 ) );
 
 		buffer.flip();
 
@@ -52,6 +54,34 @@ public class Utils
 	public static FloatBuffer createFloatBuffer( int size )
 	{
 		return BufferUtils.createFloatBuffer( size );
+	}
+
+	private static void vertexToBuffer( FloatBuffer buffer, Vector3f vertex, Vector3f normal )
+	{
+		buffer.put( vertex.getX() );
+		buffer.put( vertex.getY() );
+		buffer.put( vertex.getZ() );
+		buffer.put( (float) vertex.getColor().getRed() / 255 );
+		buffer.put( (float) vertex.getColor().getGreen() / 255 );
+		buffer.put( (float) vertex.getColor().getBlue() / 255 );
+		buffer.put( normal.getX() );
+		buffer.put( normal.getY() );
+		buffer.put( normal.getZ() );
+	}
+
+	public static FloatBuffer createFlippedBuffer( ArrayList<Triangle> triangles )
+	{
+		FloatBuffer buffer = createFloatBuffer( triangles.size() * 3 * 9 );
+
+		for ( int i = 0; i < triangles.size(); i++ )
+		{
+			vertexToBuffer( buffer, triangles.get( i ).getPoint( 3 ), triangles.get( i ).getNormal() );
+			vertexToBuffer( buffer, triangles.get( i ).getPoint( 2 ), triangles.get( i ).getNormal() );
+			vertexToBuffer( buffer, triangles.get( i ).getPoint( 1 ), triangles.get( i ).getNormal() );
+		}
+		buffer.flip();
+
+		return buffer;
 	}
 
 	public static FloatBuffer createFlippedBuffer( Matrix4f value )

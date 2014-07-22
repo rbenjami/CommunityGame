@@ -152,8 +152,6 @@ public class GeoSphere extends GameComponent
 		for ( int i = 0; i < vertices.length; i++ )
 			indices[i] = i;
 
-		calcNormals( vertices, indices );
-
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
@@ -180,25 +178,6 @@ public class GeoSphere extends GameComponent
 		glDisableVertexAttribArray( 0 );
 		glDisableVertexAttribArray( 1 );
 		glDisableVertexAttribArray( 2 );
-	}
-
-	private void calcNormals( Vector3f[] vertices, int[] indices )
-	{
-		for ( int i = 0; i < indices.length; i += 3 )
-		{
-			int i0 = indices[i];
-			int i1 = indices[i + 1];
-			int i2 = indices[i + 2];
-
-			Vector3f v1 = new Vector3f( vertices[i0], vertices[i1] );
-			Vector3f v2 = new Vector3f( vertices[i0], vertices[i2] );
-
-			Vector3f normal = v1.cross( v2 ).normalized();
-
-			vertices[i0].setNormal( normal );
-			vertices[i1].setNormal( normal );
-			vertices[i2].setNormal( normal );
-		}
 	}
 
 	@Override

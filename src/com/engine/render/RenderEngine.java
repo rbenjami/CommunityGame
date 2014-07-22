@@ -33,7 +33,7 @@ public class RenderEngine extends MappedValues
 
 		ambientShader = new Shader( "ambient" );
 
-		glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+		glClearColor( 0.4f, 0.4f, 0.4f, 0.0f );
 
 		glFrontFace( GL_CW );
 		glCullFace( GL_BACK );
@@ -121,4 +121,5 @@ public class RenderEngine extends MappedValues
 	{
 		return activeLight;
 	}
+
 }

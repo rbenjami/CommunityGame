@@ -6,6 +6,8 @@ import com.engine.core.GameObject;
 import com.engine.core.Tessellator;
 import com.engine.core.components.*;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.geometry.Triangle;
+import com.game.entity.Animals;
 import com.game.entity.Entity;
 import com.game.entity.Player;
 
@@ -16,9 +18,11 @@ import java.awt.*;
  */
 public class CommunityGame extends Game
 {
-	Player player;
-	Entity entity;
-	Mesh   mesh;
+	Player     player;
+	Animals    animals;
+	Entity     entity;
+	GameObject planet;
+	GameObject dirt;
 
 	public void init()
 	{
@@ -26,33 +30,38 @@ public class CommunityGame extends Game
 		 * Entity
 		 */
 		player = new Player( new Mesh( "monkey.obj" ) );
-		player.getTransform().getPos().set( 10, 12, 2 );
+		player.getTransform().getPos().set( 10, 60, 2 );
 		addObject( player.addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 10.0f ) ) );
 
+		animals = new Animals( new Mesh( "monkey.obj" ) );
+		animals.getTransform().getPos().set( 20, 10, 2 );
 		entity = new Entity( new Mesh( "monkey.obj" ) );
-		addObject( entity );
+		entity.getTransform().getPos().set( 10, 120, 2 );
+//		Mesh mesh = new Mesh( "monkey.obj" );
+//		mesh.getTransform().setPos( new Vector3f( 2, 0, 0 ) );
+//		entity.addComponent( mesh );
 
 		/**
 		 * Plane
 		 */
-		float fieldDepth = 10.0f;
-		float fieldWidth = 10.0f;
+		float fieldDepth = 1.0f;
+		float fieldWidth = 1.0f;
 
 		Vector3f[] vertices = new Vector3f[]
 				{
 						new Vector3f( -fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 0.0f ) ),
-						new Vector3f( -fieldWidth, 0.0f, fieldDepth * 3, new Color( 0.0f, 1.0f, 0.0f ) ),
-						new Vector3f( fieldWidth * 3, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 1.0f ) ),
-						new Vector3f( fieldWidth * 3, 0.0f, fieldDepth * 3, new Color( 1.0f, 1.0f, 0.0f ) )
+						new Vector3f( -fieldWidth, 0.0f, fieldDepth, new Color( 0.0f, 1.0f, 0.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 1.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 0.0f ) )
 				};
-
-		int indices[] =
+		Triangle[] triangles = new Triangle[]
 				{
-						0, 1, 2,
-						2, 1, 3
+						new Triangle( vertices[0], vertices[1], vertices[2] ),
+						new Triangle( vertices[2], vertices[1], vertices[3] )
 				};
 
-		mesh = new Mesh( vertices, indices );
+
+		Mesh mesh = new Mesh( triangles );
 
 		GameObject planeObject = new GameObject();
 		planeObject.addComponent( mesh );
@@ -69,40 +78,36 @@ public class CommunityGame extends Game
 		pointLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 243, 149 ), 0.6f );
+		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 243, 149 ), 0.8f );
 		directionalLightObject.addComponent( directionalLight );
 
 		/**
 		 * Object
 		 */
-		GameObject planet;
-		planet = new GameObject();
-		planet.addComponent( new GeoSphere( 50, 7 ) );
-		planet.getTransform().translate( -50, 10, 0 );
+//		planet = new GameObject();
+//		planet.addComponent( new GeoSphere( 50, 7 ) );
+//		planet.getTransform().translate( -50, 10, 0 );
 
-		Tessellator tessellator = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
-		tessellator.calculateTesselator();
-		GameObject dirt = new GameObject();
-		dirt.addComponent( tessellator.getMesh() );
+		dirt = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
 		dirt.getTransform().translate( 0, -3, 0 );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-//		GameObject pok = new GameObject();
-//		pok.addComponent( new Mesh().loadMesh( "monkey.obj" ) );
-//
-//		addObject( pok );
+		addObject( animals );
+		addObject( entity );
 		addObject( dirt );
-		addObject( planet );
+//		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );
 
-		directionalLight.getTransform().rotate( new Vector3f( 1, 0, 0 ), (float) Math.toRadians( -25 ) );
+		directionalLight.getTransform().rotate( new Vector3f( 1, 0, 0 ), (float) Math.toRadians( -42 ) );
 	}
 
 	@Override
 	public void update( float delta )
 	{
 		super.update( delta );
-		System.out.println( player.getModel().intersect( mesh ) );
+//		System.out.println(entity.getTransform().getPos());
+//		if ( dirt.getModel() != null )
+//			System.out.println( Intersect.gameObject( player, dirt ) );
 	}
 }
