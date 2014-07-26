@@ -25,10 +25,12 @@ public class PhysicsEngine
 	public void update( ArrayList<GameObject> objectList, float delta )
 	{
 		this.objectList = objectList;
+//		double time = TimeHelper.getTime();
 		for ( GameObject object : objectList )
 		{
 			physics( object, delta );
 		}
+//		System.out.println( TimeHelper.getTime() - time );
 	}
 
 	public void physics( GameObject object, float delta )

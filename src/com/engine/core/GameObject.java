@@ -19,12 +19,12 @@ public class GameObject
 	private ArrayList<GameObject>    children;
 	private ArrayList<GameComponent> components;
 	private CoreEngine               engine;
-	private Mesh      model;
-	private Transform transform;
-	private Material  material;
-	private Vector3f  velocity;
-	private float     rollAngle;
-	private String    name;
+	private Mesh                     model;
+	private Transform                transform;
+	private Material                 material;
+	private Vector3f                 velocity;
+	private float                    rollAngle;
+	private String                   name;
 
 	public GameObject()
 	{

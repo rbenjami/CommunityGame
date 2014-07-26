@@ -1,5 +1,7 @@
 package com.engine.core.helpers.dimensions;
 
+import com.engine.core.helpers.AABB;
+
 import java.awt.*;
 
 /**
@@ -88,6 +90,17 @@ public class Vector3f
 	/**
 	 * METHODS
 	 */
+	public boolean isInBound( AABB aabb )
+	{
+		if ( x > aabb.getMax().getX() || x < aabb.getMin().getX() )
+			return false;
+		if ( y > aabb.getMax().getY() || y < aabb.getMin().getY() )
+			return false;
+		if ( z > aabb.getMax().getZ() || z < aabb.getMin().getZ() )
+			return false;
+		return true;
+	}
+
 	public Vector3f rotate( Quaternion rotation )
 	{
 		Quaternion conjugate = rotation.conjugate();
@@ -175,6 +188,11 @@ public class Vector3f
 		this.y = y;
 		this.z = z;
 		return this;
+	}
+
+	public boolean isNull()
+	{
+		return this.equals( Vector3f.NULL );
 	}
 
 	public boolean equals( Vector3f r )

@@ -29,17 +29,15 @@ public class CommunityGame extends Game
 		/**
 		 * Entity
 		 */
-		player = new Player( new Mesh( "monkey.obj" ) );
-		player.getTransform().getPos().set( 10, 60, 2 );
+		player = new Player( new Mesh( "cube.obj" ) );
+		player.getTransform().getPos().set( 0, 5, -6 );
 		addObject( player.addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 10.0f ) ) );
 
-		animals = new Animals( new Mesh( "monkey.obj" ) );
-		animals.getTransform().getPos().set( 20, 10, 2 );
-		entity = new Entity( new Mesh( "monkey.obj" ) );
-		entity.getTransform().getPos().set( 10, 120, 2 );
-//		Mesh mesh = new Mesh( "monkey.obj" );
-//		mesh.getTransform().setPos( new Vector3f( 2, 0, 0 ) );
-//		entity.addComponent( mesh );
+//		animals = new Animals( new Mesh( "sphere.obj" ) );
+//		animals.getTransform().getPos().set( 0, 0, 0 );
+		entity = new Entity( new Mesh( "sphere.obj" ) );
+		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
+		entity.getTransform().getPos().set( 0, 50, 10 );
 
 		/**
 		 * Plane
@@ -56,17 +54,17 @@ public class CommunityGame extends Game
 				};
 		Triangle[] triangles = new Triangle[]
 				{
-						new Triangle( vertices[0], vertices[1], vertices[2] ),
-						new Triangle( vertices[2], vertices[1], vertices[3] )
+						new Triangle( vertices[0], vertices[1], vertices[2], 0 ),
+						new Triangle( vertices[2], vertices[1], vertices[3], 1 )
 				};
 
 
 		Mesh mesh = new Mesh( triangles );
 
-		GameObject planeObject = new GameObject();
-		planeObject.addComponent( mesh );
-		planeObject.getTransform().translate( 0, -1, 0 );
-		addObject( planeObject );
+//		GameObject planeObject = new GameObject();
+//		planeObject.addComponent( mesh );
+//		planeObject.getTransform().translate( 0, -1, 0 );
+//		addObject( planeObject );
 
 		/**
 		 * Light
@@ -92,7 +90,7 @@ public class CommunityGame extends Game
 		dirt.getTransform().translate( 0, -3, 0 );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-		addObject( animals );
+//		addObject( animals );
 		addObject( entity );
 		addObject( dirt );
 //		addObject( planet );

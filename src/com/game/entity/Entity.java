@@ -19,7 +19,7 @@ public class Entity extends GameObject
 		material.addFloat( "gravity", 1 );
 		material.addFloat( "mass", 1 );
 		material.addFloat( "dragCoefficient", 0.47f );
-		material.addFloat( "surface", 1f );
+		material.addFloat( "surface", 0.5f );
 		setName( "Roger" );
 		setMaterial( material );
 	}

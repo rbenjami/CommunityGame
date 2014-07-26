@@ -1,5 +1,6 @@
 package com.game.entity;
 
+import com.engine.core.Material;
 import com.engine.core.components.Mesh;
 import com.engine.core.helpers.dimensions.Vector3f;
 
@@ -8,11 +9,15 @@ import com.engine.core.helpers.dimensions.Vector3f;
  */
 public class Animals extends Entity
 {
-	private float test = 0;
-
 	public Animals( Mesh model )
 	{
 		super( model );
+		Material material = new Material();
+		material.addFloat( "gravity", 0 );
+		material.addFloat( "mass", 0 );
+		material.addFloat( "dragCoefficient", 0.47f );
+		material.addFloat( "surface", 1f );
+		setMaterial( material );
 		setName( "" );
 	}
 
@@ -21,6 +26,5 @@ public class Animals extends Entity
 	{
 		super.update( delta );
 		setVelocity( new Vector3f( 0, 0, 0 ) );
-		test += 0.01f;
 	}
 }

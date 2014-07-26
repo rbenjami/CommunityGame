@@ -84,6 +84,19 @@ public class Utils
 		return buffer;
 	}
 
+	public static FloatBuffer createFlippedBuffer( Triangle triangle )
+	{
+		FloatBuffer buffer = createFloatBuffer( 3 * 9 );
+
+		vertexToBuffer( buffer, triangle.getPoint( 3 ), triangle.getNormal() );
+		vertexToBuffer( buffer, triangle.getPoint( 2 ), triangle.getNormal() );
+		vertexToBuffer( buffer, triangle.getPoint( 1 ), triangle.getNormal() );
+
+		buffer.flip();
+
+		return buffer;
+	}
+
 	public static FloatBuffer createFlippedBuffer( Matrix4f value )
 	{
 		FloatBuffer buffer = createFloatBuffer( 4 * 4 );

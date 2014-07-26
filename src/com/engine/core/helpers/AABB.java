@@ -13,12 +13,12 @@ public class AABB
 	private Vector3f max;
 	private Mesh mesh;
 
-	public AABB( Vector3f min, Vector3f max )
-	{
-		this.min = min;
-		this.max = max;
-		mesh = null;
-	}
+//	public AABB( Vector3f min, Vector3f max )
+//	{
+//		this.min = min;
+//		this.max = max;
+//		mesh = null;
+//	}
 
 	public AABB( Mesh mesh )
 	{
@@ -96,6 +96,6 @@ public class AABB
 	@Override
 	public String toString()
 	{
-		return "AABB min: X: " + getMin().getX() + " Y: " + getMin().getY() + " Z: " + getMin().getZ() + " ,max: X: " + getMax().getX() + " Y: " + getMax().getY() + " Z: " + getMax().getZ();
+		return "AABB min: X: " + getMin().getX() + " Y: " + getMin().getY() + " Z: " + getMin().getZ() + ", max: X: " + getMax().getX() + " Y: " + getMax().getY() + " Z: " + getMax().getZ();
 	}
 }

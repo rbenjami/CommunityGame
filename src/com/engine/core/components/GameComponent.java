@@ -22,7 +22,10 @@ public abstract class GameComponent
 	public void setParent( GameObject parent )
 	{
 		this.parent = parent;
+		onAddParent( this.parent );
 	}
+
+	public void onAddParent( GameObject parent ) {}
 
 	public Transform getTransform()
 	{

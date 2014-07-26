@@ -1,5 +1,6 @@
 package com.engine.core.components;
 
+import com.engine.core.GameObject;
 import com.engine.core.Material;
 import com.engine.core.Utils;
 import com.engine.core.components.meshLoading.OBJModel;
@@ -79,6 +80,18 @@ public class Mesh extends GameComponent
 		addVertices( triangles );
 	}
 
+	//TODO: updateTriangle
+	public void updateTriangle( int offset )
+	{
+		Triangle triangle = triangles.get( offset );
+
+		offset *= 3 * 9;
+		System.out.println( "POK: " + offset );
+//		resource = new MeshResource( triangles.size() * 3 );
+//		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
+		glBufferSubData( GL_ARRAY_BUFFER, offset, Utils.createFlippedBuffer( triangle ) );
+	}
+
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
 	{
@@ -86,6 +99,14 @@ public class Mesh extends GameComponent
 		shader.updateUniforms( getTransform(), material, renderingEngine );
 		if ( resource != null )
 			draw();
+	}
+
+	@Override
+	public void onAddParent( GameObject parent )
+	{
+		super.onAddParent( parent );
+		for ( Triangle triangle : triangles )
+			parent.addComponent( triangle );
 	}
 
 	public void draw()
@@ -125,6 +146,18 @@ public class Mesh extends GameComponent
 	public ArrayList<Triangle> getTriangles()
 	{
 		return triangles;
+	}
+
+	public ArrayList<Triangle> getTrianglesInBound( AABB aabb )
+	{
+		ArrayList<Triangle> tmpTriangles = new ArrayList<Triangle>();
+
+		for ( Triangle triangle : triangles )
+		{
+			if ( triangle.havePointInBound( aabb ) )
+				tmpTriangles.add( triangle );
+		}
+		return tmpTriangles;
 	}
 }
 
