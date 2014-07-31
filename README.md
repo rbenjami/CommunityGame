@@ -3,7 +3,7 @@
 -----------------
 
 ####### Presentation
-Hi, I'm a french developer and I plan to code a 3D game engine, then create games.
+Hi, I'm a french developer and I plan to code a open source 3D game engine, then create games (open source to).
 
 ####### Technical feature
 * Engine:
