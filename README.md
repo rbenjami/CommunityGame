@@ -3,11 +3,11 @@
 -----------------
 
 ####### Presentation
-Hi, I'm a french developer and I plan to code a open source 3D game engine, then create games (open source to).
+Hi, I'm a french developer and I plan to code a open source 3D game engine, then create games (open source too).
 
 ####### Technical feature
 * Engine:
-  * Language: JAVA, OpenGL (no libs, to remain free of all law and learn more thing)
+  * Language: JAVA, OpenGL (no libs, to remain free of all law and learn more things)
   * Graphical style: [Low poly art](http://bit.ly/1oeDOdW) or [see](https://github.com/BenjaminRepingon/CommunityGame/tree/master/screenshot)
   * Physic: as real as possible
 * Game (idea):
