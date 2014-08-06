@@ -5,6 +5,7 @@ import com.engine.core.Material;
 import com.engine.core.Utils;
 import com.engine.core.components.meshLoading.OBJModel;
 import com.engine.core.helpers.AABB;
+import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
@@ -26,6 +27,7 @@ public class Mesh extends GameComponent
 	 * info
 	 */
 	private ArrayList<Triangle> triangles;
+	private ArrayList<Vector3f> vertices;
 
 	public Mesh( String fileName )
 	{
@@ -56,6 +58,13 @@ public class Mesh extends GameComponent
 	{
 		axisAlignedBoundingBox = new AABB( this );
 
+		vertices = new ArrayList<Vector3f>();
+		for ( Triangle triangle : triangles )
+		{
+			for ( int i = 0; i < 3; i++ )
+				vertices.add( triangle.getPoint( i + 1 ) );
+		}
+
 		resource = new MeshResource( triangles.size() * 3 );
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
 		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( triangles ), GL_STATIC_DRAW );
@@ -66,10 +75,7 @@ public class Mesh extends GameComponent
 
 	public Mesh( Triangle[] triangles )
 	{
-		this.triangles = new ArrayList<Triangle>( Arrays.asList( triangles ) );
-		this.material = new Material();
-		axisAlignedBoundingBox = new AABB( this );
-		addVertices( this.triangles );
+		this( new ArrayList<Triangle>( Arrays.asList( triangles ) ) );
 	}
 
 	public Mesh( ArrayList<Triangle> triangles )
@@ -128,11 +134,18 @@ public class Mesh extends GameComponent
 		glDisableVertexAttribArray( 2 );
 	}
 
+
+	/**
+	 * GETTER
+	 */
 	public Material getMaterial()
 	{
 		return material;
 	}
 
+	/**
+	 * SETTER
+	 */
 	public void setMaterial( Material material )
 	{
 		this.material = material;
@@ -146,6 +159,11 @@ public class Mesh extends GameComponent
 	public ArrayList<Triangle> getTriangles()
 	{
 		return triangles;
+	}
+
+	public ArrayList<Vector3f> getVertices()
+	{
+		return vertices;
 	}
 
 	public ArrayList<Triangle> getTrianglesInBound( AABB aabb )

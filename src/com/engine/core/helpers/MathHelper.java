@@ -5,6 +5,8 @@ package com.engine.core.helpers;
  */
 public class MathHelper
 {
+	public static final float EPSILON = 0.00000001f;
+
 	public static int rand( int lower, int higher )
 	{
 		return (int) ( Math.random() * ( ( higher + 1 ) - lower ) ) + lower;

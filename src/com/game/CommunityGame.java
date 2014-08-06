@@ -37,7 +37,7 @@ public class CommunityGame extends Game
 //		animals.getTransform().getPos().set( 0, 0, 0 );
 		entity = new Entity( new Mesh( "sphere.obj" ) );
 		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
-		entity.getTransform().getPos().set( 0, 50, 10 );
+		entity.getTransform().getPos().set( 5, 50, 10 );
 
 		/**
 		 * Plane
@@ -86,7 +86,7 @@ public class CommunityGame extends Game
 //		planet.addComponent( new GeoSphere( 50, 7 ) );
 //		planet.getTransform().translate( -50, 10, 0 );
 
-		dirt = new Tessellator( 64, 10f, new Color( 255, 237, 117 ), 40 );
+		dirt = new Tessellator( 256, 10f, new Color( 255, 237, 117 ), 40 );
 		dirt.getTransform().translate( 0, -3, 0 );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
 

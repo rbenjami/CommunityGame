@@ -2,6 +2,7 @@ package com.engine.core.helpers.geometry;
 
 import com.engine.core.components.GameComponent;
 import com.engine.core.helpers.AABB;
+import com.engine.core.helpers.MathHelper;
 import com.engine.core.helpers.dimensions.Matrix4f;
 import com.engine.core.helpers.dimensions.Transform;
 import com.engine.core.helpers.dimensions.Vector3f;
@@ -13,12 +14,11 @@ import java.awt.*;
  */
 public class Triangle extends GameComponent
 {
-	private static final float EPSILON = 0.0000001f; // used in intersects method
 	private Vector3f point1;
 	private Vector3f point2;
 	private Vector3f point3;
 	private Vector3f normal;
-	private int offset;
+	private int      offset;
 
 	public Triangle( Vector3f point1, Vector3f point3, Vector3f point2, int offset )
 	{
@@ -51,11 +51,11 @@ public class Triangle extends GameComponent
 		float dv2 = n1.dot( v.getPoint3() ) + dv;
 
 		// Coplanarity robustness check.
-		if ( Math.abs( dv0 ) < EPSILON )
+		if ( Math.abs( dv0 ) < MathHelper.EPSILON )
 			dv0 = 0;
-		if ( Math.abs( dv1 ) < EPSILON )
+		if ( Math.abs( dv1 ) < MathHelper.EPSILON )
 			dv1 = 0;
-		if ( Math.abs( dv2 ) < EPSILON )
+		if ( Math.abs( dv2 ) < MathHelper.EPSILON )
 			dv2 = 0;
 
 		float dv0dv1 = dv0 * dv1;
@@ -81,11 +81,11 @@ public class Triangle extends GameComponent
 		float du2 = n2.dot( u.getPoint3() ) + du;
 
 		// Coplanarity robustness check.
-		if ( Math.abs( du0 ) < EPSILON )
+		if ( Math.abs( du0 ) < MathHelper.EPSILON )
 			du0 = 0;
-		if ( Math.abs( du1 ) < EPSILON )
+		if ( Math.abs( du1 ) < MathHelper.EPSILON )
 			du1 = 0;
-		if ( Math.abs( du2 ) < EPSILON )
+		if ( Math.abs( du2 ) < MathHelper.EPSILON )
 			du2 = 0;
 
 		float du0du1 = du0 * du1;
