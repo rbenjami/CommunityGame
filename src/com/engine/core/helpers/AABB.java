@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2014 Repingon Benjamin
+ * This file is part of CommunityGame.
+ * CommunityGame is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * CommunityGame is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
+ */
+
 package com.engine.core.helpers;
 
 import com.engine.core.components.Mesh;
@@ -11,20 +26,18 @@ public class AABB
 {
 	private Vector3f min;
 	private Vector3f max;
-	private Mesh mesh;
+	private Mesh     mesh;
 
-//	public AABB( Vector3f min, Vector3f max )
-//	{
-//		this.min = min;
-//		this.max = max;
-//		mesh = null;
-//	}
-
-	public AABB( Mesh mesh )
+	public AABB( Vector3f min, Vector3f max )
 	{
-		this.mesh = mesh;
-		this.min = new Vector3f( 0, 0, 0 );
-		this.max = new Vector3f( 0, 0, 0 );
+		this.min = min;
+		this.max = max;
+	}
+
+	public static AABB createMeshAABB( Mesh mesh )
+	{
+		Vector3f min = new Vector3f( 0, 0, 0 );
+		Vector3f max = new Vector3f( 0, 0, 0 );
 		for ( Triangle triangle : mesh.getTriangles() )
 		{
 			for ( int i = 0; i < 3; i++ )
@@ -33,39 +46,32 @@ public class AABB
 				float posX = vector.getX();
 				float posY = vector.getY();
 				float posZ = vector.getZ();
-				if ( posX > this.max.getX() )
-					this.max.setX( posX );
-				if ( posY > this.max.getY() )
-					this.max.setY( posY );
-				if ( posZ > this.max.getZ() )
-					this.max.setZ( posZ );
-				if ( posX < this.min.getX() )
-					this.min.setX( posX );
-				if ( posY < this.min.getY() )
-					this.min.setY( posY );
-				if ( posZ < this.min.getZ() )
-					this.min.setZ( posZ );
+				if ( posX > max.getX() )
+					max.setX( posX );
+				if ( posY > max.getY() )
+					max.setY( posY );
+				if ( posZ > max.getZ() )
+					max.setZ( posZ );
+				if ( posX < min.getX() )
+					min.setX( posX );
+				if ( posY < min.getY() )
+					min.setY( posY );
+				if ( posZ < min.getZ() )
+					min.setZ( posZ );
 			}
 		}
+		return new AABB( min, max );
 	}
 
 	public boolean intersectBounds( AABB aabb )
 	{
-		if ( aabb == null )
-			return false;
-		if ( getMin().getX() > aabb.getMax().getX() )
-			return false;
-		if ( getMax().getX() < aabb.getMin().getX() )
-			return false;
-		if ( getMin().getY() > aabb.getMax().getY() )
-			return false;
-		if ( getMax().getY() < aabb.getMin().getY() )
-			return false;
-		if ( getMin().getZ() > aabb.getMax().getZ() )
-			return false;
-		if ( getMax().getZ() < aabb.getMin().getZ() )
-			return false;
-		return true;
+		return aabb == null ||
+				getMin().getX() > aabb.getMax().getX() ||
+				getMax().getX() < aabb.getMin().getX() ||
+				getMin().getY() > aabb.getMax().getY() ||
+				getMax().getY() < aabb.getMin().getY() ||
+				getMin().getZ() > aabb.getMax().getZ() ||
+				getMax().getZ() < aabb.getMin().getZ();
 	}
 
 	/**
@@ -73,29 +79,17 @@ public class AABB
 	 */
 	public Vector3f getMin()
 	{
-		if ( mesh != null )
-		{
-			Vector3f mi = min.mul( mesh.getTransform().getScale() );
-			mi = mi.add( mesh.getTransform().getPos() );
-			return mi;
-		}
 		return min;
 	}
 
 	public Vector3f getMax()
 	{
-		if ( mesh != null )
-		{
-			Vector3f ma = max.mul( mesh.getTransform().getScale() );
-			ma = ma.add( mesh.getTransform().getPos() );
-			return ma;
-		}
 		return max;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "AABB min: X: " + getMin().getX() + " Y: " + getMin().getY() + " Z: " + getMin().getZ() + ", max: X: " + getMax().getX() + " Y: " + getMax().getY() + " Z: " + getMax().getZ();
+		return "AABB min: " + min + ", max: " + max;
 	}
 }

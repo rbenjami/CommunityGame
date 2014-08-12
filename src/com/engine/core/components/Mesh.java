@@ -1,11 +1,25 @@
+/*
+ * Copyright (C) 2014 Repingon Benjamin
+ * This file is part of CommunityGame.
+ * CommunityGame is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * CommunityGame is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
+ */
+
 package com.engine.core.components;
 
 import com.engine.core.GameObject;
 import com.engine.core.Material;
 import com.engine.core.Utils;
-import com.engine.core.components.meshLoading.OBJModel;
+import com.engine.core.components.meshLoading.MeshLoader;
 import com.engine.core.helpers.AABB;
-import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
@@ -21,50 +35,28 @@ public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 	private Material     material;
-	private AABB axisAlignedBoundingBox;
+	private AABB         axisAlignedBoundingBox;
 
 	/**
-	 * info
+	 * Info
 	 */
 	private ArrayList<Triangle> triangles;
-	private ArrayList<Vector3f> vertices;
 
 	public Mesh( String fileName )
 	{
-		loadMesh( fileName );
+		this( (ArrayList<Triangle>) MeshLoader.loadOBJ( "./res/models/" + fileName ) );
 	}
 
-	public void loadMesh( String fileName )
+	public Mesh( ArrayList<Triangle> triangles )
 	{
-		String[] splitArray = fileName.split( "\\." );
-		String ext = splitArray[splitArray.length - 1];
-
-		if ( !ext.equals( "obj" ) )
-		{
-			System.err.println( "Error: '" + ext + "' file format not supported for mesh data." );
-			new Exception().printStackTrace();
-			System.exit( 1 );
-		}
-
-		OBJModel model = new OBJModel( "./res/models/" + fileName );
-
-		triangles = model.getTriangles();
+		this.triangles = triangles;
 		this.material = new Material();
-		axisAlignedBoundingBox = new AABB( this );
+		axisAlignedBoundingBox = AABB.createMeshAABB( this );
 		addVertices( triangles );
 	}
 
 	private void addVertices( ArrayList<Triangle> triangles )
 	{
-		axisAlignedBoundingBox = new AABB( this );
-
-		vertices = new ArrayList<Vector3f>();
-		for ( Triangle triangle : triangles )
-		{
-			for ( int i = 0; i < 3; i++ )
-				vertices.add( triangle.getPoint( i + 1 ) );
-		}
-
 		resource = new MeshResource( triangles.size() * 3 );
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
 		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( triangles ), GL_STATIC_DRAW );
@@ -78,25 +70,17 @@ public class Mesh extends GameComponent
 		this( new ArrayList<Triangle>( Arrays.asList( triangles ) ) );
 	}
 
-	public Mesh( ArrayList<Triangle> triangles )
-	{
-		this.triangles = triangles;
-		this.material = new Material();
-		axisAlignedBoundingBox = new AABB( this );
-		addVertices( triangles );
-	}
-
 	//TODO: updateTriangle
-	public void updateTriangle( int offset )
-	{
-		Triangle triangle = triangles.get( offset );
-
-		offset *= 3 * 9;
-		System.out.println( "POK: " + offset );
+//	public void updateTriangle( int offset )
+//	{
+//		Triangle triangle = triangles.get( offset );
+//
+//		offset *= 3 * 9;
+//		System.out.println( "POK: " + offset );
 //		resource = new MeshResource( triangles.size() * 3 );
 //		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferSubData( GL_ARRAY_BUFFER, offset, Utils.createFlippedBuffer( triangle ) );
-	}
+//		glBufferSubData( GL_ARRAY_BUFFER, offset, Utils.createFlippedBuffer( triangle ) );
+//	}
 
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
@@ -159,23 +143,6 @@ public class Mesh extends GameComponent
 	public ArrayList<Triangle> getTriangles()
 	{
 		return triangles;
-	}
-
-	public ArrayList<Vector3f> getVertices()
-	{
-		return vertices;
-	}
-
-	public ArrayList<Triangle> getTrianglesInBound( AABB aabb )
-	{
-		ArrayList<Triangle> tmpTriangles = new ArrayList<Triangle>();
-
-		for ( Triangle triangle : triangles )
-		{
-			if ( triangle.havePointInBound( aabb ) )
-				tmpTriangles.add( triangle );
-		}
-		return tmpTriangles;
 	}
 }
 

@@ -1,12 +1,23 @@
+/*
+ * Copyright (C) 2014 Repingon Benjamin
+ * This file is part of CommunityGame.
+ * CommunityGame is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * CommunityGame is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
+ */
+
 package com.engine.core;
 
 import com.engine.CoreEngine;
-import com.engine.core.components.GameComponent;
 import com.engine.physic.PhysicsEngine;
 import com.engine.render.RenderEngine;
-import com.game.entity.Entity;
-
-import java.util.ArrayList;
 
 /**
  * Created on 27/04/14.
@@ -14,9 +25,6 @@ import java.util.ArrayList;
 public abstract class Game
 {
 	private GameObject root;
-	private ArrayList<GameObject>    gameObjectsList = new ArrayList<GameObject>();
-	private ArrayList<Entity>        entityList      = new ArrayList<Entity>();
-	private ArrayList<GameComponent> boundingBox     = new ArrayList<GameComponent>();
 
 	public void init() {}
 
@@ -51,18 +59,6 @@ public abstract class Game
 	public void addObject( GameObject object )
 	{
 		getRootObject().addChild( object );
-		gameObjectsList.add( object );
-	}
-
-	public void addEntity( Entity entity )
-	{
-		root.addComponent( entity.getModel() );
-		entityList.add( entity );
-	}
-
-	public ArrayList<GameObject> getGameObjectsList()
-	{
-		return gameObjectsList;
 	}
 
 	public void setEngine( CoreEngine engine )

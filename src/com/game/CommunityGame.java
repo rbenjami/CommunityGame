@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2014 Repingon Benjamin
+ * This file is part of CommunityGame.
+ * CommunityGame is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * CommunityGame is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
+ */
+
 package com.game;
 
 import com.engine.core.Attenuation;
@@ -7,7 +22,6 @@ import com.engine.core.Tessellator;
 import com.engine.core.components.*;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
-import com.game.entity.Animals;
 import com.game.entity.Entity;
 import com.game.entity.Player;
 
@@ -19,7 +33,6 @@ import java.awt.*;
 public class CommunityGame extends Game
 {
 	Player     player;
-	Animals    animals;
 	Entity     entity;
 	GameObject planet;
 	GameObject dirt;
@@ -33,8 +46,6 @@ public class CommunityGame extends Game
 		player.getTransform().getPos().set( 0, 5, -6 );
 		addObject( player.addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 10.0f ) ) );
 
-//		animals = new Animals( new Mesh( "sphere.obj" ) );
-//		animals.getTransform().getPos().set( 0, 0, 0 );
 		entity = new Entity( new Mesh( "sphere.obj" ) );
 		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
 		entity.getTransform().getPos().set( 5, 50, 10 );
@@ -90,7 +101,6 @@ public class CommunityGame extends Game
 		dirt.getTransform().translate( 0, -3, 0 );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
 
-//		addObject( animals );
 		addObject( entity );
 		addObject( dirt );
 //		addObject( planet );
