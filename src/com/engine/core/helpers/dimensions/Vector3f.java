@@ -129,17 +129,14 @@ public class Vector3f
 	{
 		float length = this.length();
 
+		if ( length == 0 )
+			return new Vector3f( 0, 0, 0 );
 		return ( new Vector3f( x / length, y / length, z / length ) );
 	}
 
 	public float length()
 	{
 		return ( (float) Math.sqrt( x * x + y * y + z * z ) );
-	}
-
-	public float dot( Vector3f v )
-	{
-		return x * v.getX() + y * v.getY() + z * v.getZ();
 	}
 
 	public Vector3f cross( Vector3f v )
@@ -149,6 +146,26 @@ public class Vector3f
 		float z_ = x * v.getY() - y * v.getX();
 
 		return ( new Vector3f( x_, y_, z_ ) );
+	}
+
+	public Vector3f reflect( Vector3f normal )
+	{
+		return this.sub( normal.mul( this.dot( normal ) * 2 ) );
+	}
+
+	public Vector3f sub( Vector3f v )
+	{
+		return ( new Vector3f( this.x - v.getX(), this.y - v.getY(), this.z - v.getZ() ) );
+	}
+
+	public Vector3f mul( float v )
+	{
+		return ( new Vector3f( this.x * v, this.y * v, this.z * v ) );
+	}
+
+	public float dot( Vector3f v )
+	{
+		return x * v.getX() + y * v.getY() + z * v.getZ();
 	}
 
 	public Vector3f add( Vector3f v )
@@ -161,11 +178,6 @@ public class Vector3f
 		return ( new Vector3f( this.x + v, this.y + v, this.z + v ) );
 	}
 
-	public Vector3f sub( Vector3f v )
-	{
-		return ( new Vector3f( this.x - v.getX(), this.y - v.getY(), this.z - v.getZ() ) );
-	}
-
 	public Vector3f sub( float v )
 	{
 		return ( new Vector3f( this.x - v, this.y - v, this.z - v ) );
@@ -174,11 +186,6 @@ public class Vector3f
 	public Vector3f mul( Vector3f v )
 	{
 		return ( new Vector3f( this.x * v.getX(), this.y * v.getY(), this.z * v.getZ() ) );
-	}
-
-	public Vector3f mul( float v )
-	{
-		return ( new Vector3f( this.x * v, this.y * v, this.z * v ) );
 	}
 
 	public Vector3f div( Vector3f v )

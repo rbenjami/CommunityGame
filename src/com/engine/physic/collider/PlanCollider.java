@@ -13,42 +13,51 @@
  * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
  */
 
-package com.engine.physic;
+package com.engine.physic.collider;
 
 import com.engine.core.helpers.dimensions.Vector3f;
 
-/**
- * Created on 24/07/14.
- */
-public class IntersectData
+public class PlanCollider extends Collider
 {
-	private boolean  intersect;
-	private Vector3f direction;
+	private Vector3f normal;
+	private float    distance;
 
-	public IntersectData( boolean intersect, Vector3f direction )
+	public PlanCollider( Vector3f normal, float distance )
 	{
-		this.intersect = intersect;
-		this.direction = direction;
+		super( ColliderType.PLAN );
+		this.normal = normal;
+		this.distance = distance;
+	}
+
+	@Override
+	public void setPos( Vector3f pos )
+	{
+
 	}
 
 	/**
 	 * GETTER
 	 */
-	public boolean isIntersect()
+	public Vector3f getNormal()
 	{
-		return intersect;
-	}
-
-	public Vector3f getDirection()
-	{
-		return direction;
+		return normal;
 	}
 
 	/**
 	 * SETTER
 	 */
-	public void setDirection( Vector3f direction )
+	public void setNormal( Vector3f normal )
 	{
-		this.direction = direction;
+		this.normal = normal;
+	}
+
+	public float getDistance()
+	{
+		return distance;
+	}
+
+	public void setDistance( float distance )
+	{
+		this.distance = distance;
 	}
 }

@@ -18,8 +18,8 @@ package com.engine.core.components;
 import com.engine.core.GameObject;
 import com.engine.core.Material;
 import com.engine.core.Utils;
-import com.engine.core.components.meshLoading.MeshLoader;
 import com.engine.core.helpers.AABB;
+import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
@@ -50,7 +50,7 @@ public class Mesh extends GameComponent
 	public Mesh( ArrayList<Triangle> triangles )
 	{
 		this.triangles = triangles;
-		this.material = new Material();
+		this.material = Material.DEFAULT;
 		axisAlignedBoundingBox = AABB.createMeshAABB( this );
 		addVertices( triangles );
 	}
@@ -60,27 +60,31 @@ public class Mesh extends GameComponent
 		resource = new MeshResource( triangles.size() * 3 );
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
 		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( triangles ), GL_STATIC_DRAW );
-
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createRegularFlippedBuffer( triangles.size() * 3 ), GL_STATIC_DRAW );
+	}
+
+	public Mesh( Vector3f[] vertices, int[] indices )
+	{
+//		this.triangles = triangles;
+		this.material = Material.DEFAULT;
+//		axisAlignedBoundingBox = AABB.createMeshAABB( this );
+		addVertices( vertices, indices );
+	}
+
+	private void addVertices( Vector3f[] vertices, int[] indices )
+	{
+		resource = new MeshResource( indices.length );
+		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices, indices ), GL_STATIC_DRAW );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
 	}
 
 	public Mesh( Triangle[] triangles )
 	{
 		this( new ArrayList<Triangle>( Arrays.asList( triangles ) ) );
 	}
-
-	//TODO: updateTriangle
-//	public void updateTriangle( int offset )
-//	{
-//		Triangle triangle = triangles.get( offset );
-//
-//		offset *= 3 * 9;
-//		System.out.println( "POK: " + offset );
-//		resource = new MeshResource( triangles.size() * 3 );
-//		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-//		glBufferSubData( GL_ARRAY_BUFFER, offset, Utils.createFlippedBuffer( triangle ) );
-//	}
 
 	@Override
 	public void render( Shader shader, RenderEngine renderingEngine )
@@ -95,8 +99,11 @@ public class Mesh extends GameComponent
 	public void onAddParent( GameObject parent )
 	{
 		super.onAddParent( parent );
-		for ( Triangle triangle : triangles )
-			parent.addComponent( triangle );
+		if ( triangles != null )
+		{
+			for ( Triangle triangle : triangles )
+				parent.addComponent( triangle );
+		}
 	}
 
 	public void draw()

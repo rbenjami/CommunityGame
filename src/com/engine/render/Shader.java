@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2014 Repingon Benjamin
- * This file is part of CommunityGame.
- * CommunityGame is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- * CommunityGame is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
- */
-
 package com.engine.render;
 
 import com.engine.core.Material;
@@ -116,13 +101,6 @@ public class Shader
 			String uniformName = resource.getUniformNames().get( i );
 			String uniformType = resource.getUniformTypes().get( i );
 
-			/*if(uniformType.equals("sampler2D"))
-			{
-				int samplerSlot = renderEngine.getSamplerSlot(uniformName);
-				material.getTexture(uniformName).bind(samplerSlot);
-				setUniformi(uniformName, samplerSlot);
-			}
-			else */
 			if ( uniformName.startsWith( "T_" ) )
 			{
 				if ( uniformName.equals( "T_MVP" ) )
@@ -138,17 +116,35 @@ public class Shader
 			{
 				String unprefixedUniformName = uniformName.substring( 2 );
 				if ( uniformType.equals( "vec3" ) )
+				{
 					setUniform( uniformName, renderEngine.getVector3f( unprefixedUniformName ) );
+
+				}
 				else if ( uniformType.equals( "float" ) )
+				{
 					setUniformf( uniformName, renderEngine.getFloat( unprefixedUniformName ) );
+
+				}
 				else if ( uniformType.equals( "DirectionalLight" ) )
+				{
 					setUniformDirectionalLight( uniformName, (DirectionalLight) renderEngine.getActiveLight() );
+
+				}
 				else if ( uniformType.equals( "PointLight" ) )
+				{
 					setUniformPointLight( uniformName, (PointLight) renderEngine.getActiveLight() );
+
+				}
 				else if ( uniformType.equals( "SpotLight" ) )
+				{
 					setUniformSpotLight( uniformName, (SpotLight) renderEngine.getActiveLight() );
+
+				}
 				else
+				{
 					renderEngine.updateUniformStruct( transform, this, uniformName, uniformType );
+
+				}
 			}
 			else if ( uniformName.startsWith( "C_" ) )
 			{
@@ -159,9 +155,7 @@ public class Shader
 			}
 			else
 			{
-				if ( uniformType.equals( "vec3" ) )
-					setUniform( uniformName, material.getVector3f( uniformName ) );
-				else if ( uniformType.equals( "float" ) )
+				if ( uniformType.equals( "float" ) )
 					setUniformf( uniformName, material.getFloat( uniformName ) );
 				else
 					throw new IllegalArgumentException( uniformType + " is not a supported type in Material" );

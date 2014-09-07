@@ -20,6 +20,10 @@ import com.engine.core.helpers.MathHelper;
 import com.engine.core.helpers.TimeHelper;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
+import com.engine.physic.collider.Collider;
+import com.engine.physic.collider.ColliderType;
+import com.engine.physic.collider.PlanCollider;
+import com.engine.physic.collider.SphereCollider;
 
 import java.util.ArrayList;
 
@@ -28,6 +32,26 @@ import java.util.ArrayList;
  */
 public class Intersect
 {
+	public static IntersectData colliders( Collider collider1, Collider collider2 )
+	{
+		if ( collider1 == null || collider2 == null )
+			return null;
+		if ( collider1.getType() == ColliderType.SPHERE && collider2.getType() == ColliderType.SPHERE )
+			return ( (SphereCollider) collider1 ).intersect( (SphereCollider) collider2 );
+		if ( collider1.getType() == ColliderType.PLAN && collider2.getType() == ColliderType.SPHERE )
+			return planSphere( (PlanCollider) collider1, (SphereCollider) collider2 );
+		if ( collider1.getType() == ColliderType.SPHERE && collider2.getType() == ColliderType.PLAN )
+			return planSphere( (PlanCollider) collider2, (SphereCollider) collider1 );
+		return null;
+	}
+
+	public static IntersectData planSphere( PlanCollider plan, SphereCollider sphere )
+	{
+		float distanceFromSphereCenter = Math.abs( plan.getNormal().dot( sphere.getCenter() ) + plan.getDistance() );
+		float distanceFromSphere = distanceFromSphereCenter - sphere.getRadius();
+		return new IntersectData( distanceFromSphere < 0, plan.getNormal().mul( distanceFromSphere ) );
+	}
+
 	public static Vector3f[] gameObjects( ArrayList<GameObject> objectList, GameObject object )
 	{
 		Vector3f[] res;

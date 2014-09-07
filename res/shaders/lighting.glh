@@ -38,7 +38,7 @@ struct SpotLight
 
 vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal, vec3 worldPos)
 {
-    float diffuseFactor = dot(normal, -direction);
+float diffuseFactor = dot(normal, -direction);
     
     vec4 diffuseColor = vec4(0,0,0,0);
     vec4 specularColor = vec4(0,0,0,0);

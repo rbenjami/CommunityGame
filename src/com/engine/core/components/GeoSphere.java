@@ -170,7 +170,7 @@ public class GeoSphere extends GameComponent
 		resource = new MeshResource( indices.length );
 
 		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices ), GL_DYNAMIC_DRAW );
+		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices, indices ), GL_DYNAMIC_DRAW );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_DYNAMIC_DRAW );

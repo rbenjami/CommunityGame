@@ -54,12 +54,16 @@ public class Utils
 		return buffer;
 	}
 
-	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices )
+	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices, int[] indices )
 	{
 		FloatBuffer buffer = createFloatBuffer( vertices.length * 9 );
 
+		int i = 0;
 		for ( Vector3f vertex : vertices )
-			vertexToBuffer( buffer, vertex, new Vector3f( 0, 1, 0 ) );
+		{
+			vertexToBuffer( buffer, vertex, calcNormals( vertices, indices, i / 3 ) );
+			i++;
+		}
 
 		buffer.flip();
 
@@ -84,15 +88,26 @@ public class Utils
 		buffer.put( normal.getZ() );
 	}
 
+	private static Vector3f calcNormals( Vector3f[] vertices, int[] indices, int index )
+	{
+		int i0 = indices[index];
+		int i1 = indices[index + 1];
+		int i2 = indices[index + 2];
+		Vector3f v1 = new Vector3f( vertices[i0], vertices[i1] );
+		Vector3f v2 = new Vector3f( vertices[i0], vertices[i2] );
+		return v1.cross( v2 ).normalized();// TODO: normal
+//		return new Vector3f( 0, 1, 0 );
+	}
+
 	public static FloatBuffer createFlippedBuffer( ArrayList<Triangle> triangles )
 	{
 		FloatBuffer buffer = createFloatBuffer( triangles.size() * 3 * 9 );
 
 		for ( int i = 0; i < triangles.size(); i++ )
 		{
-			vertexToBuffer( buffer, triangles.get( i ).getPoint( 3 ), triangles.get( i ).getNormal() );
-			vertexToBuffer( buffer, triangles.get( i ).getPoint( 2 ), triangles.get( i ).getNormal() );
 			vertexToBuffer( buffer, triangles.get( i ).getPoint( 1 ), triangles.get( i ).getNormal() );
+			vertexToBuffer( buffer, triangles.get( i ).getPoint( 2 ), triangles.get( i ).getNormal() );
+			vertexToBuffer( buffer, triangles.get( i ).getPoint( 3 ), triangles.get( i ).getNormal() );
 		}
 		buffer.flip();
 
@@ -103,9 +118,9 @@ public class Utils
 	{
 		FloatBuffer buffer = createFloatBuffer( 3 * 9 );
 
-		vertexToBuffer( buffer, triangle.getPoint( 3 ), triangle.getNormal() );
-		vertexToBuffer( buffer, triangle.getPoint( 2 ), triangle.getNormal() );
 		vertexToBuffer( buffer, triangle.getPoint( 1 ), triangle.getNormal() );
+		vertexToBuffer( buffer, triangle.getPoint( 2 ), triangle.getNormal() );
+		vertexToBuffer( buffer, triangle.getPoint( 3 ), triangle.getNormal() );
 
 		buffer.flip();
 

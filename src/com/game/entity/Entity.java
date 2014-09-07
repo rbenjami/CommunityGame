@@ -31,9 +31,10 @@ public class Entity extends GameObject
 		this.setModel( model );
 		this.addComponent( model );
 		Material material = new Material();
-		material.addFloat( "gravity", 1 );
-		material.addFloat( "mass", 1 );
+		material.addFloat( "gravity", 0.5f );
+		material.addFloat( "mass", 0.1f );
 		material.addFloat( "dragCoefficient", 0.47f );
+		material.addFloat( "restitutionCoefficient", 0.95f );
 		material.addFloat( "surface", 0.5f );
 		setMaterial( material );
 	}

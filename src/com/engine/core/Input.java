@@ -19,6 +19,7 @@ import com.engine.core.helpers.dimensions.Vector2f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+@SuppressWarnings("unused")
 public class Input
 {
 	public static final int       NUM_KEYCODES     = 256;

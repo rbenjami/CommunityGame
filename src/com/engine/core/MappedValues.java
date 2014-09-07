@@ -33,19 +33,21 @@ public abstract class MappedValues
 		floatHashMap = new HashMap<String, Float>();
 	}
 
-	public void addVector3f( String name, Vector3f vector3f )
+	public MappedValues addVector3f( String name, Vector3f vector3f )
 	{
-		vector3fHashMap.put( name, vector3f );
+		vector3fHashMap.put( name.toLowerCase(), vector3f );
+		return this;
 	}
 
-	public void addFloat( String name, float floatValue )
+	public MappedValues addFloat( String name, float floatValue )
 	{
-		floatHashMap.put( name, floatValue );
+		floatHashMap.put( name.toLowerCase(), floatValue );
+		return this;
 	}
 
 	public Vector3f getVector3f( String name )
 	{
-		Vector3f result = vector3fHashMap.get( name );
+		Vector3f result = vector3fHashMap.get( name.toLowerCase() );
 		if ( result != null )
 			return result;
 
@@ -54,7 +56,7 @@ public abstract class MappedValues
 
 	public float getFloat( String name )
 	{
-		Float result = floatHashMap.get( name );
+		Float result = floatHashMap.get( name.toLowerCase() );
 		if ( result != null )
 			return result;
 

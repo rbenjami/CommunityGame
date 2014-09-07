@@ -15,13 +15,13 @@
 
 package com.game;
 
-import com.engine.core.Attenuation;
-import com.engine.core.Game;
-import com.engine.core.GameObject;
-import com.engine.core.Tessellator;
+import com.engine.core.*;
 import com.engine.core.components.*;
+import com.engine.core.helpers.dimensions.Quaternion;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.helpers.geometry.Sphere;
 import com.engine.core.helpers.geometry.Triangle;
+import com.engine.physic.collider.PlanCollider;
 import com.game.entity.Entity;
 import com.game.entity.Player;
 
@@ -34,11 +34,14 @@ public class CommunityGame extends Game
 {
 	Player     player;
 	Entity     entity;
-	GameObject planet;
 	GameObject dirt;
 
 	public void init()
 	{
+		Material material = new Material();
+		material.addFloat( "specularPower", 4f );
+		material.addFloat( "specularIntensity", 0.8f );
+
 		/**
 		 * Entity
 		 */
@@ -46,9 +49,15 @@ public class CommunityGame extends Game
 		player.getTransform().getPos().set( 0, 5, -6 );
 		addObject( player.addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 10.0f ) ) );
 
-		entity = new Entity( new Mesh( "sphere.obj" ) );
-		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
-		entity.getTransform().getPos().set( 5, 50, 10 );
+//		entity = new Entity( new Mesh( "sphere.obj" ) );
+//		entity.getTransform().getPos().set( 0, 30, 0 );
+//		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
+//		entity.setCollider( new SphereCollider( 1 ) );
+//
+//		Entity animals = new Entity( new Mesh( "sphere.obj" ) );
+//		animals.getTransform().getPos().set( 0.5f, 5, 0 );
+//		animals.setCollider( new SphereCollider( 1 ) );
+//		addObject( animals );
 
 		/**
 		 * Plane
@@ -58,10 +67,10 @@ public class CommunityGame extends Game
 
 		Vector3f[] vertices = new Vector3f[]
 				{
-						new Vector3f( -fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 0.0f ) ),
-						new Vector3f( -fieldWidth, 0.0f, fieldDepth, new Color( 0.0f, 1.0f, 0.0f ) ),
-						new Vector3f( fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 1.0f ) ),
-						new Vector3f( fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 0.0f ) )
+						new Vector3f( -fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
+						new Vector3f( -fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) )
 				};
 		Triangle[] triangles = new Triangle[]
 				{
@@ -71,11 +80,15 @@ public class CommunityGame extends Game
 
 
 		Mesh mesh = new Mesh( triangles );
+		mesh.setMaterial( material );
 
-//		GameObject planeObject = new GameObject();
-//		planeObject.addComponent( mesh );
-//		planeObject.getTransform().translate( 0, -1, 0 );
-//		addObject( planeObject );
+		GameObject planeObject = new GameObject();
+		planeObject.addComponent( mesh );
+		planeObject.getTransform().setScale( new Vector3f( 100, 100, 100 ) );
+		planeObject.setCollider( new PlanCollider( new Vector3f( 0, 1, 0 ), 0 ) );
+		material.addFloat( "restitutionCoefficient", 0.95f );
+		planeObject.setMaterial( material );
+		addObject( planeObject );
 
 		/**
 		 * Light
@@ -83,31 +96,42 @@ public class CommunityGame extends Game
 		PointLight pointLight = new PointLight( new Color( 255, 205, 73 ), 0.2f, new Attenuation( 0, 0, 0.1f ) );
 		GameObject pointLightObject = new GameObject();
 		pointLightObject.addComponent( pointLight );
-		pointLightObject.getTransform().translate( -1, 0, 0 );
+		pointLightObject.getTransform().translate( 10, 13, 10 );
 		pointLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 243, 149 ), 0.8f );
+		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 223, 70 ), 0.01f );
 		directionalLightObject.addComponent( directionalLight );
+		directionalLightObject.getTransform().getPos().set( 0, 2, 0 );
+		directionalLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
+
+		GameObject spotLightObject = new GameObject();
+		SpotLight spotLight = new SpotLight( new Color( 255, 2, 0 ), 1.2f, new Attenuation( 0, 0, 0.1f ), 0.7f );
+		spotLightObject.addComponent( spotLight );
+		spotLightObject.getTransform().getPos().set( 0, 1, 0 );
+		spotLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		/**
 		 * Object
 		 */
-//		planet = new GameObject();
-//		planet.addComponent( new GeoSphere( 50, 7 ) );
-//		planet.getTransform().translate( -50, 10, 0 );
+		GameObject planet = new GameObject();
+		planet.addComponent( new Sphere( 3, 10 ).getMesh() );
+		planet.getTransform().setPos( new Vector3f( 10, 0, 0 ) );
 
 		dirt = new Tessellator( 256, 10f, new Color( 255, 237, 117 ), 40 );
 		dirt.getTransform().translate( 0, -3, 0 );
+		dirt.getModel().setMaterial( material );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
+		dirt.getTransform().setPos( new Vector3f( 0, 5, 0 ) );
 
-		addObject( entity );
+//		addObject( entity );
 		addObject( dirt );
-//		addObject( planet );
+		addObject( planet );
 		addObject( directionalLightObject );
 		addObject( pointLightObject );
+		addObject( spotLightObject );
 
-		directionalLight.getTransform().rotate( new Vector3f( 1, 0, 0 ), (float) Math.toRadians( -42 ) );
+		directionalLight.getTransform().setRot( new Quaternion( new Vector3f( 1, 0, 0 ), (float) Math.toRadians( -45 ) ) );
 	}
 
 	@Override

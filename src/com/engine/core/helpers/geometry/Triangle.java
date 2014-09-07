@@ -35,15 +35,15 @@ public class Triangle extends GameComponent
 	private Vector3f normal;
 	private int      offset;
 
-	public Triangle( Vector3f point1, Vector3f point3, Vector3f point2, int offset )
+	public Triangle( Vector3f point1, Vector3f point2, Vector3f point3, int offset )
 	{
 		this.point1 = point1;
 		this.point2 = point2;
 		this.point3 = point3;
 		this.offset = offset;
 
-		Vector3f v1 = new Vector3f( point1, point3 );
-		Vector3f v2 = new Vector3f( point1, point2 );
+		Vector3f v1 = new Vector3f( point1, point2 );
+		Vector3f v2 = new Vector3f( point1, point3 );
 		normal = v1.cross( v2 ).normalized();
 	}
 

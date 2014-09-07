@@ -13,7 +13,7 @@
  * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
  */
 
-package com.engine.core.components.meshLoading;
+package com.engine.core.components;
 
 import com.engine.core.Utils;
 import com.engine.core.helpers.dimensions.Vector3f;

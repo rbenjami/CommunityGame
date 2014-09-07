@@ -1,9 +1,9 @@
 #version 120
 
 attribute vec3 position;
-attribute vec4 color;
+attribute vec3 color;
 
-varying vec4 color0;
+varying vec3 color0;
 
 uniform mat4 T_MVP;
 

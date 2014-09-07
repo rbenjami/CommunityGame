@@ -20,6 +20,8 @@ package com.engine.core;
  */
 public class Material extends MappedValues
 {
+	public static final Material DEFAULT = (Material) new Material().addFloat( "specularPower", 4f ).addFloat( "specularIntensity", 0.8f );
+
 	public Material()
 	{
 		super();

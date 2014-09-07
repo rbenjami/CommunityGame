@@ -21,6 +21,7 @@ import com.engine.core.components.Mesh;
 import com.engine.core.helpers.AABB;
 import com.engine.core.helpers.dimensions.Transform;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.physic.collider.Collider;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
 
@@ -31,13 +32,16 @@ import java.util.ArrayList;
  */
 public class GameObject
 {
+	//TMP
+	Vector3f oldPos;
 	private ArrayList<GameObject>    children;
 	private ArrayList<GameComponent> components;
 	private CoreEngine               engine;
 	private Mesh                     model;
 	private Transform                transform;
-	private Material                 material;
+	private Material                 material; // TODO Change to PhysicObject
 	private Vector3f                 velocity;
+	private Collider                 collider;
 	private float                    rollAngle;
 
 	public GameObject()
@@ -50,6 +54,13 @@ public class GameObject
 		rollAngle = 0;
 		engine = null;
 		model = null;
+
+		oldPos = getTransform().getPos();
+	}
+
+	public Transform getTransform()
+	{
+		return transform;
 	}
 
 	public void addChild( GameObject child )
@@ -125,11 +136,6 @@ public class GameObject
 		return result;
 	}
 
-	public Transform getTransform()
-	{
-		return transform;
-	}
-
 	public Material getMaterial()
 	{
 		return material;
@@ -173,6 +179,23 @@ public class GameObject
 	public void setModel( Mesh model )
 	{
 		this.model = model;
+	}
+
+	public Collider getCollider()
+	{
+//		Vector3f translation = getTransform().getPos().sub( oldPos );
+//		System.out.println( getTransform().getPos() );
+//		oldPos = getTransform().getPos();
+//		if ( collider != null )
+//			collider.transform( translation );
+		if ( collider != null )
+			collider.setPos( getTransform().getPos() );
+		return collider;
+	}
+
+	public void setCollider( Collider collider )
+	{
+		this.collider = collider;
 	}
 
 	/**

@@ -42,8 +42,11 @@ public class PhysicsEngine
 		this.objectList = objectList;
 //		double time = TimeHelper.getTime();
 		for ( GameObject object : objectList )
-		{
 			physics( object, delta );
+		for ( int i = 0; i < objectList.size(); i++ )
+		{
+			for ( int j = i + 1; j < objectList.size(); j++ )
+				intersect( objectList.get( i ), objectList.get( j ) );
 		}
 //		System.out.println( TimeHelper.getTime() - time );
 	}
@@ -52,9 +55,8 @@ public class PhysicsEngine
 	{
 		if ( object.getMaterial().getFloat( "gravity" ) != 0 )
 		{
-			float gravity = (float) Math.sqrt(
-					( 2 * object.getMaterial().getFloat( "mass" ) * NEWTON ) /
-							( AIR_DENSITY * object.getMaterial().getFloat( "surface" ) * object.getMaterial().getFloat( "dragCoefficient" ) ) );
+			float gravity = (float) Math.sqrt( ( 2 * object.getMaterial().getFloat( "mass" ) * NEWTON ) / ( AIR_DENSITY * object.getMaterial().getFloat( "surface" ) * object.getMaterial().getFloat( "dragCoefficient" ) ) );
+			gravity *= object.getMaterial().getFloat( "gravity" );
 			object.getVelocity().setY( object.getVelocity().getY() - gravity * delta );
 		}
 		if ( object.getMaterial().getFloat( "dragCoefficient" ) != 0 )
@@ -65,9 +67,19 @@ public class PhysicsEngine
 			else
 				object.setVelocity( new Vector3f( 0, 0, 0 ) );
 		}
-		if ( object.getModel() != null && Intersect.gameObjects( objectList, object ) != null )
+	}
+
+	public void intersect( GameObject object1, GameObject object2 )
+	{
+		IntersectData intersectData = Intersect.colliders( object1.getCollider(), object2.getCollider() );
+		if ( intersectData != null && intersectData.isIntersect() )
 		{
-			object.setVelocity( new Vector3f( 0, 0, 0 ) );
+			Vector3f direction = intersectData.getDirection().normalized();
+			Vector3f otherDirection = direction.reflect( object1.getVelocity().normalized() );
+			float restitutionCoefficient = ( object1.getMaterial().getFloat( "restitutionCoefficient" ) + object2.getMaterial().getFloat( "restitutionCoefficient" ) ) / 2;
+
+			object1.setVelocity( object1.getVelocity().reflect( otherDirection ).mul( restitutionCoefficient ) );
+			object2.setVelocity( object2.getVelocity().reflect( direction ).mul( restitutionCoefficient ) );
 		}
 	}
 }
