@@ -13,26 +13,13 @@
  * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
  */
 
-package com.engine.physic.collider;
+package com.game;
 
-import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.GameObject;
 
-public class Collider
+public class Planet extends GameObject
 {
-	private ColliderType type;
-
-	public Collider( ColliderType type )
+	public Planet()
 	{
-		this.type = type;
-	}
-
-	public void setPos( Vector3f pos )
-	{
-
-	}
-
-	public ColliderType getType()
-	{
-		return type;
 	}
 }

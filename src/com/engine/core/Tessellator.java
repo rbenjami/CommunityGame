@@ -41,9 +41,8 @@ public class Tessellator extends GameObject
 			this.fraction--;
 		this.color = color;
 		this.smooth = smooth;
-		this.noise = NoiseHelper.generatePerlinNoise( NoiseHelper.generateWhiteNoise( fraction + 1, fraction + 1, seed ), 6 );
+		this.noise = NoiseHelper.generatePerlinNoise( fraction + 1, fraction + 1, 5, seed );
 		Mesh model = calculateTesselator();
-		setModel( model );
 		addComponent( model );
 	}
 

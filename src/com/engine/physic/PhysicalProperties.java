@@ -13,26 +13,26 @@
  * along with CommunityGame. If not, see <http://www.gnu.org/licenses/
  */
 
-package com.engine.physic.collider;
+package com.engine.physic;
 
-import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.core.MappedValues;
 
-public class Collider
+public class PhysicalProperties extends MappedValues
 {
-	private ColliderType type;
+	public static final String GRAVITY                 = "gravity";
+	public static final String MASS                    = "mass";
+	public static final String DRAG_COEFFICIENT        = "dragCoefficient";
+	public static final String RESTITUTION_COEFFICIENT = "restitutionCoefficient";
+	public static final String SURFACE                 = "surface";
 
-	public Collider( ColliderType type )
+	public PhysicalProperties addProperty( String name, float value )
 	{
-		this.type = type;
+		addFloat( name, value );
+		return this;
 	}
 
-	public void setPos( Vector3f pos )
+	public float get( String name )
 	{
-
-	}
-
-	public ColliderType getType()
-	{
-		return type;
+		return getFloat( name );
 	}
 }

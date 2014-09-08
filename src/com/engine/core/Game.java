@@ -48,7 +48,7 @@ public abstract class Game
 
 	public void physic( PhysicsEngine physicsEngine, float delta )
 	{
-		physicsEngine.update( getRootObject().getAllAttached(), delta );
+		physicsEngine.update( getRootObject().getAllPhysicObjects(), delta );
 	}
 
 	public void render( RenderEngine renderingEngine )

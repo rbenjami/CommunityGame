@@ -29,12 +29,6 @@ public class PlanCollider extends Collider
 		this.distance = distance;
 	}
 
-	@Override
-	public void setPos( Vector3f pos )
-	{
-
-	}
-
 	/**
 	 * GETTER
 	 */

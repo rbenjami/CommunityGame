@@ -22,20 +22,12 @@ import java.util.Random;
  */
 public class NoiseHelper
 {
-	public static float[][] generateWhiteNoise( int width, int height, long seed )
+	public static float[][] generatePerlinNoise( int width, int height, int octaveCount, long seed )
 	{
-		Random random = new Random( seed );
-		float[][] noise = new float[width][height];
-
-		for ( int i = 0; i < width; i++ )
-		{
-			for ( int j = 0; j < height; j++ )
-				noise[i][j] = (float) random.nextDouble() % 1;
-		}
-		return noise;
+		return generatePerlinNoise( generateWhiteNoise( width, height, seed ), octaveCount );
 	}
 
-	public static float[][] generatePerlinNoise( float[][] baseNoise, int octaveCount )
+	private static float[][] generatePerlinNoise( float[][] baseNoise, int octaveCount )
 	{
 		int width = baseNoise.length;
 		int height = baseNoise[0].length;
@@ -80,7 +72,20 @@ public class NoiseHelper
 		return perlinNoise;
 	}
 
-	public static float[][] generateSmoothNoise( float[][] baseNoise, int octave )
+	private static float[][] generateWhiteNoise( int width, int height, long seed )
+	{
+		Random random = new Random( seed );
+		float[][] noise = new float[width][height];
+
+		for ( int i = 0; i < width; i++ )
+		{
+			for ( int j = 0; j < height; j++ )
+				noise[i][j] = (float) random.nextDouble() % 1;
+		}
+		return noise;
+	}
+
+	private static float[][] generateSmoothNoise( float[][] baseNoise, int octave )
 	{
 		int width = baseNoise.length;
 		int height = baseNoise[0].length;

@@ -15,7 +15,6 @@
 
 package com.engine.physic;
 
-import com.engine.core.GameObject;
 import com.engine.core.helpers.dimensions.Vector3f;
 
 import java.util.ArrayList;
@@ -27,41 +26,36 @@ public class PhysicsEngine
 {
 	public final static float NEWTON      = 9.80665f;
 	public final static float AIR_DENSITY = 1;
-	ArrayList<GameObject> objectList;
-
-	public PhysicsEngine()
-	{
-		this.objectList = new ArrayList<GameObject>();
-	}
 
 	/**
 	 * Update physics
 	 */
-	public void update( ArrayList<GameObject> objectList, float delta )
+	public void update( ArrayList<PhysicObject> objectList, float delta )
 	{
-		this.objectList = objectList;
-//		double time = TimeHelper.getTime();
-		for ( GameObject object : objectList )
+		if ( objectList == null )
+			return;
+		for ( PhysicObject object : objectList )
 			physics( object, delta );
 		for ( int i = 0; i < objectList.size(); i++ )
 		{
 			for ( int j = i + 1; j < objectList.size(); j++ )
 				intersect( objectList.get( i ), objectList.get( j ) );
 		}
-//		System.out.println( TimeHelper.getTime() - time );
 	}
 
-	public void physics( GameObject object, float delta )
+	public void physics( PhysicObject object, float delta )
 	{
-		if ( object.getMaterial().getFloat( "gravity" ) != 0 )
+		PhysicalProperties properties = object.getPhysicalProperties();
+
+		if ( properties.getFloat( "gravity" ) != 0 )
 		{
-			float gravity = (float) Math.sqrt( ( 2 * object.getMaterial().getFloat( "mass" ) * NEWTON ) / ( AIR_DENSITY * object.getMaterial().getFloat( "surface" ) * object.getMaterial().getFloat( "dragCoefficient" ) ) );
-			gravity *= object.getMaterial().getFloat( "gravity" );
+			float gravity = (float) Math.sqrt( ( 2 * properties.getFloat( "mass" ) * NEWTON ) / ( AIR_DENSITY * properties.getFloat( "surface" ) * properties.getFloat( "dragCoefficient" ) ) );
+			gravity *= properties.getFloat( "gravity" );
 			object.getVelocity().setY( object.getVelocity().getY() - gravity * delta );
 		}
-		if ( object.getMaterial().getFloat( "dragCoefficient" ) != 0 )
+		if ( properties.getFloat( "dragCoefficient" ) != 0 )
 		{
-			Vector3f dragForce = object.getVelocity().mul( object.getVelocity() ).mul( object.getMaterial().getFloat( "dragCoefficient" ) * AIR_DENSITY * object.getMaterial().getFloat( "surface" ) );
+			Vector3f dragForce = object.getVelocity().mul( object.getVelocity() ).mul( properties.getFloat( "dragCoefficient" ) * AIR_DENSITY * properties.getFloat( "surface" ) );
 			if ( dragForce.length() <= object.getVelocity().length() )
 				object.setVelocity( object.getVelocity().add( dragForce ) );
 			else
@@ -69,14 +63,15 @@ public class PhysicsEngine
 		}
 	}
 
-	public void intersect( GameObject object1, GameObject object2 )
+	public void intersect( PhysicObject object1, PhysicObject object2 )
 	{
-		IntersectData intersectData = Intersect.colliders( object1.getCollider(), object2.getCollider() );
+		// TODO: do intersect with all colliders
+		IntersectData intersectData = Intersect.colliders( object1.getColliders().get( 0 ), object2.getColliders().get( 0 ) );
 		if ( intersectData != null && intersectData.isIntersect() )
 		{
 			Vector3f direction = intersectData.getDirection().normalized();
 			Vector3f otherDirection = direction.reflect( object1.getVelocity().normalized() );
-			float restitutionCoefficient = ( object1.getMaterial().getFloat( "restitutionCoefficient" ) + object2.getMaterial().getFloat( "restitutionCoefficient" ) ) / 2;
+			float restitutionCoefficient = ( object1.getPhysicalProperties().getFloat( "restitutionCoefficient" ) + object2.getPhysicalProperties().getFloat( "restitutionCoefficient" ) ) / 2;
 
 			object1.setVelocity( object1.getVelocity().reflect( otherDirection ).mul( restitutionCoefficient ) );
 			object2.setVelocity( object2.getVelocity().reflect( direction ).mul( restitutionCoefficient ) );

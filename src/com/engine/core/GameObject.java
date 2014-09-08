@@ -17,11 +17,8 @@ package com.engine.core;
 
 import com.engine.CoreEngine;
 import com.engine.core.components.GameComponent;
-import com.engine.core.components.Mesh;
-import com.engine.core.helpers.AABB;
 import com.engine.core.helpers.dimensions.Transform;
-import com.engine.core.helpers.dimensions.Vector3f;
-import com.engine.physic.collider.Collider;
+import com.engine.physic.PhysicObject;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
 
@@ -32,30 +29,17 @@ import java.util.ArrayList;
  */
 public class GameObject
 {
-	//TMP
-	Vector3f oldPos;
 	private ArrayList<GameObject>    children;
 	private ArrayList<GameComponent> components;
 	private CoreEngine               engine;
-	private Mesh                     model;
 	private Transform                transform;
-	private Material                 material; // TODO Change to PhysicObject
-	private Vector3f                 velocity;
-	private Collider                 collider;
-	private float                    rollAngle;
 
 	public GameObject()
 	{
 		children = new ArrayList<GameObject>();
 		components = new ArrayList<GameComponent>();
 		transform = new Transform();
-		material = new Material();
-		velocity = new Vector3f( 0, 0, 0 );
-		rollAngle = 0;
 		engine = null;
-		model = null;
-
-		oldPos = getTransform().getPos();
 	}
 
 	public Transform getTransform()
@@ -136,66 +120,16 @@ public class GameObject
 		return result;
 	}
 
-	public Material getMaterial()
+	public ArrayList<PhysicObject> getAllPhysicObjects()
 	{
-		return material;
-	}
+		ArrayList<PhysicObject> result = new ArrayList<PhysicObject>();
 
-	public void setMaterial( Material material )
-	{
-		this.material = material;
-	}
+		for ( GameObject child : children )
+			result.addAll( child.getAllPhysicObjects() );
 
-	public Vector3f getVelocity()
-	{
-		return velocity;
-	}
-
-	public void setVelocity( Vector3f velocity )
-	{
-		this.velocity = velocity;
-	}
-
-	public float getRollAngle()
-	{
-		return rollAngle;
-	}
-
-	public void setRollAngle( float rollAngle )
-	{
-		this.rollAngle = (float) Math.toRadians( rollAngle );
-	}
-
-	public AABB getAxisAlignedBoundingBox()
-	{
-		return getModel().getAxisAlignedBoundingBox();
-	}
-
-	public Mesh getModel()
-	{
-		return model;
-	}
-
-	public void setModel( Mesh model )
-	{
-		this.model = model;
-	}
-
-	public Collider getCollider()
-	{
-//		Vector3f translation = getTransform().getPos().sub( oldPos );
-//		System.out.println( getTransform().getPos() );
-//		oldPos = getTransform().getPos();
-//		if ( collider != null )
-//			collider.transform( translation );
-		if ( collider != null )
-			collider.setPos( getTransform().getPos() );
-		return collider;
-	}
-
-	public void setCollider( Collider collider )
-	{
-		this.collider = collider;
+		if ( this instanceof PhysicObject )
+			result.add( (PhysicObject) this );
+		return result;
 	}
 
 	/**

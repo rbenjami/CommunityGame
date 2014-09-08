@@ -15,9 +15,9 @@
 
 package com.game.entity;
 
-import com.engine.core.Material;
 import com.engine.core.components.Mesh;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.physic.PhysicalProperties;
 
 /**
  * Created on 18/07/14.
@@ -27,12 +27,12 @@ public class Animals extends Entity
 	public Animals( Mesh model )
 	{
 		super( model );
-		Material material = new Material();
-		material.addFloat( "gravity", 0 );
-		material.addFloat( "mass", 0 );
-		material.addFloat( "dragCoefficient", 0.47f );
-		material.addFloat( "surface", 1f );
-		setMaterial( material );
+		PhysicalProperties physicalProperties = new PhysicalProperties();
+		physicalProperties.addProperty( PhysicalProperties.GRAVITY, 0.5f );
+		physicalProperties.addProperty( PhysicalProperties.MASS, 0 );
+		physicalProperties.addProperty( PhysicalProperties.DRAG_COEFFICIENT, 0.47f );
+		physicalProperties.addProperty( PhysicalProperties.SURFACE, 0.5f );
+		setPhysicalProperties( physicalProperties );
 	}
 
 	@Override

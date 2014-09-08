@@ -64,6 +64,7 @@ public class Mesh extends GameComponent
 		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createRegularFlippedBuffer( triangles.size() * 3 ), GL_STATIC_DRAW );
 	}
 
+	@Deprecated
 	public Mesh( Vector3f[] vertices, int[] indices )
 	{
 //		this.triangles = triangles;
@@ -72,6 +73,7 @@ public class Mesh extends GameComponent
 		addVertices( vertices, indices );
 	}
 
+	@Deprecated
 	private void addVertices( Vector3f[] vertices, int[] indices )
 	{
 		resource = new MeshResource( indices.length );

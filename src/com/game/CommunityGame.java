@@ -21,7 +21,10 @@ import com.engine.core.helpers.dimensions.Quaternion;
 import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Sphere;
 import com.engine.core.helpers.geometry.Triangle;
+import com.engine.physic.PhysicObject;
+import com.engine.physic.PhysicalProperties;
 import com.engine.physic.collider.PlanCollider;
+import com.engine.physic.collider.SphereCollider;
 import com.game.entity.Entity;
 import com.game.entity.Player;
 
@@ -38,10 +41,6 @@ public class CommunityGame extends Game
 
 	public void init()
 	{
-		Material material = new Material();
-		material.addFloat( "specularPower", 4f );
-		material.addFloat( "specularIntensity", 0.85f );
-
 		/**
 		 * Entity
 		 */
@@ -49,15 +48,15 @@ public class CommunityGame extends Game
 		player.getTransform().getPos().set( 0, 5, -6 );
 		addObject( player.addComponent( new FreeLook( 0.5f ) ).addComponent( new FreeMove( 10.0f ) ) );
 
-//		entity = new Entity( new Mesh( "sphere.obj" ) );
-//		entity.getTransform().getPos().set( 0, 30, 0 );
-//		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
-//		entity.setCollider( new SphereCollider( 1 ) );
+		entity = new Entity( new Mesh( "sphere.obj" ) );
+		entity.getTransform().getPos().set( 0, 30, 0 );
+		entity.getTransform().setScale( new Vector3f( 1, 1, 1 ) );
+		entity.addCollider( new SphereCollider( 1 ) );
 //
-//		Entity animals = new Entity( new Mesh( "sphere.obj" ) );
-//		animals.getTransform().getPos().set( 0.5f, 5, 0 );
-//		animals.setCollider( new SphereCollider( 1 ) );
-//		addObject( animals );
+		Entity animals = new Entity( new Mesh( "sphere.obj" ) );
+		animals.getTransform().getPos().set( 0.5f, 5, 0 );
+		animals.addCollider( new SphereCollider( 1 ) );
+		addObject( animals );
 
 		/**
 		 * Plane
@@ -80,14 +79,18 @@ public class CommunityGame extends Game
 
 
 		Mesh mesh = new Mesh( triangles );
+		Material material = new Material();
+		material.addFloat( "specularPower", 4f );
+		material.addFloat( "specularIntensity", 0.85f );
 		mesh.setMaterial( material );
 
-		GameObject planeObject = new GameObject();
+		Planet planet1 = new Planet();
+
+		PhysicObject planeObject = new PhysicObject();
 		planeObject.addComponent( mesh );
 		planeObject.getTransform().setScale( new Vector3f( 100, 100, 100 ) );
-		planeObject.setCollider( new PlanCollider( new Vector3f( 0, 1, 0 ), 0 ) );
-		material.addFloat( "restitutionCoefficient", 0.95f );
-		planeObject.setMaterial( material );
+		planeObject.addCollider( new PlanCollider( new Vector3f( 0, 1, 0 ), 0 ) );
+		planeObject.setPhysicalProperties( new PhysicalProperties().addProperty( PhysicalProperties.RESTITUTION_COEFFICIENT, 0.95f ) );
 		addObject( planeObject );
 
 		/**
@@ -114,13 +117,14 @@ public class CommunityGame extends Game
 		/**
 		 * Object
 		 */
-		GameObject planet = new GameObject();
-		planet.addComponent( new Sphere( 100, 10 ).getMesh() );
-		planet.getTransform().setPos( new Vector3f( 10, 0, 0 ) );
+		PhysicObject planet = new PhysicObject();
+		planet.addComponent( new Sphere( 10, 10 ).getMesh() );
+		planet.getTransform().setPos( new Vector3f( 10, 30, 0 ) );
+		planet.addCollider( new SphereCollider( 10 ) );
+		planet.setPhysicalProperties( new PhysicalProperties() );
 
 		dirt = new Tessellator( 256, 10f, new Color( 255, 237, 117 ), 40 );
 		dirt.getTransform().translate( 0, -3, 0 );
-		dirt.getModel().setMaterial( material );
 		dirt.getTransform().getScale().set( 100, 100, 100 );
 		dirt.getTransform().setPos( new Vector3f( 0, 5, 0 ) );
 
@@ -130,6 +134,7 @@ public class CommunityGame extends Game
 		addObject( directionalLightObject );
 		addObject( pointLightObject );
 		addObject( spotLightObject );
+		addObject( player );
 
 		directionalLight.getTransform().setRot( new Quaternion( new Vector3f( 1, 0, 0 ), (float) Math.toRadians( -45 ) ) );
 	}

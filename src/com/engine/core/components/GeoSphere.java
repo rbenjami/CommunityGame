@@ -34,6 +34,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Created on 21/05/2014.
  */
+@Deprecated
 public class GeoSphere extends GameComponent
 {
 	int DEBUG = 0;

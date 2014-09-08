@@ -15,28 +15,28 @@
 
 package com.game.entity;
 
-import com.engine.core.GameObject;
-import com.engine.core.Material;
 import com.engine.core.components.Mesh;
-import com.engine.core.helpers.dimensions.Quaternion;
 import com.engine.core.helpers.dimensions.Vector3f;
+import com.engine.physic.PhysicObject;
+import com.engine.physic.PhysicalProperties;
+import com.engine.physic.collider.SphereCollider;
 
 /**
  * Created on 17/07/14.
  */
-public class Entity extends GameObject
+public class Entity extends PhysicObject
 {
 	public Entity( Mesh model )
 	{
-		this.setModel( model );
 		this.addComponent( model );
-		Material material = new Material();
-		material.addFloat( "gravity", 0.5f );
-		material.addFloat( "mass", 0.1f );
-		material.addFloat( "dragCoefficient", 0.47f );
-		material.addFloat( "restitutionCoefficient", 0.95f );
-		material.addFloat( "surface", 0.5f );
-		setMaterial( material );
+		PhysicalProperties physicalProperties = new PhysicalProperties();
+		physicalProperties.addProperty( PhysicalProperties.GRAVITY, 0.5f );
+		physicalProperties.addProperty( PhysicalProperties.MASS, 0.1f );
+		physicalProperties.addProperty( PhysicalProperties.DRAG_COEFFICIENT, 0.47f );
+		physicalProperties.addProperty( PhysicalProperties.RESTITUTION_COEFFICIENT, 0.95f );
+		physicalProperties.addProperty( PhysicalProperties.SURFACE, 0.5f );
+		setPhysicalProperties( physicalProperties );
+		addCollider( new SphereCollider( 1 ) );
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class Entity extends GameObject
 		if ( !getVelocity().equals( Vector3f.NULL ) )
 		{
 			getTransform().translate( getVelocity() );
-			getTransform().lookAt( getTransform().getPos().add( getVelocity() ), new Vector3f( 0, 1, 0 ).rotate( new Quaternion( getVelocity().normalized(), getRollAngle() ) ) );
+			//getTransform().lookAt( getTransform().getPos().add( getVelocity() ), new Vector3f( 0, 1, 0 ).rotate( new Quaternion( getVelocity().normalized(), getRollAngle() ) ) );
 		}
 	}
 
