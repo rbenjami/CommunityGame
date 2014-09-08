@@ -33,14 +33,12 @@ public class Triangle extends GameComponent
 	private Vector3f point2;
 	private Vector3f point3;
 	private Vector3f normal;
-	private int      offset;
 
-	public Triangle( Vector3f point1, Vector3f point2, Vector3f point3, int offset )
+	public Triangle( Vector3f point1, Vector3f point2, Vector3f point3 )
 	{
 		this.point1 = point1;
 		this.point2 = point2;
 		this.point3 = point3;
-		this.offset = offset;
 
 		Vector3f v1 = new Vector3f( point1, point2 );
 		Vector3f v2 = new Vector3f( point1, point3 );
@@ -506,22 +504,11 @@ public class Triangle extends GameComponent
 		this.point2 = triangle.getPoint2();
 		this.point3 = triangle.getPoint3();
 		this.normal = triangle.getNormal();
-		this.offset = triangle.getOffset();
 	}
 
 	public Vector3f getNormal()
 	{
 		return normal;
-	}
-
-	public int getOffset()
-	{
-		return offset;
-	}
-
-	public void setOffset( int offset )
-	{
-		this.offset = offset;
 	}
 
 	public void setNormal( Vector3f normal )

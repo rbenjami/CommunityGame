@@ -54,6 +54,7 @@ public class Utils
 		return buffer;
 	}
 
+	@Deprecated
 	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices, int[] indices )
 	{
 		FloatBuffer buffer = createFloatBuffer( vertices.length * 9 );
@@ -88,6 +89,7 @@ public class Utils
 		buffer.put( normal.getZ() );
 	}
 
+	@Deprecated
 	private static Vector3f calcNormals( Vector3f[] vertices, int[] indices, int index )
 	{
 		int i0 = indices[index];
@@ -138,6 +140,16 @@ public class Utils
 		buffer.flip();
 
 		return buffer;
+	}
+
+	public static ArrayList<Triangle> convertVerticesToTriangles( Vector3f[] vertices, int[] indices )
+	{
+		ArrayList<Triangle> list = new ArrayList<Triangle>();
+		int index = 0;
+
+		while ( index < indices.length )
+			list.add( new Triangle( vertices[indices[index++]], vertices[indices[index++]], vertices[indices[index++]] ) );
+		return list;
 	}
 
 	public static String[] removeEmptyStrings( String[] data )

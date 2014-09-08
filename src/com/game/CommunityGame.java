@@ -40,7 +40,7 @@ public class CommunityGame extends Game
 	{
 		Material material = new Material();
 		material.addFloat( "specularPower", 4f );
-		material.addFloat( "specularIntensity", 0.8f );
+		material.addFloat( "specularIntensity", 0.85f );
 
 		/**
 		 * Entity
@@ -67,15 +67,15 @@ public class CommunityGame extends Game
 
 		Vector3f[] vertices = new Vector3f[]
 				{
-						new Vector3f( -fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
-						new Vector3f( -fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
-						new Vector3f( fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) ),
-						new Vector3f( fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 1.0f ) )
+						new Vector3f( -fieldWidth, 0.0f, -fieldDepth, new Color( 1.0f, 0.0f, 0.0f ) ),
+						new Vector3f( -fieldWidth, 0.0f, fieldDepth, new Color( 0.0f, 1.0f, 0.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, -fieldDepth, new Color( 0.0f, 0.0f, 1.0f ) ),
+						new Vector3f( fieldWidth, 0.0f, fieldDepth, new Color( 1.0f, 1.0f, 0.0f ) )
 				};
 		Triangle[] triangles = new Triangle[]
 				{
-						new Triangle( vertices[0], vertices[1], vertices[2], 0 ),
-						new Triangle( vertices[2], vertices[1], vertices[3], 1 )
+						new Triangle( vertices[0], vertices[1], vertices[2] ),
+						new Triangle( vertices[2], vertices[1], vertices[3] )
 				};
 
 
@@ -100,22 +100,22 @@ public class CommunityGame extends Game
 		pointLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject directionalLightObject = new GameObject();
-		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 223, 70 ), 0.01f );
+		DirectionalLight directionalLight = new DirectionalLight( new Color( 255, 223, 70 ), 0.05f );
 		directionalLightObject.addComponent( directionalLight );
 		directionalLightObject.getTransform().getPos().set( 0, 2, 0 );
 		directionalLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		GameObject spotLightObject = new GameObject();
-		SpotLight spotLight = new SpotLight( new Color( 255, 2, 0 ), 1.2f, new Attenuation( 0, 0, 0.1f ), 0.7f );
+		SpotLight spotLight = new SpotLight( new Color( 255, 255, 255 ), 1.2f, new Attenuation( 0, 0, 0.1f ), 0.7f );
 		spotLightObject.addComponent( spotLight );
-		spotLightObject.getTransform().getPos().set( 0, 1, 0 );
+		spotLightObject.getTransform().getPos().set( 5, 1, 5 );
 		spotLightObject.getTransform().rotate( new Vector3f( 0, 1, 0 ), (float) Math.toRadians( 90 ) );
 
 		/**
 		 * Object
 		 */
 		GameObject planet = new GameObject();
-		planet.addComponent( new Sphere( 3, 10 ).getMesh() );
+		planet.addComponent( new Sphere( 100, 10 ).getMesh() );
 		planet.getTransform().setPos( new Vector3f( 10, 0, 0 ) );
 
 		dirt = new Tessellator( 256, 10f, new Color( 255, 237, 117 ), 40 );

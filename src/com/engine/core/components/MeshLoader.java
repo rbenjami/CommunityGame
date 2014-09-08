@@ -72,9 +72,8 @@ public class MeshLoader
 			}
 			meshReader.close();
 
-			int offset = 0;
 			for ( int i = 0; i < indices.size(); i += 3 )
-				triangles.add( new Triangle( positions.get( indices.get( i ) ), positions.get( indices.get( i + 1 ) ), positions.get( indices.get( i + 2 ) ), offset++ ) );
+				triangles.add( new Triangle( positions.get( indices.get( i ) ), positions.get( indices.get( i + 1 ) ), positions.get( indices.get( i + 2 ) ) ) );
 		}
 		catch ( FileNotFoundException e )
 		{

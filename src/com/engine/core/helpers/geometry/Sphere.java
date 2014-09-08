@@ -15,6 +15,7 @@
 
 package com.engine.core.helpers.geometry;
 
+import com.engine.core.Utils;
 import com.engine.core.components.Mesh;
 import com.engine.core.helpers.dimensions.Vector3f;
 
@@ -29,14 +30,14 @@ public class Sphere
 		int perFaceVertexCount = subdivision * subdivision;
 		float invSubDiv = 1.f / ( subdivision - 1 );
 
-		for ( int face = 0; face != 3; ++face )
+		for ( int face = 0; face != 3; face++ )
 		{
 			int faceIndex[][] = new int[][]{ { 0, 1, 2 }, { 2, 0, 1 }, { 1, 2, 0 } };
 			int indirect[] = faceIndex[face];
-			for ( int v = 0; v < subdivision; ++v )
+			for ( int v = 0; v < subdivision; v++ )
 			{
 				float texV = v * invSubDiv;
-				for ( int u = 0; u < subdivision; ++u )
+				for ( int u = 0; u < subdivision; u++ )
 				{
 					float texU = u * invSubDiv;
 					float posU = texU * 2.f - 1.f;
@@ -59,25 +60,26 @@ public class Sphere
 		int perFaceQuadCount = ( subdivision - 1 ) * ( subdivision - 1 );
 
 		int faceIndices[] = new int[perFaceQuadCount * 2 * 3];
-		for ( int v = 0; v != subdivision - 1; ++v )
+		for ( int v = 0; v != subdivision - 1; v++ )
 		{
-			for ( int u = 0; u != subdivision - 1; ++u )
+			for ( int u = 0; u != subdivision - 1; u++ )
 			{
 				int i0 = ( u + 0 ) + ( v + 0 ) * subdivision;
 				int i1 = ( u + 0 ) + ( v + 1 ) * subdivision;
 				int i2 = ( u + 1 ) + ( v + 1 ) * subdivision;
 				int i3 = ( u + 1 ) + ( v + 0 ) * subdivision;
 
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6] = i1;
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6 + 1] = i0;
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6 + 2] = i3;
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6 + 3] = i1;
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6 + 4] = i3;
-				faceIndices[( v * ( subdivision - 1 ) + u ) * 6 + 5] = i2;
+				int index = ( v * ( subdivision - 1 ) + u ) * 6;
+				faceIndices[index] = i1;
+				faceIndices[index + 1] = i0;
+				faceIndices[index + 2] = i3;
+				faceIndices[index + 3] = i1;
+				faceIndices[index + 4] = i3;
+				faceIndices[index + 5] = i2;
 			}
 		}
 		indices = new int[perFaceQuadCount * 2 * 3 * 6];
-		for ( int face = 0; face != 6; ++face )
+		for ( int face = 0; face != 6; face++ )
 		{
 			int vertexOffs = face * subdivision * subdivision;
 			int indexOffs = face * 2 * 3 * perFaceQuadCount;
@@ -92,6 +94,7 @@ public class Sphere
 
 	public Mesh getMesh()
 	{
-		return new Mesh( vertices, indices );
+//		return new Mesh( vertices, indices );
+		return new Mesh( Utils.convertVerticesToTriangles( vertices, indices ) );
 	}
 }
