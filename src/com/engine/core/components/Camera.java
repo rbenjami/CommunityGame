@@ -55,6 +55,10 @@ public class Camera extends GameComponent
 		engine.getRenderEngine().addCamera( this );
 	}
 
+	public void resizeProjection( float width, float height )
+	{
+		this.projection = new Matrix4f().initPerspective( fov, width / height, zNear, zFar );
+	}
 
 	/**
 	 * GETTER
@@ -70,10 +74,5 @@ public class Camera extends GameComponent
 	public void setPos( Vector3f pos )
 	{
 		getTransform().setPos( pos );
-	}
-
-	public void resizeProjection( float width, float height )
-	{
-		this.projection = new Matrix4f().initPerspective( fov, width / height, zNear, zFar );
 	}
 }

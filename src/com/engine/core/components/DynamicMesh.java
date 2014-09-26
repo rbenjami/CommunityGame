@@ -61,20 +61,6 @@ public class DynamicMesh extends GameComponent
 		bufferData( GL_ELEMENT_ARRAY_BUFFER, resource.getIboIndex(), resource.getIbo() );
 	}
 
-	private void bufferData( int target, int buffer, FloatBuffer data )
-	{
-		glBindBuffer( target, buffer );
-		glBufferData( target, data, GL_DYNAMIC_DRAW );
-		glBindBuffer( target, 0 );
-	}
-
-	private void bufferData( int target, int buffer, IntBuffer data )
-	{
-		glBindBuffer( target, buffer );
-		glBufferData( target, data, GL_DYNAMIC_DRAW );
-		glBindBuffer( target, 0 );
-	}
-
 	public void delTriangle( Triangle triangle ) throws Exception
 	{
 		delTriangle( triangle, true );
@@ -146,6 +132,20 @@ public class DynamicMesh extends GameComponent
 	{
 		glBindBuffer( target, buffer );
 		glBufferSubData( target, offset, data );
+		glBindBuffer( target, 0 );
+	}
+
+	private void bufferData( int target, int buffer, FloatBuffer data )
+	{
+		glBindBuffer( target, buffer );
+		glBufferData( target, data, GL_DYNAMIC_DRAW );
+		glBindBuffer( target, 0 );
+	}
+
+	private void bufferData( int target, int buffer, IntBuffer data )
+	{
+		glBindBuffer( target, buffer );
+		glBufferData( target, data, GL_DYNAMIC_DRAW );
 		glBindBuffer( target, 0 );
 	}
 

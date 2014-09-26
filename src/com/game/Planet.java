@@ -78,6 +78,35 @@ public class Planet extends GameObject
 		addComponent( mesh );
 	}
 
+	public boolean isInSphere( int level, SphereCollider sphere, QuadTree node )
+	{
+		return node.depth < level && sphere.intersect( ( (Chunk) node.object ).getCenter() ) != null;
+	}
+
+	public void subDivideChunk( Chunk parent, QuadTree node )
+	{
+		Vector3f left = parent.getV2().add( parent.getV1() ).div( 2 );
+		Vector3f top = parent.getV4().add( parent.getV2() ).div( 2 );
+		Vector3f right = parent.getV3().add( parent.getV4() ).div( 2 );
+		Vector3f bot = parent.getV1().add( parent.getV3() ).div( 2 );
+		Vector3f center = left.add( right );
+
+		left = left.normalized().mul( radius );
+		top = top.normalized().mul( radius );
+		right = right.normalized().mul( radius );
+		bot = bot.normalized().mul( radius );
+		center = center.normalized().mul( radius );
+
+		parent.del();
+
+		Chunk child1 = new Chunk( mesh, 2, radius, parent.getV1(), left, bot, center );
+		Chunk child2 = new Chunk( mesh, 2, radius, left, parent.getV2(), center, top );
+		Chunk child3 = new Chunk( mesh, 2, radius, center, top, right, parent.getV4() );
+		Chunk child4 = new Chunk( mesh, 2, radius, bot, center, parent.getV3(), right );
+
+		node.split( child1, child2, child3, child4 );
+	}
+
 	@Override
 	public void update( float delta )
 	{
@@ -134,34 +163,5 @@ public class Planet extends GameObject
 //			}
 //			mesh.addTriangles( ( (Chunk) node.object ).getTriangles() );
 //		}
-	}
-
-	public boolean isInSphere( int level, SphereCollider sphere, QuadTree node )
-	{
-		return node.depth < level && sphere.intersect( ( (Chunk) node.object ).getCenter() ) != null;
-	}
-
-	public void subDivideChunk( Chunk parent, QuadTree node )
-	{
-		Vector3f left = parent.getV2().add( parent.getV1() ).div( 2 );
-		Vector3f top = parent.getV4().add( parent.getV2() ).div( 2 );
-		Vector3f right = parent.getV3().add( parent.getV4() ).div( 2 );
-		Vector3f bot = parent.getV1().add( parent.getV3() ).div( 2 );
-		Vector3f center = left.add( right );
-
-		left = left.normalized().mul( radius );
-		top = top.normalized().mul( radius );
-		right = right.normalized().mul( radius );
-		bot = bot.normalized().mul( radius );
-		center = center.normalized().mul( radius );
-
-		parent.del();
-
-		Chunk child1 = new Chunk( mesh, 2, radius, parent.getV1(), left, bot, center );
-		Chunk child2 = new Chunk( mesh, 2, radius, left, parent.getV2(), center, top );
-		Chunk child3 = new Chunk( mesh, 2, radius, center, top, right, parent.getV4() );
-		Chunk child4 = new Chunk( mesh, 2, radius, bot, center, parent.getV3(), right );
-
-		node.split( child1, child2, child3, child4 );
 	}
 }
