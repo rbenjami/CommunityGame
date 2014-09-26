@@ -29,6 +29,7 @@ import java.awt.*;
  */
 public class Triangle extends GameComponent
 {
+	public static final int SIZE = 3 * 9;
 	private Vector3f point1;
 	private Vector3f point2;
 	private Vector3f point3;
@@ -523,10 +524,10 @@ public class Triangle extends GameComponent
 		point3.setColor( color );
 	}
 
-	public boolean equals( Triangle obj )
-	{
-		return obj.getPoint1().equals( point1 ) && obj.getPoint2().equals( point2 ) && obj.getPoint3().equals( point3 );
-	}
+//	public boolean equals( Triangle obj )
+//	{
+//		return obj.getPoint1().equals( point1 ) && obj.getPoint2().equals( point2 ) && obj.getPoint3().equals( point3 );
+//	}
 
 	protected static class TriangleIntersection
 	{

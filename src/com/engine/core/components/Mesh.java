@@ -18,8 +18,6 @@ package com.engine.core.components;
 import com.engine.core.GameObject;
 import com.engine.core.Material;
 import com.engine.core.Utils;
-import com.engine.core.helpers.AABB;
-import com.engine.core.helpers.dimensions.Vector3f;
 import com.engine.core.helpers.geometry.Triangle;
 import com.engine.render.RenderEngine;
 import com.engine.render.Shader;
@@ -35,7 +33,6 @@ public class Mesh extends GameComponent
 {
 	private MeshResource resource;
 	private Material     material;
-	private AABB         axisAlignedBoundingBox;
 
 	/**
 	 * Info
@@ -51,39 +48,23 @@ public class Mesh extends GameComponent
 	{
 		this.triangles = triangles;
 		this.material = Material.DEFAULT;
-		axisAlignedBoundingBox = AABB.createMeshAABB( this );
 		addVertices( triangles );
 	}
 
 	private void addVertices( ArrayList<Triangle> triangles )
 	{
-		resource = new MeshResource( triangles.size() * 3 );
-		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( triangles ), GL_STATIC_DRAW );
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createRegularFlippedBuffer( triangles.size() * 3 ), GL_STATIC_DRAW );
+		resource = new MeshResource();
+
+		resource.setVbo( Utils.createFlippedBuffer( triangles ) );
+		glBindBuffer( GL_ARRAY_BUFFER, resource.getVboIndex() );
+		glBufferData( GL_ARRAY_BUFFER, resource.getVbo(), GL_STATIC_DRAW );
+
+		resource.setIbo( Utils.createRegularFlippedBuffer( triangles.size() * 3 ) );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIboIndex() );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo(), GL_STATIC_DRAW );
 	}
 
-	@Deprecated
-	public Mesh( Vector3f[] vertices, int[] indices )
-	{
-//		this.triangles = triangles;
-		this.material = Material.DEFAULT;
-//		axisAlignedBoundingBox = AABB.createMeshAABB( this );
-		addVertices( vertices, indices );
-	}
-
-	@Deprecated
-	private void addVertices( Vector3f[] vertices, int[] indices )
-	{
-		resource = new MeshResource( indices.length );
-		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
-		glBufferData( GL_ARRAY_BUFFER, Utils.createFlippedBuffer( vertices, indices ), GL_STATIC_DRAW );
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, Utils.createFlippedBuffer( indices ), GL_STATIC_DRAW );
-	}
-
-	public Mesh( Triangle[] triangles )
+	public Mesh( Triangle... triangles )
 	{
 		this( new ArrayList<Triangle>( Arrays.asList( triangles ) ) );
 	}
@@ -114,13 +95,13 @@ public class Mesh extends GameComponent
 		glEnableVertexAttribArray( 1 );
 		glEnableVertexAttribArray( 2 );
 
-		glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
+		glBindBuffer( GL_ARRAY_BUFFER, resource.getVboIndex() );
 		glVertexAttribPointer( 0, 3, GL_FLOAT, false, 9 * 4, 0 );
 		glVertexAttribPointer( 1, 3, GL_FLOAT, true, 9 * 4, 12 );
 		glVertexAttribPointer( 2, 3, GL_FLOAT, false, 9 * 4, 24 );
 
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
-		glDrawElements( GL_TRIANGLES, resource.getSize(), GL_UNSIGNED_INT, 0 );
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIboIndex() );
+		glDrawElements( GL_TRIANGLES, resource.getVbo().limit(), GL_UNSIGNED_INT, 0 );
 
 		glDisableVertexAttribArray( 0 );
 		glDisableVertexAttribArray( 1 );
@@ -142,11 +123,6 @@ public class Mesh extends GameComponent
 	public void setMaterial( Material material )
 	{
 		this.material = material;
-	}
-
-	public AABB getAxisAlignedBoundingBox()
-	{
-		return axisAlignedBoundingBox;
 	}
 
 	public ArrayList<Triangle> getTriangles()

@@ -15,6 +15,9 @@
 
 package com.engine.core.components;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 
@@ -23,49 +26,51 @@ import static org.lwjgl.opengl.GL15.glGenBuffers;
  */
 public class MeshResource
 {
-	private int vbo;
-	private int ibo;
-	private int size;
-	private int refCount;
+	private int         vboIndex;
+	private int         iboIndex;
+	private FloatBuffer vbo;
+	private IntBuffer   ibo;
 
-	public MeshResource( int size )
+	public MeshResource()
 	{
-		vbo = glGenBuffers();
-		ibo = glGenBuffers();
-		this.size = size;
-		this.refCount = 1;
+		vboIndex = glGenBuffers();
+		iboIndex = glGenBuffers();
 	}
 
 	@Override
 	protected void finalize()
 	{
-		glDeleteBuffers( vbo );
-		glDeleteBuffers( ibo );
+		glDeleteBuffers( vboIndex );
+		glDeleteBuffers( iboIndex );
 	}
 
-	public void addReference()
+	public int getVboIndex()
 	{
-		refCount++;
+		return vboIndex;
 	}
 
-	public boolean removeReference()
+	public int getIboIndex()
 	{
-		refCount--;
-		return refCount == 0;
+		return iboIndex;
 	}
 
-	public int getVbo()
+	public FloatBuffer getVbo()
 	{
 		return vbo;
 	}
 
-	public int getIbo()
+	public void setVbo( FloatBuffer vbo )
+	{
+		this.vbo = vbo;
+	}
+
+	public IntBuffer getIbo()
 	{
 		return ibo;
 	}
 
-	public int getSize()
+	public void setIbo( IntBuffer ibo )
 	{
-		return size;
+		this.ibo = ibo;
 	}
 }

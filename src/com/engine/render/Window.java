@@ -21,6 +21,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 
 /**
  * Created on 24/04/14.
@@ -35,7 +36,7 @@ public class Window
 			Display.setDisplayMode( new DisplayMode( width, height ) );
 			Display.setVSyncEnabled( true );
 			Display.setResizable( true );
-			Display.create();
+			Display.create( new PixelFormat( 0, 0, 0, 8 ) );
 			Keyboard.create();
 			Mouse.create();
 		}

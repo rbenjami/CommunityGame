@@ -31,9 +31,14 @@ public class Utils
 {
 	public static IntBuffer createRegularFlippedBuffer( int size )
 	{
+		return createRegularFlippedBuffer( size, 0 );
+	}
+
+	public static IntBuffer createRegularFlippedBuffer( int size, int index )
+	{
 		IntBuffer buffer = createIntBuffer( size );
 
-		for ( int i = 0; i < size; i++ )
+		for ( int i = index; i < size + index; i++ )
 			buffer.put( i );
 		buffer.flip();
 
@@ -58,13 +63,8 @@ public class Utils
 	public static FloatBuffer createFlippedBuffer( Vector3f[] vertices, int[] indices )
 	{
 		FloatBuffer buffer = createFloatBuffer( vertices.length * 9 );
-
-		int i = 0;
 		for ( Vector3f vertex : vertices )
-		{
-			vertexToBuffer( buffer, vertex, calcNormals( vertices, indices, i / 3 ) );
-			i++;
-		}
+			vertexToBuffer( buffer, vertex, new Vector3f( 0, 1, 0 ) );
 
 		buffer.flip();
 
@@ -87,18 +87,6 @@ public class Utils
 		buffer.put( normal.getX() );
 		buffer.put( normal.getY() );
 		buffer.put( normal.getZ() );
-	}
-
-	@Deprecated
-	private static Vector3f calcNormals( Vector3f[] vertices, int[] indices, int index )
-	{
-		int i0 = indices[index];
-		int i1 = indices[index + 1];
-		int i2 = indices[index + 2];
-		Vector3f v1 = new Vector3f( vertices[i0], vertices[i1] );
-		Vector3f v2 = new Vector3f( vertices[i0], vertices[i2] );
-		return v1.cross( v2 ).normalized();// TODO: normal
-//		return new Vector3f( 0, 1, 0 );
 	}
 
 	public static FloatBuffer createFlippedBuffer( ArrayList<Triangle> triangles )

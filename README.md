@@ -12,7 +12,7 @@ Hi, I'm a french developer and I plan to code a open source 3D game engine, then
   * Physic: as real as possible
 * Game (idea):
   * Procedural generation of planets
-  * Infinit space
+  * Infinite space
   * Fully scalable, adding objects (model, script, sound, ...)
   * ...
 
@@ -33,9 +33,9 @@ You can contribute:
 
 E-mail: repingonbenjamin@gmail.com
 
---------------
-| Ressources |
---------------
+-------------
+| Resources |
+-------------
 
 * OpenGL (1.2 at this time, mac OK)
 * Java 1.7

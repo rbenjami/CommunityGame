@@ -77,4 +77,11 @@ public class SphereCollider extends Collider
 	{
 		this.radius = radius;
 	}
+
+	public IntersectData intersect( Vector3f vector )
+	{
+		if ( center.sub( vector ).length() <= radius )
+			return new IntersectData( true, null );
+		return null;
+	}
 }

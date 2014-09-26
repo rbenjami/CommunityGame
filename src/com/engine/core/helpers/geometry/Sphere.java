@@ -34,6 +34,7 @@ public class Sphere
 		{
 			int faceIndex[][] = new int[][]{ { 0, 1, 2 }, { 2, 0, 1 }, { 1, 2, 0 } };
 			int indirect[] = faceIndex[face];
+
 			for ( int v = 0; v < subdivision; v++ )
 			{
 				float texV = v * invSubDiv;
